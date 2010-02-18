@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<project xmlns="http://maven.apache.org/DECORATION/1.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/DECORATION/1.0.0 http://maven.apache.org/xsd/decoration-1.0.0.xsd"
+  name="Maven MarkLogic plugin">
+  
+  <bannerLeft>
+    <name>MarkLogic</name>
+    <src>images/logo.gif</src>
+    <href>http://developer.marklogic.com</href>
+  </bannerLeft>
+  <bannerRight>
+    <src>http://maven.apache.org/images/maven-small.gif</src>
+  </bannerRight>
+  <body>
+    <links>
+      <item name="Apache" href="http://www.apache.org/" />
+      <item name="Maven 1.0" href="http://maven.apache.org/"/>
+      <item name="Maven 2" href="http://maven.apache.org/maven2/"/>
+    </links>
+
+    <menu name="Maven 2.0">
+      <item name="APT Format" href="format.html"/>
+      <item name="FAQ" href="faq.html"/>
+      <item name="Xdoc Example" href="xdoc.html"/>      
+    </menu>
+  </body>
+</project>
