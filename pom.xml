@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   
   <groupId>com.marklogic.maven</groupId>
-  <artifactId>marklogic-maven-plugin</artifactId>
+  <artifactId>maven-marklogic-plugin</artifactId>
   <version>1.0-SNAPSHOT</version>
   <packaging>maven-plugin</packaging>
   
@@ -10,6 +10,31 @@
   <description>The Compiler Plugin is used to compile the sources of your project.</description>
   <inceptionYear>2010</inceptionYear>
   <url>http://maven.apache.org</url>
+  
+  <licenses>
+    <license>
+      <name>The Apache Software License, Version 2.0</name>
+      <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+      <distribution>repo</distribution>
+    </license>
+  </licenses>  
+  
+  <scm>
+    <connection>scm:svn:http://svn.helmstetter.com/trunk/maven-marklogic-plugin/</connection>
+    <url>http://svn.helmstetter.com/trunk/maven-marklogic-plugin/</url>
+  </scm>
+  
+  <developers>
+    <developer>
+      <id>mhelmstetter</id>
+      <name>Mark Helmstetter</name>
+      <email>mark@helmstetter.com</email>
+      <timezone>-5</timezone>
+      <roles>
+        <role>Maintainer</role>
+      </roles>
+    </developer>
+  </developers>
   
   <distributionManagement>
     <repository>
@@ -19,7 +44,7 @@
     </repository>
     <site>
       <id>m2ml</id> 
-      <url>scp://helmstetter.com/var/www/helmstetter.com/marklogic-maven-plugin</url> 
+      <url>scp://helmstetter.com/var/www/helmstetter.com/maven-marklogic-plugin</url> 
     </site>
   </distributionManagement>
   

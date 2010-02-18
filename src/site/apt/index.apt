@@ -8,11 +8,14 @@ Maven MarkLogic Plugin
 
    The MarkLogic Plugin has the following goals:
 
-   * {{{./marklogic-mojo.html}marklogic:bootstrap}} is used create the necessary bootstrap configuration that
+   * {{{./bootstrap-mojo.html}marklogic:bootstrap}} is used create the necessary bootstrap configuration that
      the MarkLogic Plugin requires for executing its goals.
      
-   * {{{./marklogic-mojo.html}marklogic:bootstrap-uninstall}} is used to remove the bootstrap configuration
+   * {{{./bootstrap-uninstall-mojo.html}marklogic:bootstrap-uninstall}} is used to remove the bootstrap configuration
      created by the <<<marklogic:bootstrap>>> goal.
+     
+   * {{{./install-mojo.html}marklogic:install}} is used install and configure the database(s), 
+     application server(s), etc. in the specified configuration.    
 
 * Usage
 
@@ -23,5 +26,5 @@ Maven MarkLogic Plugin
 
    The following examples show how to use the MarkLogic Plugin:
 
-   * {{{./examples/bootstrap.html}Bootstrap}}
+   * {{{examples/simple_configuration.html}Simple plugin configuration.}}
 

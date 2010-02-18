@@ -19,11 +19,6 @@ public class BootstrapUninstallMojo extends AbstractBootstrapMojo {
 		+"\n	let $config := admin:get-configuration()"
 		//+"\n	let $config := try{admin:appserver-delete($config, xdmp:server('"+httpName+"'))}catch($e){$config}"
 		+"\n	let $config := try{admin:appserver-delete($config, xdmp:server('"+xdbcName+"'))}catch($e){$config}"
-		+"\n	let $config := try{admin:database-detach-forest($config, xdmp:database('"+databaseName+"'), xdmp:forest('"+forestName+"'))}catch($e){$config}"
-		+"\n	let $config := admin:save-configuration-without-restart($config)"
-		+"\n	let $config := admin:get-configuration()"
-		+"\n	let $config := try{admin:database-delete($config, xdmp:database('"+databaseName+"'))}catch($e){$config}"
-		+"\n	let $config := try{admin:forest-delete($config, xdmp:forest('"+forestName+"'), fn:true())}catch($e){$config}"
 		+"\n	let $config := admin:save-configuration($config)"
 		+"\n	return	'Bootstrap Uninstall - OK'"
 		;

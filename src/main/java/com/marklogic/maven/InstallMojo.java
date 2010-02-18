@@ -13,6 +13,9 @@ import org.apache.maven.plugin.MojoFailureException;
  * @execute goal="bootstrap"
  */
 public class InstallMojo extends AbstractInstallMojo {
+	
+	// TODO should we just manually check if bootstrap is required and provide an error,
+	// rather than just executing bootstrap every time?
 
 	@Override
 	public void execute() throws MojoExecutionException, MojoFailureException {

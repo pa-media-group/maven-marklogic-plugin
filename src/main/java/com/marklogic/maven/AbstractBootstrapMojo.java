@@ -24,18 +24,19 @@ public abstract class AbstractBootstrapMojo extends AbstractMarkLogicMojo {
      */
     protected int bootstrapPort;
     
-    protected String xdbcName = "8998-Remote-Install";
+    /**
+     * The MarkLogic Installer XDBC server name
+     * 
+     * @parameter default-value="MarkLogic-Installer-XDBC" expression="${marklogic.xdbc.name}"
+     */    
+    protected String xdbcName;
     
     /**
-     * The port used to bootstrap MarkLogic Server.
+     * The MarkLogic Installer XDBC module root setting
      * 
      * @parameter default-value="/" expression="${marklogic.xdbc.module-root}"
      */    
     protected String xdbcModuleRoot = "/";
-    
-    // These are the configurations for the installation database
-    protected String databaseName = "Remote-Install";
-    protected String forestName = "Remote-Install";
     
     protected abstract String getBootstrapExecuteQuery();
 	
