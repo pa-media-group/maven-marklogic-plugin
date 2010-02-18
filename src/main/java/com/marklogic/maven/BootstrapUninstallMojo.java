@@ -11,8 +11,7 @@ import org.apache.maven.plugin.MojoFailureException;
  * @goal bootstrap-uninstall
  */
 public class BootstrapUninstallMojo extends AbstractBootstrapMojo {	
- 
-	@Override
+
 	protected String getBootstrapExecuteQuery() {
 		return 	"xquery version '1.0-ml';"
 		+"\n	import module namespace admin = 'http://marklogic.com/xdmp/admin' at '/MarkLogic/admin.xqy';"
@@ -24,7 +23,6 @@ public class BootstrapUninstallMojo extends AbstractBootstrapMojo {
 		;
 	}
 	
-	@Override
 	public void execute() throws MojoExecutionException, MojoFailureException {
 		getLog().info("bootstrap-uninstall execute");
 		super.execute();

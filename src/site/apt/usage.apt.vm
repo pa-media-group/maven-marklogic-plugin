@@ -1,0 +1,29 @@
+Usage
+
+* How to Use
+
+  In the pom.xml, insert this segment.
+  
++---
+<project>
+...
+  <build>
+    <plugins>
+	  <plugin>
+	    <groupId>com.marklogic.maven</groupId>
+	    <artifactId>maven-marklogic-plugin</artifactId>
+	    <version>1.0-SNAPSHOT</version>
+	  </plugin>
+    </plugins>
+  </build> 
+  
+  <pluginRepositories>
+    <pluginRepository>
+      <id>helmstetter-maven</id>
+      <name>helmstetter.com maven repository</name>
+      <url>http://www.helmstetter.com/maven</url>
+    </pluginRepository>
+  </pluginRepositories>  
+...
+</project>
++---  

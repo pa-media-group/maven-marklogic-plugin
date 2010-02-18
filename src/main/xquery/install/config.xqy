@@ -1,0 +1,175 @@
+xquery version "1.0-ml";
+(: Copyright 2009, Mark Logic Corporation. All Rights Reserved. :)
+
+module namespace inst-conf = 'http://www.marklogic.com/ps/install/config.xqy';
+declare default element namespace 'http://www.marklogic.com/ps/install/config.xqy';
+
+declare variable $MARKLOGIC-HOME := "/opt/MarkLogic";
+declare variable $APPLICATION-ROOT := "/opt/CR-MarkLogic";
+declare variable $APPLICATION-NAME := "CR";
+declare variable $APPLICATION-TITLE := "Coral Reef";
+
+(::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::)
+
+declare variable $COMMON-CONFIGURATIONS :=
+(
+    <database name="Modules">
+        <forest name="Modules">
+            <forest-directory/>
+        </forest>
+        
+        <attribute-range-index  scalar-type="string" parent-namespace=":::performance:::" parent-localname="profile" namespace="" localname="label" />
+        
+    </database>
+    ,
+    <database name="Content">
+    	<triggers-database name="Triggers"/>
+        
+        <set name="uri-lexicon"  value="true"/>
+        <set name="word-searches"  value="true"/>
+        <set name="word-positions" value="true"/>
+        <set name="in-memory-list-size" value="256"/>
+        <set name="in-memory-tree-size" value="16"/>
+        <set name="element-value-positions" value="true"/>
+        <set name="element-word-positions"  value="true"/>
+        <set name="attribute-value-positions"  value="true"/>
+        
+        <add name="fragment-root"   namespace="urn:coralreef:logs" localname="logEntry"/>
+        <add name="fragment-root"   namespace="urn:coralreef:user" localname="read-alert"/>
+        <add name="fragment-root"   namespace="urn:coralreef" localname="changeLog"/>
+        <add name="fragment-root"   namespace="urn:coralreef" localname="Identities"/>
+        
+        <forest name="Content">
+            <forest-directory/>
+        </forest>
+        
+        <geospatial-element-pair-index parent-namespace="urn:coralreef" parent-localname="LocationOfCapture"
+            lat-namespace="urn:coralreef" lat-localname="NormalizedLatitude"
+            lon-namespace="urn:coralreef" lon-localname="NormalizedLongitude"/>
+        
+        <element-word-lexicon   namespace="" localname="cr-status"/>
+        <element-word-lexicon   namespace="" localname="cr-owner-credential"/>
+        <element-word-lexicon   namespace="urn:coralreef" localname="UniqueId"/>
+        <element-word-lexicon   namespace="urn:coralreef" localname="Identity"/>
+        
+        <element-range-index    scalar-type="dateTime" namespace="" localname="cr-upload-dateTime"/>
+        <element-range-index    scalar-type="string" namespace="urn:coralreef" localname="Location"/>
+        <element-range-index    scalar-type="string" namespace="urn:coralreef" localname="Identity"/>
+        <element-range-index    scalar-type="string" namespace="urn:coralreef" localname="AcquiringUnit"/>
+        <element-range-index    scalar-type="string" namespace="urn:coralreef" localname="ForensicUnit"/>
+        <element-range-index    scalar-type="string" namespace="urn:coralreef" localname="HandsetMake"/>
+        <element-range-index    scalar-type="string" namespace="urn:coralreef" localname="HandsetModel"/>
+        <element-range-index    scalar-type="string" namespace="urn:coralreef" localname="ServiceProvider"/>
+        <element-range-index    scalar-type="string" namespace="urn:coralreef" localname="Value"/>
+        <element-range-index    scalar-type="string" namespace="urn:coralreef" localname="UniqueId"/>
+        <element-range-index    scalar-type="string" namespace="urn:coralreef:alerting" localname="Realm"/>
+        <element-range-index    scalar-type="string" namespace="urn:coralreef:alerting" localname="alertLevel"/>
+        <element-range-index    scalar-type="string" namespace="urn:coralreef:alerting" localname="alertType"/>
+        <element-range-index    scalar-type="dateTime" namespace="urn:coralreef:alerting" localname="alertDtg"/>
+        <element-range-index    scalar-type="string" namespace="urn:coralreef:alerting" localname="userCredential"/>
+        
+        <attribute-range-index  scalar-type="string" parent-namespace="urn:coralreef" parent-localname="Selector" namespace="" localname="SearchKey"/>
+        <attribute-range-index  scalar-type="string" parent-namespace="urn:coralreef" parent-localname="Identities" namespace="" localname="SearchKey"/>
+        <attribute-range-index  scalar-type="date" parent-namespace="urn:coralreef" parent-localname="AcquireDate" namespace="" localname="NormalizedDate" />
+        <attribute-range-index  scalar-type="string" parent-namespace="urn:coralreef:alerting" parent-localname="triggerDocument" namespace="" localname="Uri"/>
+        <attribute-range-index  scalar-type="string" parent-namespace="urn:coralreef:alerting" parent-localname="target" namespace="" localname="id"/>
+        <attribute-range-index  scalar-type="string" parent-namespace="urn:coralreef:user" parent-localname="read-alert" namespace="" localname="Uri"/>
+        <attribute-range-index  scalar-type="string" parent-namespace="urn:coralreef:target" parent-localname="Selector" namespace="" localname="SearchKey"/>
+        <attribute-range-index  scalar-type="string" parent-namespace="urn:coralreef:target" parent-localname="target" namespace="" localname="id"/>
+        <attribute-range-index  scalar-type="string" parent-namespace="urn:coralreef" parent-localname="domexHistory" namespace="" localname="uniqueId" />
+        <attribute-range-index  scalar-type="string" parent-namespace=":::performance:::" parent-localname="profile" namespace="" localname="label" />
+            
+        <content-processing user="admin" role="admin" modules="Modules" root="/" default-domain="Coral Reef Raw">
+            <load-pipelines>
+                <from-filesystem file="{$MARKLOGIC-HOME}/Installer/cpf/status-pipeline.xml"/>
+                <from-filesystem file="{$MARKLOGIC-HOME}/Installer/conversion/alternatives/basic-pipeline.xml"/>
+                <from-filesystem file="{$MARKLOGIC-HOME}/Installer/openxml/openxml-pipeline.xml"/>
+                <from-filesystem file="{$APPLICATION-ROOT}/Modules/CPF/pipelines/msoffice-pipeline.xml"/>
+                <from-filesystem file="{$APPLICATION-ROOT}/Modules/CPF/pipelines/cr-raw-to-formatted.xml"/>
+                <from-filesystem file="{$APPLICATION-ROOT}/Modules/CPF/pipelines/invalid-file.xml"/>
+                <from-filesystem file="{$APPLICATION-ROOT}/Modules/CPF/pipelines/create-alerts-for-domex.xml"/>
+            </load-pipelines>
+            <domain name="Coral Reef Raw" description="Process CR Raw Input" document-scope="directory" uri="/Content/Raw/" depth="infinity" modules="Modules" root="/">
+                <pipeline name="MS Office Conversion"/>
+                <pipeline name="Conversion Processing (Basic)"/>
+                <pipeline name="Coral Reef Raw-to-Formatted"/>
+                <pipeline name="Invalid File"/>
+                <pipeline name="Status Change Handling"/>
+            </domain>
+            <domain name="Coral Reef Alerts" description="Create Alerts" document-scope="directory" uri="/Content/Formatted/" depth="infinity" modules="Modules" root="/">
+                <pipeline name="Conversion Processing (Basic)"/>
+                <pipeline name="Create Alerts for Domex"/>
+                <pipeline name="Status Change Handling"/>
+            </domain>
+        </content-processing>
+    </database>
+   	,
+   	<database name="Triggers">
+        <forest name="Triggers">
+            <forest-directory/>
+       	</forest>
+    </database>
+    ,
+    <load-content>
+        <copy-files> 
+            <from-filesystem root="{$APPLICATION-ROOT}/Content">
+                <rules>
+                    <rule root="{$APPLICATION-ROOT}/Content/Normalization"   match="^.*\.xml$" format="binary"/>
+                    <rule root="{$APPLICATION-ROOT}/Content/Phone/Thesaurus" match="^.*\.xml$" format="thesaurus"/>
+                </rules>
+            </from-filesystem>
+            <to-database  database="Content" root="/"/>
+        </copy-files>
+        <copy-files>
+            <from-filesystem root="{$APPLICATION-ROOT}/Modules"/>
+            <to-database  database="Modules" root="/"/>
+        </copy-files>
+    </load-content>
+);
+
+(:::::::::::::::::::::::::::::::::::::::::::::::::::::)
+
+declare variable $DEFAULT-INSTALL-CONFIG := <install>
+
+(::::: DEVELOPMENT :::::)
+<development >
+    <application name="{$APPLICATION-NAME}-Dev" title="{$APPLICATION-TITLE} (Development)" filesystem-root="{$APPLICATION-ROOT}"/>
+    {$COMMON-CONFIGURATIONS}
+    <servers>
+        <server type="http"   name="Application" port="9000" group="Default" database="Content"   root="/opt/CR-MarkLogic/Modules" modules="0"/>
+        <server type="xdb"    name="Content"     port="9001" group="Default" database="Content"   root="/opt/CR-MarkLogic/Modules" modules="0"/>
+        <server type="webdav" name="Content"     port="9002" group="Default" database="Content"   root="/" modules="0" authentication="application-level" default-user="admin"/>
+        <server type="webdav" name="Modules"     port="9003" group="Default" database="Modules"   root="/" modules="0" authentication="application-level" default-user="admin"/>
+        <server type="http"   name="Content"     port="9004" group="Default" database="Content"   root="/" modules="Content"/>
+    </servers>
+</development>
+
+(::::: STAGING :::::)
+<staging>
+   <application name="{$APPLICATION-NAME}-Stg" title="{$APPLICATION-TITLE} (Staging)" filesystem-root="{$APPLICATION-ROOT}"/>
+   {$COMMON-CONFIGURATIONS}
+    <servers>
+        <server type="http"   name="Application" port="9000" group="Default" database="Content"   root="/" modules="Modules"/>
+        <server type="xdb"    name="Content"     port="9001" group="Default" database="Content"   root="/" modules="Modules"/>
+        <server type="webdav" name="Content"     port="9002" group="Default" database="Content"   root="/" authentication="application-level" default-user="admin"/>
+        <server type="webdav" name="Modules"     port="9003" group="Default" database="Modules"   root="/" authentication="application-level" default-user="admin"/>
+        <server type="http"   name="Content"     port="9004" group="Default" database="Content"   root="/" modules="Content"/>
+    </servers>
+</staging>
+
+(::::: PRODUCTION :::::)
+<production>
+  <application name="{$APPLICATION-NAME}-Prd" title="{$APPLICATION-TITLE} (Staging)" filesystem-root="{$APPLICATION-ROOT}"/>
+  {$COMMON-CONFIGURATIONS}
+     <servers>
+        <server type="http"   name="Application" port="9000" group="Default" database="Content"   root="/" modules="Modules"/>
+        <server type="xdb"    name="Content"     port="9001" group="Default" database="Content"   root="/" modules="Modules"/>
+        <server type="webdav" name="Content"     port="9002" group="Default" database="Content"   root="/" authentication="application-level" default-user="admin"/>
+        <server type="webdav" name="Modules"     port="9003" group="Default" database="Modules"   root="/" authentication="application-level" default-user="admin"/>
+        <server type="http"   name="Content"     port="9004" group="Default" database="Content"   root="/" modules="Content"/>
+    </servers>
+</production>
+
+
+</install>
+;

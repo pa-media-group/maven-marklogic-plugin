@@ -6,6 +6,7 @@
   <classpathentry kind="var" path="M2_REPO/org/apache/httpcomponents/httpclient/4.0.1/httpclient-4.0.1.jar"/>
   <classpathentry kind="var" path="M2_REPO/org/apache/httpcomponents/httpcore/4.0.1/httpcore-4.0.1.jar"/>
   <classpathentry kind="var" path="M2_REPO/junit/junit/3.8.1/junit-3.8.1.jar"/>
-  <classpathentry kind="var" path="M2_REPO/org/apache/maven/maven-plugin-api/2.0/maven-plugin-api-2.0.jar"/>
-  <classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+  <classpathentry kind="var" path="M2_REPO/org/apache/maven/maven-plugin-api/2.2.1/maven-plugin-api-2.2.1.jar"/>
+  <classpathentry kind="var" path="M2_REPO/com/marklogic/xcc/4.1-4/xcc-4.1-4.jar"/>
+  <classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/J2SE-1.5"/>
 </classpath>

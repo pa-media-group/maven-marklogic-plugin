@@ -14,8 +14,11 @@ Maven MarkLogic Plugin
    * {{{./bootstrap-uninstall-mojo.html}marklogic:bootstrap-uninstall}} is used to remove the bootstrap configuration
      created by the <<<marklogic:bootstrap>>> goal.
      
-   * {{{./install-mojo.html}marklogic:install}} is used install and configure the database(s), 
-     application server(s), etc. in the specified configuration.    
+   * {{{./install-mojo.html}marklogic:install}} is used to install and configure the database(s), 
+     application server(s), etc. in the specified configuration.
+     
+   * {{{./uninstall-mojo.html}marklogic:install}} is used to remove all database(s), 
+     application server(s), etc. created by the <<<marklogic:install>>> goal.         
 
 * Usage
 

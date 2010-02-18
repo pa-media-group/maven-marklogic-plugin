@@ -38,12 +38,12 @@
   
   <distributionManagement>
     <repository>
-      <id>m2ml</id>
-      <name>m2ml</name>
-      <url>scp://helmstetter.com/var/www/helmstetter.com/m2ml</url>
+      <id>helmstetter-maven</id>
+      <name>helmstetter-maven</name>
+      <url>scp://helmstetter.com/var/www/helmstetter.com/maven</url>
     </repository>
     <site>
-      <id>m2ml</id> 
+      <id>helmstetter-maven</id> 
       <url>scp://helmstetter.com/var/www/helmstetter.com/maven-marklogic-plugin</url> 
     </site>
   </distributionManagement>
@@ -54,26 +54,26 @@
       <artifactId>maven-plugin-api</artifactId>
       <version>2.2.1</version>
     </dependency>
-    
-    <!-- workaround for MPLUGIN-65, NPE generating site -->
-    <dependency>
-      <groupId>org.apache.maven</groupId>
-      <artifactId>maven-plugin-tools-api</artifactId>
-      <version>2.1</version>
-    </dependency>
 
-    
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
       <version>3.8.1</version>
       <scope>test</scope>
     </dependency>
+    
 	<dependency>
       <groupId>org.apache.httpcomponents</groupId>
       <artifactId>httpclient</artifactId>
       <version>4.0.1</version>
     </dependency>
+    
+	<dependency>
+      <groupId>com.marklogic</groupId>
+      <artifactId>xcc</artifactId>
+      <version>4.1-4</version>
+    </dependency>    
+    
   </dependencies>
   <build>
 	<pluginManagement>

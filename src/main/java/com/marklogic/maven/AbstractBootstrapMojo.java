@@ -40,7 +40,6 @@ public abstract class AbstractBootstrapMojo extends AbstractMarkLogicMojo {
     
     protected abstract String getBootstrapExecuteQuery();
 	
-	@Override
 	public void execute() throws MojoExecutionException, MojoFailureException {
 		HttpResponse response = executeBootstrapQuery(getBootstrapExecuteQuery());
 	}

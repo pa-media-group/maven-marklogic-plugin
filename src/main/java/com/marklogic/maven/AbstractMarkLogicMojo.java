@@ -7,6 +7,10 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.maven.plugin.AbstractMojo;
 
+import com.marklogic.xcc.ContentSource;
+import com.marklogic.xcc.ContentSourceFactory;
+import com.marklogic.xcc.Session;
+
 /**
  * 
  */
@@ -40,7 +44,11 @@ public abstract class AbstractMarkLogicMojo extends AbstractMojo {
      */
     protected int xdbcPort = 8998;
     
-  
+    protected Session getXccSession() {
+    	ContentSource cs = ContentSourceFactory.newContentSource(hostName, xdbcPort, username, password);
+        Session session = cs.newSession();
+        return session;
+    }
     
 	protected HttpClient getHttpClient() {
 		DefaultHttpClient httpClient = new DefaultHttpClient();
