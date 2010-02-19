@@ -21,7 +21,13 @@ Example
 	    <groupId>com.marklogic.maven</groupId>
 	    <artifactId>maven-marklogic-plugin</artifactId>
 	    <version>1.0-SNAPSHOT</version>
-	  </plugin>
+	    <configuration>
+	      <bootstrapPort>8000</bootstrapPort>
+          <xdbcPort>8997</xdbcPort>
+          <xdbcName>8997-Installer</xdbcName>
+          <xdbcModuleRoot>C:/projects/my-project/src/main/xquery</xdbcModuleRoot>
+	    </configuration>
+	</plugin>
     </plugins>
   </build> 
 ...
@@ -29,6 +35,5 @@ Example
 +---
 
 
-  
-  
+
 

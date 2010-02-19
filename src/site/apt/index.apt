@@ -17,7 +17,7 @@ Maven MarkLogic Plugin
    * {{{./install-mojo.html}marklogic:install}} is used to install and configure the database(s), 
      application server(s), etc. in the specified configuration.
      
-   * {{{./uninstall-mojo.html}marklogic:install}} is used to remove all database(s), 
+   * {{{./uninstall-mojo.html}marklogic:uninstall}} is used to remove all database(s), 
      application server(s), etc. created by the <<<marklogic:install>>> goal.         
 
 * Usage
@@ -30,4 +30,6 @@ Maven MarkLogic Plugin
    The following examples show how to use the MarkLogic Plugin:
 
    * {{{examples/simple_configuration.html}Simple plugin configuration.}}
+   
+   * {{{examples/advanced_configuration.html}Advanced configuration.}}
 

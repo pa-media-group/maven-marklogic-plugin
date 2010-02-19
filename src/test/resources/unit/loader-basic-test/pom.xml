@@ -1,0 +1,25 @@
+<project>
+  <build>
+    <plugins>
+     	<plugin>
+		  <groupId>com.marklogic.maven</groupId>
+		  <artifactId>maven-marklogic-plugin</artifactId>
+		  <version>1.0-SNAPSHOT</version>
+		  <configuration>
+	        <xdbcPort>8997</xdbcPort>
+	        <xdbcName>8997-Installer</xdbcName>
+	        <xdbcModuleRoot>C:/projects/maven-marklogic-plugin/src/main/xquery</xdbcModuleRoot>
+	        <database>Documents</database>
+	        <resources>
+	          <resource>
+	            <directory>src/main/xquery</directory>
+	            <includes>
+	                <include>**/*.xqy</include>
+	            </includes>
+	          </resource>
+	        </resources>
+		  </configuration>
+		</plugin>
+    </plugins>
+  </build>
+</project>
