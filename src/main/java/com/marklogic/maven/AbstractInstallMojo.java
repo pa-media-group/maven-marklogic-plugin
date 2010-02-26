@@ -13,7 +13,7 @@ public abstract class AbstractInstallMojo extends AbstractMarkLogicMojo {
     	Session session = this.getXccSession();
 		Request request = session.newModuleInvoke("install/install.xqy");
 		request.setNewStringVariable("action", action);
-		request.setNewStringVariable("environ", "development");
+		request.setNewStringVariable("environ", environment);
 		request.setNewVariable("delete-data", ValueType.XS_BOOLEAN, false);
 		ResultSequence rs = session.submitRequest(request);
 		return rs;

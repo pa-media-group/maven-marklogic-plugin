@@ -50,7 +50,7 @@ public abstract class AbstractBootstrapMojo extends AbstractMarkLogicMojo {
 		qparams.add(new BasicNameValuePair("queryInput", getBootstrapExecuteQuery()));
 		URI uri = null;
 		try {
-			uri = URIUtils.createURI("http", this.hostName, bootstrapPort, "/use-cases/eval2.xqy", 
+			uri = URIUtils.createURI("http", this.host, bootstrapPort, "/use-cases/eval2.xqy", 
 			URLEncodedUtils.format(qparams, "UTF-8"), null);
 		} catch (URISyntaxException e1) {
 			throw new MojoExecutionException("Unvalid uri", e1);

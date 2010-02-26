@@ -17,7 +17,7 @@ import com.marklogic.xcc.exceptions.RequestException;
 public class UninstallMojo extends AbstractInstallMojo {
 
 	public void execute() throws MojoExecutionException, MojoFailureException {
-		getLog().info("install execute");
+		getLog().info("uninstall execute");
 		try {
 			ResultSequence rs = executeInstallAction("uninstall-all");
 			System.out.println(rs.asString());

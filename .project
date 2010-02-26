@@ -1,7 +1,9 @@
 <projectDescription>
   <name>maven-marklogic-plugin</name>
   <comment>The Compiler Plugin is used to compile the sources of your project.</comment>
-  <projects/>
+  <projects>
+    <project>recordloader</project>
+  </projects>
   <buildSpec>
     <buildCommand>
       <name>org.eclipse.jdt.core.javabuilder</name>

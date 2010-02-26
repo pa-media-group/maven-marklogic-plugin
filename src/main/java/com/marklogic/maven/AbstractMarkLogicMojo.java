@@ -19,9 +19,9 @@ public abstract class AbstractMarkLogicMojo extends AbstractMojo {
     /**
      * The host MarkLogic Server is running on.
      * 
-     * @parameter default-value="localhost" expression="${marklogic.hostName}"
+     * @parameter default-value="localhost" expression="${marklogic.host}"
      */
-    protected String hostName;
+    protected String host;
     
     /**
      * The host MarkLogic Server is running on.
@@ -44,10 +44,49 @@ public abstract class AbstractMarkLogicMojo extends AbstractMojo {
      */
     protected int xdbcPort = 8998;
     
+    /**
+     * The database to be used for XDBC connections
+     * 
+     * @parameter expression="${marklogic.xdbc.database}"
+     */
+    protected String database;    
+    
+    /**
+     * The environment name, which specifies with configuration profile
+     * is being applied.
+     * 
+     * @parameter default-value="development" expression="${marklogic.environment}"
+     */
+    protected String environment;
+    
     protected Session getXccSession() {
-    	ContentSource cs = ContentSourceFactory.newContentSource(hostName, xdbcPort, username, password);
+    	ContentSource cs = null;
+    	if (database == null) {
+    		cs = ContentSourceFactory.newContentSource(host, xdbcPort, username, password);
+    	} else {
+    		cs = ContentSourceFactory.newContentSource(host, xdbcPort, username, password, database);
+    	}
         Session session = cs.newSession();
         return session;
+    }
+    
+    protected String getXdbcConnectionString() {
+    	StringBuilder sb = new StringBuilder();
+    	sb.append("xcc://");
+    	if (username != null) {
+    		sb.append(username);
+    		sb.append(":");
+    		sb.append(password);
+    		sb.append("@");
+    	}
+    	sb.append(host);
+    	sb.append(":");
+    	sb.append(xdbcPort);
+    	if (database != null) {
+    		sb.append("/");
+    		sb.append(database);
+    	}
+    	return sb.toString();
     }
     
 	protected HttpClient getHttpClient() {
