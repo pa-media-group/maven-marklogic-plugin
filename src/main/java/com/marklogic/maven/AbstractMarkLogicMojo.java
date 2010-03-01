@@ -5,6 +5,7 @@ import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.HttpClient;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.params.CoreProtocolPNames;
 import org.apache.maven.plugin.AbstractMojo;
 
 import com.marklogic.xcc.ContentSource;
@@ -94,6 +95,8 @@ public abstract class AbstractMarkLogicMojo extends AbstractMojo {
 		httpClient.getCredentialsProvider().setCredentials(
                 AuthScope.ANY, 
                 new UsernamePasswordCredentials(username, password));
+		httpClient.getParams().setParameter(CoreProtocolPNames.HTTP_CONTENT_CHARSET, 
+	    "UTF-8");
 
         //httpClient.getHostConfiguration().setProxy("my.proxyhost.com", 80);
         //Credentials defaultcreds = new UsernamePasswordCredentials(username, password);

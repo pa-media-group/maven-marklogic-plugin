@@ -4,6 +4,7 @@ import java.util.Properties;
 
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
+import org.codehaus.plexus.util.StringUtils;
 
 import com.marklogic.ps.RecordLoader;
 import com.marklogic.recordloader.Configuration;
@@ -69,9 +70,12 @@ public class RecordLoaderMojo extends AbstractMarkLogicMojo {
     		p.put("INPUT_PATTERN", inputPattern);
     	}
     	if (inputStripPrefix != null) {
+    		// if we're on windows, we need to convert the \ in the path to /
+    		inputStripPrefix = StringUtils.replace(inputStripPrefix, '\\', '/');
     		p.put("INPUT_STRIP_PREFIX", inputStripPrefix);
     	}
-    	if (inputNormalizePaths) {
+    	
+    	if (inputNormalizePaths != null && inputNormalizePaths) {
     		p.put("INPUT_NORMALIZE_PATHS", "true");
     	}
     	if (documentFormat != null) {
