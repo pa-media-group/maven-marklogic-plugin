@@ -16,14 +16,11 @@ import com.marklogic.xcc.exceptions.RequestException;
  * @execute goal="bootstrap"
  */
 public class InstallMojo extends AbstractInstallMojo {
-	
-	// TODO should we just manually check if bootstrap is required and provide an error,
-	// rather than just executing bootstrap every time?
 
 	public void execute() throws MojoExecutionException, MojoFailureException {
 		getLog().info("install execute");
 		try {
-			ResultSequence rs = executeInstallAction("install-all");
+			ResultSequence rs = executeInstallAction("install-all", installModule);
 			System.out.println(rs.asString());
 		} catch (RequestException e) {
 			throw new MojoExecutionException("xcc request error", e);

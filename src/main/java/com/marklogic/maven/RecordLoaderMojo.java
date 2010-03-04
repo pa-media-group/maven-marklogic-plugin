@@ -92,10 +92,7 @@ public class RecordLoaderMojo extends AbstractMarkLogicMojo {
 			Configuration config = new Configuration();
 			Properties properties = getProperties();
 			config.load(properties);
-			config.configure();
 			RecordLoader rl = new RecordLoader(config);
-			// have to call initConfiguration() after constructor
-			rl.initConfiguration();
 			rl.run();
 			
 //		} catch (IOException e) {

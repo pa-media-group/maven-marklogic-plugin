@@ -19,7 +19,7 @@ public class UninstallMojo extends AbstractInstallMojo {
 	public void execute() throws MojoExecutionException, MojoFailureException {
 		getLog().info("uninstall execute");
 		try {
-			ResultSequence rs = executeInstallAction("uninstall-all");
+			ResultSequence rs = executeInstallAction("uninstall-all", installModule);
 			System.out.println(rs.asString());
 		} catch (RequestException e) {
 			throw new MojoExecutionException("xcc request error", e);
