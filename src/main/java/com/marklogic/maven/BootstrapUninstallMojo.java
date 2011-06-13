@@ -26,18 +26,18 @@ public class BootstrapUninstallMojo extends AbstractBootstrapMojo {
 
     sb.append(XQUERY_PROLOG);
     sb.append(ML_ADMIN_MODULE_IMPORT);
-    sb.append("try { admin:save-configuration(                                         \n");
-    sb.append("        admin:database-delete( admin:get-configuration()                \n");
-    sb.append("                             , xdmp:database('InstallModules') )        \n");
-    sb.append("      ) } catch ($e) { () }                                             \n");
+    sb.append("try { admin:save-configuration(                                               \n");
+    sb.append("        admin:database-delete( admin:get-configuration()                      \n");
+    sb.append("                             , xdmp:database('" + xdbcModulesDatabase + "') ) \n");
+    sb.append("      ) } catch ($e) { () }                                                   \n");
     sb.append(";\n");
     
     sb.append(XQUERY_PROLOG);
     sb.append(ML_ADMIN_MODULE_IMPORT);
-    sb.append("try { admin:save-configuration(                                         \n");
-    sb.append("        admin:forest-delete( admin:get-configuration()                  \n");
-    sb.append("                           , xdmp:forest('InstallModules'), fn:true() ) \n");
-    sb.append("      ) } catch ($e) { () }                                             \n");
+    sb.append("try { admin:save-configuration(                                                      \n");
+    sb.append("        admin:forest-delete( admin:get-configuration()                               \n");
+    sb.append("                           , xdmp:forest('" + xdbcModulesDatabase + "'), fn:true() ) \n");
+    sb.append("      ) } catch ($e) { () }                                                          \n");
     sb.append(";\n");
 
 		sb.append("'Bootstrap Uninstall - OK'");

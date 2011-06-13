@@ -41,7 +41,14 @@ public abstract class AbstractBootstrapMojo extends AbstractMarkLogicMojo {
      * @parameter default-value="/" expression="${marklogic.xdbc.module-root}"
      */    
     protected String xdbcModuleRoot = "/";
-    
+
+    /**
+     * The modules database used to bootstrap MarkLogic Server.
+     *
+     * @parameter default-value="InstallModules" expression="${marklogic.xdbc.modules-db}"
+     */
+    protected String xdbcModulesDatabase;
+
     protected abstract String getBootstrapExecuteQuery();
 	
 	public void execute() throws MojoExecutionException, MojoFailureException {
@@ -71,6 +78,7 @@ public abstract class AbstractBootstrapMojo extends AbstractMarkLogicMojo {
 		if (response.getStatusLine().getStatusCode() != 200) {
 			throw new MojoExecutionException("Post response failed: " + response.getStatusLine());
     	}
+        
 		return response;
 	}
 
