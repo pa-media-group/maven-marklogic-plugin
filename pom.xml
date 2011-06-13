@@ -3,7 +3,7 @@
   
   <groupId>com.marklogic.maven</groupId>
   <artifactId>maven-marklogic-plugin</artifactId>
-  <version>0.1</version>
+  <version>0.2-SNAPSHOT</version>
   <packaging>maven-plugin</packaging>
   
   <name>Maven MarkLogic Plugin</name>
@@ -54,6 +54,11 @@
 	    <name>helmstetter.com maven repository</name>
 	    <url>http://www.helmstetter.com/maven</url>
   	</repository>
+  	<repository>
+  	  <id>marklogic-maven</id>
+  	  <name>developer.marklogic.com maven repository</name>
+  	  <url>http://developer.marklogic.com/maven2/</url>
+	  </repository>
   </repositories>
   
   <properties>
@@ -99,13 +104,13 @@
     
 	<dependency>
       <groupId>com.marklogic</groupId>
-      <artifactId>xcc</artifactId>
-      <version>4.1-4</version>
+      <artifactId>marklogic-xcc</artifactId>
+      <version>4.1.4</version>
     </dependency>
     <dependency>
       <groupId>com.marklogic.ps</groupId>
 	  <artifactId>recordloader</artifactId>
-	  <version>2010-03-01.1</version>
+	  <version>1.1-SNAPSHOT</version>
 	</dependency>        
     
   </dependencies>
