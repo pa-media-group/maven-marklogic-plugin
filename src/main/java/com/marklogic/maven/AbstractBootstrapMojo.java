@@ -17,6 +17,8 @@ import org.apache.maven.plugin.MojoFailureException;
 
 public abstract class AbstractBootstrapMojo extends AbstractMarkLogicMojo {
 	
+	  protected static final String XQUERY_PROLOG = "xquery version '1.0-ml';\n";
+  
     /**
      * The port used to bootstrap MarkLogic Server.
      * 

@@ -13,14 +13,37 @@ import org.apache.maven.plugin.MojoFailureException;
 public class BootstrapUninstallMojo extends AbstractBootstrapMojo {	
 
 	protected String getBootstrapExecuteQuery() {
-		return 	"xquery version '1.0-ml';"
-		+"\n	import module namespace admin = 'http://marklogic.com/xdmp/admin' at '/MarkLogic/admin.xqy';"
-		+"\n	let $config := admin:get-configuration()"
-		//+"\n	let $config := try{admin:appserver-delete($config, xdmp:server('"+httpName+"'))}catch($e){$config}"
-		+"\n	let $config := try{admin:appserver-delete($config, xdmp:server('"+xdbcName+"'))}catch($e){$config}"
-		+"\n	let $config := admin:save-configuration($config)"
-		+"\n	return	'Bootstrap Uninstall - OK'"
-		;
+	  StringBuilder sb = new StringBuilder();
+    
+    sb.append(XQUERY_PROLOG);
+    sb.append("import module namespace admin = 'http://marklogic.com/xdmp/admin' at '/MarkLogic/admin.xqy';     \n");
+    sb.append("try { admin:save-configuration(                                                                  \n");
+    sb.append("        admin:appserver-delete( admin:get-configuration()                                        \n");
+    sb.append("                              , xdmp:server('" + xdbcName + "') )                                \n");
+    sb.append("      ) } catch ($e) { () }                                                                      \n");
+    sb.append(";\n");
+
+    sb.append(XQUERY_PROLOG);
+    sb.append("import module namespace admin = 'http://marklogic.com/xdmp/admin' at '/MarkLogic/admin.xqy';     \n");
+    sb.append("try { admin:save-configuration(                                                                  \n");
+    sb.append("        admin:database-delete( admin:get-configuration()                                         \n");
+    sb.append("                             , xdmp:database('InstallModules') )                                 \n");
+    sb.append("      ) } catch ($e) { () }                                                                      \n");
+    sb.append(";\n");
+    
+    sb.append(XQUERY_PROLOG);
+    sb.append("import module namespace admin = 'http://marklogic.com/xdmp/admin' at '/MarkLogic/admin.xqy';     \n");
+    sb.append("try { admin:save-configuration(                                                                  \n");
+    sb.append("        admin:forest-delete( admin:get-configuration()                                           \n");
+    sb.append("                           , xdmp:forest('InstallModules'), fn:true() )                          \n");
+    sb.append("      ) } catch ($e) { () }                                                                      \n");
+    sb.append(";\n");
+
+		sb.append("'Bootstrap Uninstall - OK'");
+	  
+	  getLog().debug(sb.toString());
+	  
+	  return sb.toString();
 	}
 	
 	public void execute() throws MojoExecutionException, MojoFailureException {
