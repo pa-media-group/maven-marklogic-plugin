@@ -1,21 +1,10 @@
 package com.marklogic.maven;
 
-import com.marklogic.xcc.*;
-import com.marklogic.xcc.exceptions.XccConfigException;
-import com.sun.xml.internal.messaging.saaj.packaging.mime.util.LineInputStream;
+import com.marklogic.xcc.Content;
+import com.marklogic.xcc.ContentFactory;
+import com.marklogic.xcc.Session;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
-
-import javax.xml.transform.dom.DOMResult;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.net.URLStreamHandler;
-import java.util.ArrayList;
-import java.util.Enumeration;
 
 
 /**

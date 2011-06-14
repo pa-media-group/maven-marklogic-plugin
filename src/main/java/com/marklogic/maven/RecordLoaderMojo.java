@@ -1,13 +1,12 @@
 package com.marklogic.maven;
 
-import java.util.Properties;
-
+import com.marklogic.ps.RecordLoader;
+import com.marklogic.recordloader.Configuration;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.codehaus.plexus.util.StringUtils;
 
-import com.marklogic.ps.RecordLoader;
-import com.marklogic.recordloader.Configuration;
+import java.util.Properties;
 
 /**
  * Load data into a MarkLogic database.
