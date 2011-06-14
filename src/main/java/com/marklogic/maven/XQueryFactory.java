@@ -1,9 +1,5 @@
 package com.marklogic.maven;
 
-import com.sun.org.apache.xpath.internal.operations.Variable;
-
-import java.beans.XMLDecoder;
-
 /**
  * Created by IntelliJ IDEA.
  * User: bobb

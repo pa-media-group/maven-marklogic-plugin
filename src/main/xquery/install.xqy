@@ -1,7 +1,8 @@
 xquery version "1.0-ml";
 (: Copyright 2009, Mark Logic Corporation. All Rights Reserved. :)
 
-import module namespace inst-conf = "http://www.marklogic.com/ps/install/config.xqy" at "config.xqy";
+declare namespace inst-conf = "http://www.marklogic.com/ps/install/config.xqy";
+
 import module namespace inst-db = "http://www.marklogic.com/ps/lib/lib-database.xqy" at "/lib/lib-database.xqy";
 import module namespace inst-app = 'http://www.marklogic.com/ps/lib/lib-app-server.xqy' at "/lib/lib-app-server.xqy";
 import module namespace inst-idx = 'http://www.marklogic.com/ps/lib/lib-index.xqy' at "/lib/lib-index.xqy";
@@ -12,8 +13,10 @@ import module namespace admin = "http://marklogic.com/xdmp/admin" at "/MarkLogic
 declare variable $action as xs:string external;
 declare variable $environ as xs:string external;
 declare variable $delete-data as xs:boolean external;
+declare variable $configuration-string as xs:string external;
+declare variable $CONFIGURATION as node() := xdmp:unquote($configuration-string);
 
-let $install-config := $inst-conf:DEFAULT-INSTALL-CONFIG//inst-conf:development
+let $install-config := $CONFIGURATION//inst-conf:install/*[fn:node-name(.) = xs:QName(fn:concat('inst-conf:', $environ))]
 
 let $LOG := xdmp:log($install-config)
 

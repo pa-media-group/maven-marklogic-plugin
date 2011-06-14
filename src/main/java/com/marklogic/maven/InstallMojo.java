@@ -25,5 +25,5 @@ public class InstallMojo extends AbstractInstallMojo {
 			throw new MojoExecutionException("xcc request error", e);
 		}
 	}
-	
+
 }

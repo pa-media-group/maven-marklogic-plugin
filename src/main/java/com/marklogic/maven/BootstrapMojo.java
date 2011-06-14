@@ -61,7 +61,7 @@ public class BootstrapMojo extends AbstractBootstrapMojo {
         xquery.append(XQUERY_PROLOG);
         xquery.append(ML_ADMIN_MODULE_IMPORT);
         xquery.append(XQueryFactory.getAdminConfiguration());
-        xquery.append(XQueryFactory.createWebDavServer(xdbcName + "-WebDAV", xdbcModuleRoot, xdbcPort, xdbcModulesDatabase));
+        xquery.append(XQueryFactory.createWebDavServer(xdbcName + "-WebDAV", xdbcModuleRoot, xdbcPort + 1, xdbcModulesDatabase));
         xquery.append(XQueryFactory.saveAdminConfiguration());
         return XQueryFactory.eval(xquery.toString());
 
@@ -75,7 +75,7 @@ public class BootstrapMojo extends AbstractBootstrapMojo {
         xquery.append(ML_ADMIN_MODULE_IMPORT);
         xquery.append(XQueryFactory.getAdminConfiguration());
         xquery.append(XQueryFactory.createXDBCServer(xdbcName, xdbcModuleRoot, xdbcPort, xdbcModulesDatabase, "Security"));
-        xquery.append(XQueryFactory.saveAdminConfiguration(false));
+        xquery.append(XQueryFactory.saveAdminConfiguration());
 
         return XQueryFactory.eval(xquery.toString());
     }
