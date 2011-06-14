@@ -16,57 +16,87 @@ import org.apache.maven.plugin.MojoFailureException;
  * @goal bootstrap
  * 
  */
-public class BootstrapMojo extends AbstractBootstrapMojo {	
-   
-	protected String getBootstrapExecuteQuery() {
-	  StringBuilder sb = new StringBuilder();
-	  
-	  // TODO: Handle errors caused by database or forest already existing
-    sb.append(XQUERY_PROLOG);
-    sb.append(ML_ADMIN_MODULE_IMPORT);
-    sb.append("let $config := admin:database-create( admin:get-configuration()                 \n");
-    sb.append("                                    , '" + xdbcModulesDatabase + "'             \n");
-    sb.append("                                    , xdmp:database('Security')                 \n");
-    sb.append("                                    , xdmp:database('Schemas') )                \n");
-    sb.append("return admin:save-configuration($config)                                        \n");
-    sb.append(";\n");
-    
-    sb.append(XQUERY_PROLOG);
-    sb.append(ML_ADMIN_MODULE_IMPORT);
-    sb.append("let $config := admin:forest-create( admin:get-configuration()                   \n");
-    sb.append("                                  , '" + xdbcModulesDatabase + "'               \n");
-    sb.append("                                  , xdmp:host(), () )                           \n");
-    sb.append("return admin:save-configuration($config)                                        \n");
-    sb.append(";\n");
-    
-    sb.append(XQUERY_PROLOG);
-    sb.append(ML_ADMIN_MODULE_IMPORT);
-    sb.append("let $config := admin:database-attach-forest( admin:get-configuration()                     \n");
-    sb.append("                                           , xdmp:database('" + xdbcModulesDatabase + "')  \n");
-    sb.append("                                           , xdmp:forest('" + xdbcModulesDatabase + "') )  \n");
-    sb.append("return admin:save-configuration($config)                                                   \n");
-    sb.append(";\n");    
+public class BootstrapMojo extends AbstractBootstrapMojo {
 
-    // TODO: Handle database existence error
-		sb.append(XQUERY_PROLOG);
-    sb.append(ML_ADMIN_MODULE_IMPORT);
-		sb.append("let $config := admin:get-configuration()                                              \n");
-		sb.append("let $database := xdmp:database('Security')                                            \n");
-		sb.append("let $config := admin:xdbc-server-create( $config                                      \n");
-		sb.append("                                       , admin:group-get-id($config, 'Default')       \n");
-		sb.append("                                       , '" + xdbcName + "'                           \n");
-		sb.append("                                       , '" + xdbcModuleRoot + "'                     \n");
-		sb.append("                                       ,  " + xdbcPort + "                            \n");
-		sb.append("                                       , xdmp:database('" + xdbcModulesDatabase + "') \n");
-		sb.append("                                       , $database )                                  \n");
-		sb.append("let $config := admin:save-configuration($config)                                      \n");
-		sb.append("return	'Bootstrap Install - OK'                                                       ");
-		
-		/* Log xquery invocation */
-		getLog().debug(sb.toString());
-		
-		return sb.toString();
-	}
+    private String createDatabase() {
+        StringBuilder xquery = new StringBuilder();
+
+        // TODO: Handle errors caused by database or forest already existing
+        xquery.append(XQUERY_PROLOG);
+        xquery.append(ML_ADMIN_MODULE_IMPORT);
+        xquery.append(XQueryFactory.getAdminConfiguration());
+        xquery.append(XQueryFactory.createDatabase(xdbcModulesDatabase));
+        xquery.append(XQueryFactory.saveAdminConfiguration());
+
+        return XQueryFactory.eval(xquery.toString());
+    }
+
+    private String createForest() {
+        StringBuilder xquery = new StringBuilder();
+
+        xquery.append(XQUERY_PROLOG);
+        xquery.append(ML_ADMIN_MODULE_IMPORT);
+        xquery.append(XQueryFactory.getAdminConfiguration());
+        xquery.append(XQueryFactory.createForest(xdbcModulesDatabase));
+        xquery.append(XQueryFactory.saveAdminConfiguration());
+
+        return XQueryFactory.eval(xquery.toString());
+    }
+
+    private String attachForestToDatabase() {
+        StringBuilder xquery = new StringBuilder();
+
+        xquery.append(XQUERY_PROLOG);
+        xquery.append(ML_ADMIN_MODULE_IMPORT);
+        xquery.append(XQueryFactory.getAdminConfiguration());
+        xquery.append(XQueryFactory.attachForest(xdbcModulesDatabase, xdbcModulesDatabase));
+        xquery.append(XQueryFactory.saveAdminConfiguration());
+
+        return XQueryFactory.eval(xquery.toString());
+    }
+
+    private String createWebDAVServer() {
+        StringBuilder xquery = new StringBuilder();
+
+        xquery.append(XQUERY_PROLOG);
+        xquery.append(ML_ADMIN_MODULE_IMPORT);
+        xquery.append(XQueryFactory.getAdminConfiguration());
+        xquery.append(XQueryFactory.createWebDavServer(xdbcName + "-WebDAV", xdbcModuleRoot, xdbcPort, xdbcModulesDatabase));
+        xquery.append(XQueryFactory.saveAdminConfiguration());
+        return XQueryFactory.eval(xquery.toString());
+
+    }
+
+    private String createXDBCServer() {
+        StringBuilder xquery = new StringBuilder();
+
+        // TODO: Handle database existence error
+        xquery.append(XQUERY_PROLOG);
+        xquery.append(ML_ADMIN_MODULE_IMPORT);
+        xquery.append(XQueryFactory.getAdminConfiguration());
+        xquery.append(XQueryFactory.createXDBCServer(xdbcName, xdbcModuleRoot, xdbcPort, xdbcModulesDatabase, "Security"));
+        xquery.append(XQueryFactory.saveAdminConfiguration(false));
+
+        return XQueryFactory.eval(xquery.toString());
+    }
+
+    protected String getBootstrapExecuteQuery() {
+        StringBuilder sb = new StringBuilder();
+
+        sb.append(XQUERY_PROLOG);
+        sb.append(createDatabase());
+        sb.append(createForest());
+        sb.append(attachForestToDatabase());
+        sb.append(createWebDAVServer());
+        sb.append(createXDBCServer());
+
+        sb.append("return 'Bootstrap Install - OK'");
+
+        /* Log xquery invocation */
+        getLog().debug(sb.toString());
+
+        return sb.toString();
+    }
 
 	public void execute() throws MojoExecutionException, MojoFailureException {
 		getLog().info("bootstrap execute");
@@ -76,24 +106,25 @@ public class BootstrapMojo extends AbstractBootstrapMojo {
 
         Session session = getXccSession();
 
-        String[] paths = { "install/install.xqy"
-                         , "lib/lib-app-server.xqy"
-                         , "lib/lib-cpf.xqy"
-                         , "lib/lib-database-add.xqy"
-                         , "lib/lib-database-set.xqy"
-                         , "lib/lib-database.xqy"
-                         , "lib/lib-field.xqy"
-                         , "lib/lib-index.xqy"
-                         , "lib/lib-install.xqy"
-                         , "lib/lib-load.xqy" };
+        String[] paths = { "/install.xqy"
+                         , "/lib/lib-app-server.xqy"
+                         , "/lib/lib-cpf.xqy"
+                         , "/lib/lib-database-add.xqy"
+                         , "/lib/lib-database-set.xqy"
+                         , "/lib/lib-database.xqy"
+                         , "/lib/lib-field.xqy"
+                         , "/lib/lib-index.xqy"
+                         , "/lib/lib-install.xqy"
+                         , "/lib/lib-load.xqy" };
+
         ClassLoader loader =  Thread.currentThread().getContextClassLoader();
         for (String path : paths) {
                 getLog().info("Uploading " + path);
             try {
-                Content cs = ContentFactory.newContent(path, loader.getResource("xquery/" + path), null);
+                Content cs = ContentFactory.newContent(path, loader.getResource("xquery" + path), null);
                 session.insertContent(cs);
             } catch (Exception e) {
-                getLog().error("Failed to insert required library.", e);
+                getLog().error("Failed to insert required library.");
             }
             session.commit();
         }

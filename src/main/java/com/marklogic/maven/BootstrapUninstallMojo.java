@@ -15,7 +15,15 @@ public class BootstrapUninstallMojo extends AbstractBootstrapMojo {
 
 	protected String getBootstrapExecuteQuery() {
 	  StringBuilder sb = new StringBuilder();
-    
+
+    sb.append(XQUERY_PROLOG);
+    sb.append(ML_ADMIN_MODULE_IMPORT);
+    sb.append("try { admin:save-configuration(                                         \n");
+    sb.append("        admin:appserver-delete( admin:get-configuration()               \n");
+    sb.append("                              , xdmp:server('" + xdbcName + "-WebDAV') )\n");
+    sb.append("      ) } catch ($e) { () }                                             \n");
+    sb.append(";\n");
+
     sb.append(XQUERY_PROLOG);
     sb.append(ML_ADMIN_MODULE_IMPORT);
     sb.append("try { admin:save-configuration(                                         \n");

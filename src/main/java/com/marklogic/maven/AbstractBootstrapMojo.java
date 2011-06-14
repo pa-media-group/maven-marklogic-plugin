@@ -16,8 +16,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public abstract class AbstractBootstrapMojo extends AbstractMarkLogicMojo {
-	
-	  protected static final String XQUERY_PROLOG = "xquery version '1.0-ml';\n";
+
+    protected static final String XQUERY_PROLOG = "xquery version '1.0-ml';\n";
   
     protected static final String ML_ADMIN_MODULE_IMPORT = "import module namespace admin = 'http://marklogic.com/xdmp/admin' at '/MarkLogic/admin.xqy';\n";
     
