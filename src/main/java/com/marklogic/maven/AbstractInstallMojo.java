@@ -3,18 +3,13 @@ package com.marklogic.maven;
 import com.marklogic.xcc.Request;
 import com.marklogic.xcc.ResultSequence;
 import com.marklogic.xcc.Session;
-import com.marklogic.xcc.ValueFactory;
 import com.marklogic.xcc.exceptions.RequestException;
 import com.marklogic.xcc.types.ValueType;
-import com.marklogic.xcc.types.XdmNode;
-import org.w3c.dom.Document;
-import org.xml.sax.SAXException;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.soap.Node;
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 
 
 public abstract class AbstractInstallMojo extends AbstractMarkLogicMojo {

@@ -19,77 +19,67 @@ import org.apache.maven.plugin.MojoFailureException;
 public class BootstrapMojo extends AbstractBootstrapMojo {
 
     private String createDatabase() {
-        StringBuilder xquery = new StringBuilder();
-
-        // TODO: Handle errors caused by database or forest already existing
-        xquery.append(XQUERY_PROLOG);
-        xquery.append(ML_ADMIN_MODULE_IMPORT);
-        xquery.append(XQueryFactory.getAdminConfiguration());
-        xquery.append(XQueryFactory.createDatabase(xdbcModulesDatabase));
-        xquery.append(XQueryFactory.saveAdminConfiguration());
-
-        return XQueryFactory.eval(xquery.toString());
+        XQueryDocumentBuilder xq = new XQueryDocumentBuilder();
+        xq.append(XQueryModuleAdmin.importModule());
+        String config = xq.variable("config");
+        xq.assign(config, XQueryModuleAdmin.getConfiguration());
+        xq.assign(config, XQueryModuleAdmin.databaseCreate(config, xdbcModulesDatabase));
+        xq.doReturn(XQueryModuleAdmin.saveConfiguration(config));
+        return XQueryModuleXDMP.eval(xq.toString());
     }
 
     private String createForest() {
-        StringBuilder xquery = new StringBuilder();
-
-        xquery.append(XQUERY_PROLOG);
-        xquery.append(ML_ADMIN_MODULE_IMPORT);
-        xquery.append(XQueryFactory.getAdminConfiguration());
-        xquery.append(XQueryFactory.createForest(xdbcModulesDatabase));
-        xquery.append(XQueryFactory.saveAdminConfiguration());
-
-        return XQueryFactory.eval(xquery.toString());
+        XQueryDocumentBuilder xq = new XQueryDocumentBuilder();
+        xq.append(XQueryModuleAdmin.importModule());
+        String config = xq.variable("config");
+        xq.assign(config, XQueryModuleAdmin.getConfiguration());
+        xq.assign(config, XQueryModuleAdmin.forestCreate(config, xdbcModulesDatabase));
+        xq.doReturn(XQueryModuleAdmin.saveConfiguration(config));
+        return XQueryModuleXDMP.eval(xq.toString());
     }
 
     private String attachForestToDatabase() {
-        StringBuilder xquery = new StringBuilder();
-
-        xquery.append(XQUERY_PROLOG);
-        xquery.append(ML_ADMIN_MODULE_IMPORT);
-        xquery.append(XQueryFactory.getAdminConfiguration());
-        xquery.append(XQueryFactory.attachForest(xdbcModulesDatabase, xdbcModulesDatabase));
-        xquery.append(XQueryFactory.saveAdminConfiguration());
-
-        return XQueryFactory.eval(xquery.toString());
+        XQueryDocumentBuilder xq = new XQueryDocumentBuilder();
+        xq.append(XQueryModuleAdmin.importModule());
+        String config = xq.variable("config");
+        xq.assign(config, XQueryModuleAdmin.getConfiguration());
+        xq.assign(config, XQueryModuleAdmin.attachForest(config, XQueryModuleXDMP.database(xdbcModulesDatabase),
+                XQueryModuleXDMP.forest(xdbcModulesDatabase)));
+        xq.doReturn(XQueryModuleAdmin.saveConfiguration(config));
+        return XQueryModuleXDMP.eval(xq.toString());
     }
 
     private String createWebDAVServer() {
-        StringBuilder xquery = new StringBuilder();
-
-        xquery.append(XQUERY_PROLOG);
-        xquery.append(ML_ADMIN_MODULE_IMPORT);
-        xquery.append(XQueryFactory.getAdminConfiguration());
-        xquery.append(XQueryFactory.createWebDavServer(xdbcName + "-WebDAV", xdbcModuleRoot, xdbcPort + 1, xdbcModulesDatabase));
-        xquery.append(XQueryFactory.saveAdminConfiguration());
-        return XQueryFactory.eval(xquery.toString());
-
+        XQueryDocumentBuilder xq = new XQueryDocumentBuilder();
+        xq.append(XQueryModuleAdmin.importModule());
+        String config = xq.variable("config");
+        xq.assign(config, XQueryModuleAdmin.getConfiguration());
+        xq.assign(config, XQueryModuleAdmin.webdavServerCreate(config, xdbcName + "-WebDAV", xdbcModuleRoot,
+                xdbcPort + 1, XQueryModuleXDMP.database(xdbcModulesDatabase)));
+        xq.doReturn(XQueryModuleAdmin.saveConfiguration(config));
+        return XQueryModuleXDMP.eval(xq.toString());
     }
 
     private String createXDBCServer() {
-        StringBuilder xquery = new StringBuilder();
-
-        // TODO: Handle database existence error
-        xquery.append(XQUERY_PROLOG);
-        xquery.append(ML_ADMIN_MODULE_IMPORT);
-        xquery.append(XQueryFactory.getAdminConfiguration());
-        xquery.append(XQueryFactory.createXDBCServer(xdbcName, xdbcModuleRoot, xdbcPort, xdbcModulesDatabase, "Security"));
-        xquery.append(XQueryFactory.saveAdminConfiguration());
-
-        return XQueryFactory.eval(xquery.toString());
+        XQueryDocumentBuilder xq = new XQueryDocumentBuilder();
+        xq.append(XQueryModuleAdmin.importModule());
+        String config = xq.variable("config");
+        xq.assign(config, XQueryModuleAdmin.getConfiguration());
+        xq.assign(config, XQueryModuleAdmin.xdbcServerCreate(config, xdbcName, xdbcModuleRoot, xdbcPort,
+                XQueryModuleXDMP.database(xdbcModulesDatabase), XQueryModuleXDMP.database("Security")));
+        xq.doReturn(XQueryModuleAdmin.saveConfiguration(config));
+        return XQueryModuleXDMP.eval(xq.toString());
     }
 
     protected String getBootstrapExecuteQuery() {
-        StringBuilder sb = new StringBuilder();
+        XQueryDocumentBuilder sb = new XQueryDocumentBuilder();
 
-        sb.append(XQUERY_PROLOG);
-        sb.append(createDatabase());
-        sb.append(createForest());
-        sb.append(attachForestToDatabase());
-        sb.append(createXDBCServer());
+        sb.assign("_", createDatabase());
+        sb.assign("_", createForest());
+        sb.assign("_", attachForestToDatabase());
+        sb.assign("_", createXDBCServer());
 
-        sb.append("return 'Bootstrap Install - OK'");
+        sb.doReturn(XQueryModule.quote("Bootstrap Install - OK"));
 
         /* Log xquery invocation */
         getLog().debug(sb.toString());
