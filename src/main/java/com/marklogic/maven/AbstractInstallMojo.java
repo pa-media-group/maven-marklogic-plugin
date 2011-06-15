@@ -32,7 +32,7 @@ public abstract class AbstractInstallMojo extends AbstractMarkLogicMojo {
     /**
      * The path to the file controlling installation.
      *
-     * @parameter default-value="${basedir}/src/main/marklogic/configuration.xml"
+     * @parameter default-value="${basedir}/src/main/marklogic/configuration.xml" expression="${marklogic.install.configuration}
      * @required
      */
     protected File installConfigurationFile;
