@@ -58,6 +58,13 @@ public abstract class AbstractMarkLogicMojo extends AbstractMojo {
      * @parameter default-value="development" expression="${marklogic.environment}"
      */
     protected String environment;
+
+    /**
+     * The modules database used to bootstrap MarkLogic Server.
+     *
+     * @parameter default-value="InstallModules" expression="${marklogic.xdbc.modules-db}"
+     */
+    protected String xdbcModulesDatabase;
     
     protected Session getXccSession() {
     	return getXccSession(database);

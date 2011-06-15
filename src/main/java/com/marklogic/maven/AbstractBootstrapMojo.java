@@ -42,13 +42,6 @@ public abstract class AbstractBootstrapMojo extends AbstractMarkLogicMojo {
      */    
     protected String xdbcModuleRoot = "/";
 
-    /**
-     * The modules database used to bootstrap MarkLogic Server.
-     *
-     * @parameter default-value="InstallModules" expression="${marklogic.xdbc.modules-db}"
-     */
-    protected String xdbcModulesDatabase;
-
     protected abstract String getBootstrapExecuteQuery();
 	
 	public void execute() throws MojoExecutionException, MojoFailureException {

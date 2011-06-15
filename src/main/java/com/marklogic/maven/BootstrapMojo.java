@@ -76,6 +76,7 @@ public class BootstrapMojo extends AbstractBootstrapMojo {
         sb.assign("_", createDatabase());
         sb.assign("_", createForest());
         sb.assign("_", attachForestToDatabase());
+        sb.assign("_", createWebDAVServer());
         sb.assign("_", createXDBCServer());
 
         sb.doReturn(XQueryModule.quote("Bootstrap Install - OK"));

@@ -15,6 +15,8 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.Iterator;
+import java.util.List;
 
 
 public abstract class AbstractInstallMojo extends AbstractMarkLogicMojo {
@@ -41,6 +43,11 @@ public abstract class AbstractInstallMojo extends AbstractMarkLogicMojo {
      * @required
      */
     protected File installConfigurationFile;
+
+    /**
+     * @parameter
+     */
+    protected MLInstallEnvironment[] environments;
 
     protected ResultSequence executeInstallAction(String action, String module) throws RequestException {
     	Session session = this.getXccSession();
@@ -70,8 +77,12 @@ public abstract class AbstractInstallMojo extends AbstractMarkLogicMojo {
     }
 
     private String getInstallConfiguration() throws IOException {
-        StringBuffer buffer = new StringBuffer((int)installConfigurationFile.length());
-        BufferedReader reader = new BufferedReader(new FileReader(installConfigurationFile));
+        return getFileAsString(installConfigurationFile);
+    }
+
+    protected String getFileAsString(final File file) throws IOException {
+        StringBuffer buffer = new StringBuffer((int)file.length());
+        BufferedReader reader = new BufferedReader(new FileReader(file));
         char[] buf = new char[1024];
         int numRead = 0;
         while((numRead = reader.read(buf))!= -1) {
@@ -80,4 +91,21 @@ public abstract class AbstractInstallMojo extends AbstractMarkLogicMojo {
         reader.close();
         return buffer.toString();
     }
+
+    /**
+     * @param list
+     * @return
+     */
+    protected String getCommaSeparatedList(List list) {
+        StringBuffer buffer = new StringBuffer();
+        for (Iterator iterator = list.iterator(); iterator.hasNext();) {
+            Object element = iterator.next();
+            buffer.append(element.toString());
+            if (iterator.hasNext()) {
+                buffer.append(",");
+            }
+        }
+        return buffer.toString();
+    }
+
 }

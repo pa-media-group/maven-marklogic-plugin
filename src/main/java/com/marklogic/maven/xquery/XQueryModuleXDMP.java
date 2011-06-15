@@ -7,6 +7,10 @@ public class XQueryModuleXDMP extends XQueryModule {
         return invokeFunction(XDMP_MODULE_PREFIX, "database", quote(name));
     }
 
+    public static String directoryDelete(final String path) {
+        return invokeFunction(XDMP_MODULE_PREFIX, "directory-delete", quote(path));
+    }
+
     public static String eval(final String xquery) {
         return eval(xquery, "()", "<options xmlns='xdmp:eval'><isolation>different-transaction</isolation></options>");
     }
