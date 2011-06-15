@@ -1,4 +1,4 @@
-package com.marklogic.maven;
+package com.marklogic.maven.xquery;
 
 public class XQueryModule {
     public static String invokeFunction(final String functionPrefix, final String functionName, String... args) {

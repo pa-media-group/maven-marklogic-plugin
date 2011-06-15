@@ -1,5 +1,9 @@
 package com.marklogic.maven;
 
+import com.marklogic.maven.xquery.XQueryDocumentBuilder;
+import com.marklogic.maven.xquery.XQueryModule;
+import com.marklogic.maven.xquery.XQueryModuleAdmin;
+import com.marklogic.maven.xquery.XQueryModuleXDMP;
 import com.marklogic.xcc.Content;
 import com.marklogic.xcc.ContentFactory;
 import com.marklogic.xcc.Session;
