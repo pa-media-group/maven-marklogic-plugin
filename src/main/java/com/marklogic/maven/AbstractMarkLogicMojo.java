@@ -60,6 +60,10 @@ public abstract class AbstractMarkLogicMojo extends AbstractMojo {
     protected String environment;
     
     protected Session getXccSession() {
+    	return getXccSession(database);
+    }
+
+    protected Session getXccSession(final String database) {
     	ContentSource cs = null;
     	if (database == null) {
     		cs = ContentSourceFactory.newContentSource(host, xdbcPort, username, password);
@@ -69,7 +73,7 @@ public abstract class AbstractMarkLogicMojo extends AbstractMojo {
         Session session = cs.newSession();
         return session;
     }
-    
+
     protected String getXdbcConnectionString() {
     	StringBuilder sb = new StringBuilder();
     	sb.append("xcc://");
