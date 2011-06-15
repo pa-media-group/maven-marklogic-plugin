@@ -22,9 +22,10 @@ public class XQueryDocumentBuilder {
         return this;
     }
 
-    public XQueryDocumentBuilder assign(final String variableName, final String value) {
-        sb.append("let ").append(variable(variableName)).append(" := ").append(value);
-        return this.newline();
+    public String assign(final String variableName, final String value) {
+        String v = variable(variableName);
+        sb.append("let ").append(v).append(" := ").append(value).append("\n");
+        return v;
     }
 
     public XQueryDocumentBuilder newline() {

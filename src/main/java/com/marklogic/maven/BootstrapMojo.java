@@ -21,8 +21,7 @@ public class BootstrapMojo extends AbstractBootstrapMojo {
     private String createDatabase() {
         XQueryDocumentBuilder xq = new XQueryDocumentBuilder();
         xq.append(XQueryModuleAdmin.importModule());
-        String config = xq.variable("config");
-        xq.assign(config, XQueryModuleAdmin.getConfiguration());
+        String config = xq.assign("config", XQueryModuleAdmin.getConfiguration());
         xq.assign(config, XQueryModuleAdmin.databaseCreate(config, xdbcModulesDatabase));
         xq.doReturn(XQueryModuleAdmin.saveConfiguration(config));
         return XQueryModuleXDMP.eval(xq.toString());
@@ -31,8 +30,7 @@ public class BootstrapMojo extends AbstractBootstrapMojo {
     private String createForest() {
         XQueryDocumentBuilder xq = new XQueryDocumentBuilder();
         xq.append(XQueryModuleAdmin.importModule());
-        String config = xq.variable("config");
-        xq.assign(config, XQueryModuleAdmin.getConfiguration());
+        String config = xq.assign("config", XQueryModuleAdmin.getConfiguration());
         xq.assign(config, XQueryModuleAdmin.forestCreate(config, xdbcModulesDatabase));
         xq.doReturn(XQueryModuleAdmin.saveConfiguration(config));
         return XQueryModuleXDMP.eval(xq.toString());
@@ -41,8 +39,7 @@ public class BootstrapMojo extends AbstractBootstrapMojo {
     private String attachForestToDatabase() {
         XQueryDocumentBuilder xq = new XQueryDocumentBuilder();
         xq.append(XQueryModuleAdmin.importModule());
-        String config = xq.variable("config");
-        xq.assign(config, XQueryModuleAdmin.getConfiguration());
+        String config = xq.assign("config", XQueryModuleAdmin.getConfiguration());
         xq.assign(config, XQueryModuleAdmin.attachForest(config, XQueryModuleXDMP.database(xdbcModulesDatabase),
                 XQueryModuleXDMP.forest(xdbcModulesDatabase)));
         xq.doReturn(XQueryModuleAdmin.saveConfiguration(config));
@@ -52,8 +49,7 @@ public class BootstrapMojo extends AbstractBootstrapMojo {
     private String createWebDAVServer() {
         XQueryDocumentBuilder xq = new XQueryDocumentBuilder();
         xq.append(XQueryModuleAdmin.importModule());
-        String config = xq.variable("config");
-        xq.assign(config, XQueryModuleAdmin.getConfiguration());
+        String config = xq.assign("config", XQueryModuleAdmin.getConfiguration());
         xq.assign(config, XQueryModuleAdmin.webdavServerCreate(config, xdbcName + "-WebDAV", xdbcModuleRoot,
                 xdbcPort + 1, XQueryModuleXDMP.database(xdbcModulesDatabase)));
         xq.doReturn(XQueryModuleAdmin.saveConfiguration(config));
@@ -63,8 +59,7 @@ public class BootstrapMojo extends AbstractBootstrapMojo {
     private String createXDBCServer() {
         XQueryDocumentBuilder xq = new XQueryDocumentBuilder();
         xq.append(XQueryModuleAdmin.importModule());
-        String config = xq.variable("config");
-        xq.assign(config, XQueryModuleAdmin.getConfiguration());
+        String config = xq.assign("config", XQueryModuleAdmin.getConfiguration());
         xq.assign(config, XQueryModuleAdmin.xdbcServerCreate(config, xdbcName, xdbcModuleRoot, xdbcPort,
                 XQueryModuleXDMP.database(xdbcModulesDatabase), XQueryModuleXDMP.database("Security")));
         xq.doReturn(XQueryModuleAdmin.saveConfiguration(config));
