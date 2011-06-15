@@ -5,7 +5,12 @@ import com.marklogic.xcc.ResultSequence;
 import com.marklogic.xcc.Session;
 import com.marklogic.xcc.exceptions.RequestException;
 import com.marklogic.xcc.types.ValueType;
+import org.w3c.dom.Document;
+import org.xml.sax.SAXException;
 
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -50,6 +55,18 @@ public abstract class AbstractInstallMojo extends AbstractMarkLogicMojo {
         }
         ResultSequence rs = session.submitRequest(request);
 		return rs;
+    }
+
+    private Document getInstallConfigurationDocument() throws IOException {
+        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+        try {
+            DocumentBuilder builder = factory.newDocumentBuilder();
+            return builder.parse(installConfigurationFile);
+        } catch (ParserConfigurationException e) {
+            throw new IOException("Invalid configuration file", e);
+        } catch (SAXException e) {
+            throw new IOException("Invalid configuration file", e);
+        }
     }
 
     private String getInstallConfiguration() throws IOException {
