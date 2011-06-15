@@ -57,7 +57,7 @@ public abstract class AbstractInstallMojo extends AbstractMarkLogicMojo {
 		return rs;
     }
 
-    private Document getInstallConfigurationDocument() throws IOException {
+    protected Document getInstallConfigurationDocument() throws IOException {
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         try {
             DocumentBuilder builder = factory.newDocumentBuilder();
