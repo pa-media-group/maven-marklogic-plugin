@@ -10,7 +10,9 @@ declare namespace conf = "http://www.marklogic.com/ps/install/config.xqy";
 
 (::: INPUTS :::
     <servers>
-        <server type="http"   name="Content" port="9000" group="Default" database="Content"   root="/" modules="0"/>
+        <server type="http"   name="Content" port="9000" group="Default" database="Content"   root="/" modules="0">
+            <rewriter>rewrite.xqy</rewriter>
+        </server>
         <server type="xdb"    name="Content" port="9001" group="Default" database="Content"   root="/" modules="Modules"/>
         <server type="webdav" name="Content" port="9002" group="Default" database="Content"   root="/" modules="0"/>
         <server type="webdav" name="Modules" port="9003" group="Default" database="Modules"   root="/" modules="0"/>
@@ -98,6 +100,16 @@ declare function inst-app:create-server($install-config, $server as element())
                            <database>{xdmp:security-database()}</database>
                          </options>)
             return admin:appserver-set-default-user($config, $server-id, $uid)
+        else
+            $config
+
+    (::: Set URL Rewriter :::)
+    let $config := admin:get-configuration()
+    let $rewriter := $server/conf:url-rewriter
+    let $config := if($rewriter) then
+            let $rewriter := $rewriter/fn:string()
+            let $LOG := xdmp:log(text{"Rewriter URL = ",$rewriter})
+            return admin:appserver-set-url-rewriter($config, $server-id, $rewriter)
         else
             $config
     

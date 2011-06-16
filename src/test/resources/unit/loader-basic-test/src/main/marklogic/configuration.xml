@@ -117,7 +117,9 @@
         <!--</load-content>-->
 
         <servers>
-            <server type="http"   name="Application" port="9000" group="Default" database="Content"   root="/opt/CR-MarkLogic/Modules" modules="0"/>
+            <server type="http"   name="Application" port="9000" group="Default" database="Content"   root="/opt/CR-MarkLogic/Modules" modules="0">
+                <url-rewriter>rewrite.xqy</url-rewriter>
+            </server>
             <server type="xdb"    name="Content"     port="9001" group="Default" database="Content"   root="/opt/CR-MarkLogic/Modules" modules="0"/>
             <server type="webdav" name="Content"     port="9002" group="Default" database="Content"   root="/" modules="0" authentication="application-level" default-user="admin"/>
             <server type="webdav" name="Modules"     port="9003" group="Default" database="Modules"   root="/" modules="0" authentication="application-level" default-user="admin"/>
