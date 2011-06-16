@@ -11,7 +11,7 @@ declare namespace conf = "http://www.marklogic.com/ps/install/config.xqy";
 (::: INPUTS :::
     <servers>
         <server type="http"   name="Content" port="9000" group="Default" database="Content"   root="/" modules="0">
-            <rewriter>rewrite.xqy</rewriter>
+            <url-rewriter>rewrite.xqy</url-rewriter>
         </server>
         <server type="xdb"    name="Content" port="9001" group="Default" database="Content"   root="/" modules="Modules"/>
         <server type="webdav" name="Content" port="9002" group="Default" database="Content"   root="/" modules="0"/>
