@@ -62,13 +62,14 @@ public class InstallMojo extends AbstractInstallMojo {
                 for (ResourceFileSet resource : env.getResources()) {
                     Session session = getXccSession(resource.getDatabase());
 
-                    File directory = new File(resource.getDirectory());
-
                     for (String f : manager.getIncludedFiles(resource)) {
-                        getLog().info(String.format("Deploying %s", f, f));
+                        File sourceFile = new File(resource.getDirectory(), f);
+                        File destinationFile = new File(resource.getOutputDirectory(), f);
+                        getLog().info(String.format("Deploying %s to %s", sourceFile.getPath(),
+                                destinationFile.getPath()));
                         try {
-                            Content c = newContent(new File(resource.getOutputDirectory(), f).getPath(),
-                                    getFileAsString(new File(directory, f)), null);
+                            Content c = newContent(destinationFile.getPath(),
+                                    getFileAsString(sourceFile), null);
                             session.insertContent(c);
                         } catch (IOException e) {
                             getLog().error("Failed to read content file ".concat(f), e);
