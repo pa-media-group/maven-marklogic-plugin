@@ -26,6 +26,7 @@
                                 <resource>
                                     <database>Test-Dev-Modules</database>
                                     <directory>src/main/xquery</directory>
+                                    <outputDirectory>/static</outputDirectory>
                                     <includes>
                                         <include>**/*.xqy</include>
                                     </includes>

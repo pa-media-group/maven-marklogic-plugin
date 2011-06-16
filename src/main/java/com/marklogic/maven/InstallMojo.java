@@ -67,7 +67,8 @@ public class InstallMojo extends AbstractInstallMojo {
                     for (String f : manager.getIncludedFiles(resource)) {
                         getLog().info(String.format("Deploying %s", f, f));
                         try {
-                            Content c = newContent("/".concat(f), getFileAsString(new File(directory, f)), null);
+                            Content c = newContent(new File(resource.getOutputDirectory(), f).getPath(),
+                                    getFileAsString(new File(directory, f)), null);
                             session.insertContent(c);
                         } catch (IOException e) {
                             getLog().error("Failed to read content file ".concat(f), e);
