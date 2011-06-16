@@ -9,6 +9,8 @@ import org.apache.maven.shared.model.fileset.util.FileSetManager;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 import static com.marklogic.xcc.ContentFactory.newContent;
 
@@ -22,6 +24,16 @@ import static com.marklogic.xcc.ContentFactory.newContent;
  * @execute goal="bootstrap"
  */
 public class InstallMojo extends AbstractInstallMojo {
+
+    private Map<String, Session> sessions = new HashMap<String, Session>();
+
+    public Session getSession(final String database) {
+        Session s = sessions.get(database);
+        if(s == null) {
+            s = sessions.put(database, getXccSession(database));
+        }
+        return s;
+    }
 
     public void execute() throws MojoExecutionException, MojoFailureException {
         getLog().info("Deploying site code to bootstrap modules location");
@@ -44,12 +56,12 @@ public class InstallMojo extends AbstractInstallMojo {
         }
 
         if(env != null) {
-            Session session = getXccSession(env.getDatabase());
-
             try {
                 FileSetManager manager = new FileSetManager();
 
-                for (FileSet resource : env.getResources()) {
+                for (ResourceFileSet resource : env.getResources()) {
+                    Session session = getXccSession(resource.getDatabase());
+
                     File directory = new File(resource.getDirectory());
 
                     for (String f : manager.getIncludedFiles(resource)) {
@@ -65,9 +77,10 @@ public class InstallMojo extends AbstractInstallMojo {
                     }
                 }
             } finally {
-                if(session != null) {
-                    session.close();
+                for ( Map.Entry<String, Session> e : sessions.entrySet() ) {
+                    e.getValue().close();
                 }
+                sessions = new HashMap<String, Session>();
             }
         }
     }

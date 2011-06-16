@@ -22,23 +22,14 @@ public class MLInstallEnvironment {
     /**
      * @parameter
      */
-    private String database;
-
-    /**
-     * @parameter
-     */
-    private FileSet[] resources;
-
-    public String getDatabase() {
-        return database;
-    }
-
-    public FileSet[] getResources() {
-        return resources;
-    }
+    private ResourceFileSet[] resources;
 
     public String getName() {
         return name;
+    }
+
+    public ResourceFileSet[] getResources() {
+        return resources;
     }
 
 }

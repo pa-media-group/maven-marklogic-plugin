@@ -22,9 +22,9 @@
                     <environments>
                         <environment>
                             <name>development</name>
-                            <database>Test-Dev-Modules</database>
                             <resources>
                                 <resource>
+                                    <database>Test-Dev-Modules</database>
                                     <directory>src/main/xquery</directory>
                                     <includes>
                                         <include>**/*.xqy</include>
