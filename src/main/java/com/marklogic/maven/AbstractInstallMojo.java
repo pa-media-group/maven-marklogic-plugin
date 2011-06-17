@@ -49,22 +49,16 @@ public abstract class AbstractInstallMojo extends AbstractMarkLogicMojo {
     /**
      * The path to the file controlling installation.
      *
-     * @parameter default-value="${basedir}/src/main/marklogic/configuration.xml" expression="${marklogic.install.configuration}
-     * @required
-     */
-    protected File installConfigurationFile;
-
-    /**
-     * The XML controlling installation
-     *
      * @parameter
      */
-    protected PlexusConfiguration install;
+    protected File installConfigurationFile;
 
     /**
      * @parameter
      */
     protected MLInstallEnvironment[] environments;
+
+    private MLInstallEnvironment currentEnvironment;
 
     protected ResultSequence executeInstallAction(String action, String module) throws RequestException {
     	Session session = this.getXccSession();
@@ -74,6 +68,7 @@ public abstract class AbstractInstallMojo extends AbstractMarkLogicMojo {
 		request.setNewVariable("delete-data", ValueType.XS_BOOLEAN, false);
         try {
             request.setNewStringVariable("configuration-string", getInstallConfiguration());
+            getLog().info("Using configuration : ".concat(installConfigurationFile.getPath()));
         } catch (IOException e) {
             throw new RequestException("Cannot load configuration file", request, e);
         }
@@ -94,9 +89,10 @@ public abstract class AbstractInstallMojo extends AbstractMarkLogicMojo {
     }
 
     private String getInstallConfiguration() throws IOException {
-        if(install != null) {
+        if(installConfigurationFile == null) {
             try {
-                return getFileAsString(writeTargetToConfigurationFile());
+                installConfigurationFile = writeEnvironmentToConfigurationFile();
+                return getFileAsString(installConfigurationFile);
             } catch (PlexusConfigurationException e) {
                 throw new IOException("Unable to configuration from project pom.", e);
             }
@@ -133,26 +129,54 @@ public abstract class AbstractInstallMojo extends AbstractMarkLogicMojo {
         return buffer.toString();
     }
 
-    protected File writeTargetToConfigurationFile() throws IOException, PlexusConfigurationException {
-        StringWriter writer = new StringWriter();
-        MarklogicXmlPlexusConfigurationWriter xmlWriter = new MarklogicXmlPlexusConfigurationWriter();
-        xmlWriter.write( install, writer );
+    protected File writeEnvironmentToConfigurationFile() throws IOException, PlexusConfigurationException {
 
-        StringBuffer installConfigurationXml = writer.getBuffer();
+        StringBuilder builder = new StringBuilder();
+        builder.append("<?xml version=\"1.0\" encoding=\"" + UTF_8 + "\" ?>\n");
+        builder.append("<install xmlns=\"" + INSTALL_NS + "\">\n");
+        builder.append("<").append(environment).append(">");
+        builder.append("<application name=\"")
+                .append(getCurrentEnvironment().getApplicationName()).append("\" title=\"")
+                .append(getCurrentEnvironment().getTitle()).append("\" filesystem-root=\"")
+                .append(getCurrentEnvironment().getFilesystemRoot()).append("\" />\n");
 
-        final String xmlHeader = "<?xml version=\"1.0\" encoding=\"" + UTF_8 + "\" ?>\n";
-        installConfigurationXml.insert(0, xmlHeader);
-
-        int index = installConfigurationXml.indexOf( "<install" );
-        installConfigurationXml.replace(index, index + "<install".length(), "<install xmlns=\"" + INSTALL_NS + "\" ");
+        for (PlexusConfiguration db : getCurrentEnvironment().getDatabases()) {
+            builder.append(plexusConfigurationToStringBuffer(db).toString()).append("\n");
+        }
+        builder.append(plexusConfigurationToStringBuffer(getCurrentEnvironment().getServers()).toString()).append("\n");
+        builder.append("</").append(environment).append(">");
+        builder.append("</install>");
 
         // The fileName should probably use the plugin executionId instead of the targetName
         String fileName = "install-" + environment + ".xml";
         File buildFile = new File( project.getBuild().getDirectory(), "/marklogic/" + fileName );
 
         buildFile.getParentFile().mkdirs();
-        FileUtils.fileWrite(buildFile.getAbsolutePath(), UTF_8, installConfigurationXml.toString());
+        FileUtils.fileWrite(buildFile.getAbsolutePath(), UTF_8, builder.toString());
 
         return buildFile;
+    }
+
+    private StringBuffer plexusConfigurationToStringBuffer(PlexusConfiguration config) throws IOException {
+        StringWriter writer = new StringWriter();
+        MarklogicXmlPlexusConfigurationWriter xmlWriter = new MarklogicXmlPlexusConfigurationWriter();
+        xmlWriter.write( config, writer );
+        return writer.getBuffer();
+    }
+
+
+    public MLInstallEnvironment getCurrentEnvironment() {
+        if(currentEnvironment == null) {
+            for (MLInstallEnvironment e : environments) {
+                if(environment.equalsIgnoreCase(e.getName())) {
+                    currentEnvironment = e;
+                    break;
+                }
+            }
+            if(currentEnvironment == null) {
+                currentEnvironment = new DefaultMLInstallEnvironment(environment);
+            }
+        }
+        return currentEnvironment;
     }
 }

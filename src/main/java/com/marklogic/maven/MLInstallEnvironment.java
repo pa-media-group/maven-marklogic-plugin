@@ -1,5 +1,7 @@
 package com.marklogic.maven;
 
+import org.codehaus.plexus.configuration.PlexusConfiguration;
+
 /**
  * Created by IntelliJ IDEA.
  * User: bobb
@@ -13,12 +15,40 @@ public class MLInstallEnvironment {
      * @parameter
      * @required
      */
-    private String name;
+    protected String name;
+
+    /**
+     * @parameter
+     * @required
+     */
+    protected String applicationName;
+
+    /**
+     * @parameter
+     * @required
+     */
+    protected String title;
+
+    /**
+     * @parameter default-value="/"
+     */
+    protected String filesystemRoot;
 
     /**
      * @parameter
      */
-    private ResourceFileSet[] resources;
+    protected ResourceFileSet[] resources;
+
+
+    /**
+     * @parameter
+     */
+    protected PlexusConfiguration[] databases;
+
+    /**
+     * @parameter
+     */
+    protected PlexusConfiguration servers;
 
     public String getName() {
         return name;
@@ -28,4 +58,23 @@ public class MLInstallEnvironment {
         return resources;
     }
 
+    public PlexusConfiguration[] getDatabases() {
+        return databases;
+    }
+
+    public PlexusConfiguration getServers() {
+        return servers;
+    }
+
+    public String getApplicationName() {
+        return applicationName;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public String getFilesystemRoot() {
+        return filesystemRoot;
+    }
 }
