@@ -10,11 +10,20 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.params.CoreProtocolPNames;
 import org.apache.maven.plugin.AbstractMojo;
+import org.apache.maven.project.MavenProject;
 
 /**
  * 
  */
 public abstract class AbstractMarkLogicMojo extends AbstractMojo {
+
+    /**
+     * The Maven project object
+     *
+     * @parameter expression="${project}"
+     * @readonly
+     */
+    protected MavenProject project;
 
     /**
      * The host MarkLogic Server is running on.

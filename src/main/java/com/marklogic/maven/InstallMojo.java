@@ -1,10 +1,11 @@
 package com.marklogic.maven;
 
-import com.marklogic.xcc.*;
+import com.marklogic.xcc.Content;
+import com.marklogic.xcc.ResultSequence;
+import com.marklogic.xcc.Session;
 import com.marklogic.xcc.exceptions.RequestException;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
-import org.apache.maven.shared.model.fileset.FileSet;
 import org.apache.maven.shared.model.fileset.util.FileSetManager;
 
 import java.io.File;

@@ -1,9 +1,5 @@
 package com.marklogic.maven;
 
-import org.apache.maven.shared.model.fileset.FileSet;
-
-import java.util.List;
-
 /**
  * Created by IntelliJ IDEA.
  * User: bobb

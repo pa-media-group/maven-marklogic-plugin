@@ -5,22 +5,32 @@ import com.marklogic.xcc.ResultSequence;
 import com.marklogic.xcc.Session;
 import com.marklogic.xcc.exceptions.RequestException;
 import com.marklogic.xcc.types.ValueType;
+import org.codehaus.plexus.configuration.PlexusConfiguration;
+import org.codehaus.plexus.configuration.PlexusConfigurationException;
+import org.codehaus.plexus.util.FileUtils;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.util.Iterator;
 import java.util.List;
 
 
 public abstract class AbstractInstallMojo extends AbstractMarkLogicMojo {
-	
+
+    /**
+     * The default encoding to use for the generated Ant build.
+     */
+    public static final String UTF_8 = "UTF-8";
+
+    /**
+     * Namespace for the install configuration block
+     */
+    public static final String INSTALL_NS = "http://www.marklogic.com/ps/install/config.xqy";
+
     /**
      * The installation module path.  This path is relative to the 
      * xdbcModuleRoot.
@@ -43,6 +53,13 @@ public abstract class AbstractInstallMojo extends AbstractMarkLogicMojo {
      * @required
      */
     protected File installConfigurationFile;
+
+    /**
+     * The XML controlling installation
+     *
+     * @parameter
+     */
+    protected PlexusConfiguration install;
 
     /**
      * @parameter
@@ -77,7 +94,15 @@ public abstract class AbstractInstallMojo extends AbstractMarkLogicMojo {
     }
 
     private String getInstallConfiguration() throws IOException {
-        return getFileAsString(installConfigurationFile);
+        if(install != null) {
+            try {
+                return getFileAsString(writeTargetToConfigurationFile());
+            } catch (PlexusConfigurationException e) {
+                throw new IOException("Unable to configuration from project pom.", e);
+            }
+        } else {
+            return getFileAsString(installConfigurationFile);
+        }
     }
 
     protected String getFileAsString(final File file) throws IOException {
@@ -108,4 +133,26 @@ public abstract class AbstractInstallMojo extends AbstractMarkLogicMojo {
         return buffer.toString();
     }
 
+    protected File writeTargetToConfigurationFile() throws IOException, PlexusConfigurationException {
+        StringWriter writer = new StringWriter();
+        MarklogicXmlPlexusConfigurationWriter xmlWriter = new MarklogicXmlPlexusConfigurationWriter();
+        xmlWriter.write( install, writer );
+
+        StringBuffer installConfigurationXml = writer.getBuffer();
+
+        final String xmlHeader = "<?xml version=\"1.0\" encoding=\"" + UTF_8 + "\" ?>\n";
+        installConfigurationXml.insert(0, xmlHeader);
+
+        int index = installConfigurationXml.indexOf( "<install" );
+        installConfigurationXml.replace(index, index + "<install".length(), "<install xmlns=\"" + INSTALL_NS + "\" ");
+
+        // The fileName should probably use the plugin executionId instead of the targetName
+        String fileName = "install-" + environment + ".xml";
+        File buildFile = new File( project.getBuild().getDirectory(), "/marklogic/" + fileName );
+
+        buildFile.getParentFile().mkdirs();
+        FileUtils.fileWrite(buildFile.getAbsolutePath(), UTF_8, installConfigurationXml.toString());
+
+        return buildFile;
+    }
 }

@@ -19,6 +19,90 @@
                     <database>Documents</database>
                     <xdbcModulesDatabase>TestInstallModules</xdbcModulesDatabase>
                     <installConfigurationFile>${basedir}/src/main/marklogic/configuration.xml</installConfigurationFile>
+                    <install>
+                        <development >
+                            <application name="Test-Dev" title="Test (Development)" filesystem-root="/"/>
+
+                            <database name="Modules">
+                                <forest name="Modules">
+                                    <forest-directory/>
+                                </forest>
+
+                                <attribute-range-index  scalar-type="string" parent-namespace=":::performance:::"
+                                                        parent-localname="profile" namespace="" localname="label" />
+                            </database>
+
+                            <database name="Content">
+                                <triggers-database name="Triggers"/>
+
+                                <set name="uri-lexicon"  value="true"/>
+                                <set name="word-searches"  value="true"/>
+                                <set name="word-positions" value="true"/>
+                                <set name="in-memory-list-size" value="256"/>
+                                <set name="in-memory-tree-size" value="16"/>
+                                <set name="element-value-positions" value="true"/>
+                                <set name="element-word-positions"  value="true"/>
+                                <set name="attribute-value-positions"  value="true"/>
+
+                                <add name="fragment-root"   namespace="urn:coralreef:logs" localname="logEntry"/>
+                                <add name="fragment-root"   namespace="urn:coralreef:user" localname="read-alert"/>
+                                <add name="fragment-root"   namespace="urn:coralreef" localname="changeLog"/>
+                                <add name="fragment-root"   namespace="urn:coralreef" localname="Identities"/>
+
+                                <forest name="Content">
+                                    <forest-directory/>
+                                </forest>
+
+                                <element-word-lexicon   namespace="" localname="cr-status"/>
+                                <element-word-lexicon   namespace="" localname="cr-owner-credential"/>
+                                <element-word-lexicon   namespace="urn:coralreef" localname="UniqueId"/>
+                                <element-word-lexicon   namespace="urn:coralreef" localname="Identity"/>
+
+                                <element-range-index    scalar-type="dateTime" namespace="" localname="cr-upload-dateTime"/>
+                                <element-range-index    scalar-type="string" namespace="urn:coralreef" localname="Location"/>
+                                <element-range-index    scalar-type="string" namespace="urn:coralreef" localname="Identity"/>
+                                <element-range-index    scalar-type="string" namespace="urn:coralreef" localname="AcquiringUnit"/>
+                                <element-range-index    scalar-type="string" namespace="urn:coralreef" localname="ForensicUnit"/>
+                                <element-range-index    scalar-type="string" namespace="urn:coralreef" localname="HandsetMake"/>
+                                <element-range-index    scalar-type="string" namespace="urn:coralreef" localname="HandsetModel"/>
+                                <element-range-index    scalar-type="string" namespace="urn:coralreef" localname="ServiceProvider"/>
+                                <element-range-index    scalar-type="string" namespace="urn:coralreef" localname="Value"/>
+                                <element-range-index    scalar-type="string" namespace="urn:coralreef" localname="UniqueId"/>
+                                <element-range-index    scalar-type="string" namespace="urn:coralreef:alerting" localname="Realm"/>
+                                <element-range-index    scalar-type="string" namespace="urn:coralreef:alerting" localname="alertLevel"/>
+                                <element-range-index    scalar-type="string" namespace="urn:coralreef:alerting" localname="alertType"/>
+                                <element-range-index    scalar-type="dateTime" namespace="urn:coralreef:alerting" localname="alertDtg"/>
+                                <element-range-index    scalar-type="string" namespace="urn:coralreef:alerting" localname="userCredential"/>
+
+                                <attribute-range-index  scalar-type="string" parent-namespace="urn:coralreef" parent-localname="Selector" namespace="" localname="SearchKey"/>
+                                <attribute-range-index  scalar-type="string" parent-namespace="urn:coralreef" parent-localname="Identities" namespace="" localname="SearchKey"/>
+                                <attribute-range-index  scalar-type="date" parent-namespace="urn:coralreef" parent-localname="AcquireDate" namespace="" localname="NormalizedDate" />
+                                <attribute-range-index  scalar-type="string" parent-namespace="urn:coralreef:alerting" parent-localname="triggerDocument" namespace="" localname="Uri"/>
+                                <attribute-range-index  scalar-type="string" parent-namespace="urn:coralreef:alerting" parent-localname="target" namespace="" localname="id"/>
+                                <attribute-range-index  scalar-type="string" parent-namespace="urn:coralreef:user" parent-localname="read-alert" namespace="" localname="Uri"/>
+                                <attribute-range-index  scalar-type="string" parent-namespace="urn:coralreef:target" parent-localname="Selector" namespace="" localname="SearchKey"/>
+                                <attribute-range-index  scalar-type="string" parent-namespace="urn:coralreef:target" parent-localname="target" namespace="" localname="id"/>
+                                <attribute-range-index  scalar-type="string" parent-namespace="urn:coralreef" parent-localname="domexHistory" namespace="" localname="uniqueId" />
+                                <attribute-range-index  scalar-type="string" parent-namespace=":::performance:::" parent-localname="profile" namespace="" localname="label" />
+                            </database>
+
+                            <database name="Triggers">
+                                <forest name="Triggers">
+                                    <forest-directory/>
+                                </forest>
+                            </database>
+
+                            <servers>
+                                <server type="http"   name="Application" port="9000" group="Default" database="Content"   root="/opt/CR-MarkLogic/Modules" modules="0">
+                                    <url-rewriter>rewrite.xqy</url-rewriter>
+                                </server>
+                                <server type="xdb"    name="Content"     port="9001" group="Default" database="Content"   root="/opt/CR-MarkLogic/Modules" modules="0"/>
+                                <server type="webdav" name="Content"     port="9002" group="Default" database="Content"   root="/" modules="0" authentication="application-level" default-user="admin"/>
+                                <server type="webdav" name="Modules"     port="9003" group="Default" database="Modules"   root="/" modules="0" authentication="application-level" default-user="admin"/>
+                                <server type="http"   name="Content"     port="9004" group="Default" database="Content"   root="/" modules="Content"/>
+                            </servers>
+                        </development>
+                    </install>
                     <environments>
                         <environment>
                             <name>development</name>
