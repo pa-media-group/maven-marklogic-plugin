@@ -68,24 +68,12 @@ public abstract class AbstractInstallMojo extends AbstractMarkLogicMojo {
 		request.setNewVariable("delete-data", ValueType.XS_BOOLEAN, false);
         try {
             request.setNewStringVariable("configuration-string", getInstallConfiguration());
-            getLog().info("Using configuration : ".concat(installConfigurationFile.getPath()));
+            getLog().debug("Using configuration : ".concat(installConfigurationFile.getPath()));
         } catch (IOException e) {
             throw new RequestException("Cannot load configuration file", request, e);
         }
         ResultSequence rs = session.submitRequest(request);
 		return rs;
-    }
-
-    protected Document getInstallConfigurationDocument() throws IOException {
-        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-        try {
-            DocumentBuilder builder = factory.newDocumentBuilder();
-            return builder.parse(installConfigurationFile);
-        } catch (ParserConfigurationException e) {
-            throw new IOException("Invalid configuration file", e);
-        } catch (SAXException e) {
-            throw new IOException("Invalid configuration file", e);
-        }
     }
 
     private String getInstallConfiguration() throws IOException {
