@@ -5,15 +5,11 @@ import com.marklogic.xcc.ResultSequence;
 import com.marklogic.xcc.Session;
 import com.marklogic.xcc.exceptions.RequestException;
 import com.marklogic.xcc.types.ValueType;
+
 import org.codehaus.plexus.configuration.PlexusConfiguration;
 import org.codehaus.plexus.configuration.PlexusConfigurationException;
 import org.codehaus.plexus.util.FileUtils;
-import org.w3c.dom.Document;
-import org.xml.sax.SAXException;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
 import java.io.*;
 import java.util.Iterator;
 import java.util.List;
@@ -22,43 +18,83 @@ import java.util.List;
 public abstract class AbstractInstallMojo extends AbstractMarkLogicMojo {
 
     /**
-     * The default encoding to use for the generated Ant build.
-     */
-    public static final String UTF_8 = "UTF-8";
-
-    /**
      * Namespace for the install configuration block
      */
     public static final String INSTALL_NS = "http://www.marklogic.com/ps/install/config.xqy";
 
     /**
-     * The installation module path.  This path is relative to the 
-     * xdbcModuleRoot.
-     * 
-     * For example if the xdbcModuleRoot is set to /modules/,
-     * and the installation module is deployed at /modules/install/install.xqy,
-     * set the installModule to install/install.xqy.
-     * 
-     * The default value is just "install.xqy" since we assume that the xdbc server 
-     * will point directly to the installation xquery.
-     * 
-     * @parameter default-value="install.xqy" expression="${marklogic.install.module}"
-     */    
-    protected String installModule;
+     * The default encoding to use for the generated Ant build.
+     */
+    public static final String UTF_8 = "UTF-8";
+
+    private MLInstallEnvironment currentEnvironment;
+
+    /**
+     * Sequence of environments, containing configuration instructions
+     *
+     * For example
+     *
+     * <environments>
+     *     <environment>
+     *         <name>development</name>
+     *         <applicationName>Demo-Development</applicationName>
+     *         <title>Demo (Development)</title>
+     *         <databases>
+     *             { database nodes for configuration xml }
+     *         </databases>
+     *         <servers>
+     *             { server nodes for configuration xml }
+     *         </servers>
+     *         <pipeline-resources>
+     *             <resource>
+     *                 <database>Triggers</database>
+     *                 <directory>${basedir}/src/main/marklogic/pipelines</directory>
+     *                 <includes>
+     *                     <include>demp-pipeline.xml</include>
+     *                 </includes>
+     *             </resource>
+     *         </pipeline-resources>
+     *         <resources>
+     *             <resource>
+     *                 <database>Content</database>
+     *                 <directory>${basedir}/src/main/xquery</directory>
+     *                 <includes>
+     *                     <include>*.xqy</include>
+     *                 </includes>
+     *             </resource>
+     *         </resources>
+     *     </environment>
+     *     ...
+     * </environments>
+     *
+     * @parameter
+     */
+    protected MLInstallEnvironment[] environments;
 
     /**
      * The path to the file controlling installation.
+     *
+     * The configuration defined in the specified file is used instead of that defined in the environments block
+     * with the exception of the pipeline-resources and resources elements.
      *
      * @parameter
      */
     protected File installConfigurationFile;
 
     /**
-     * @parameter
+     * The installation module path.  This path is relative to the
+     * xdbcModuleRoot.
+     *
+     * For example if the xdbcModuleRoot is set to /modules/,
+     * and the installation module is deployed at /modules/install/install.xqy,
+     * set the installModule to install/install.xqy.
+     *
+     * The default value is just "install.xqy" since we assume that the xdbc server
+     * will point directly to the installation xquery.
+     *
+     * @parameter default-value="install.xqy" expression="${marklogic.install.module}"
      */
-    protected MLInstallEnvironment[] environments;
-
-    private MLInstallEnvironment currentEnvironment;
+    protected String installModule;
 
     protected ResultSequence executeInstallAction(String action, String module) throws RequestException {
     	Session session = this.getXccSession();
@@ -76,33 +112,10 @@ public abstract class AbstractInstallMojo extends AbstractMarkLogicMojo {
 		return rs;
     }
 
-    private String getInstallConfiguration() throws IOException {
-        if(installConfigurationFile == null) {
-            try {
-                installConfigurationFile = writeEnvironmentToConfigurationFile();
-                return getFileAsString(installConfigurationFile);
-            } catch (PlexusConfigurationException e) {
-                throw new IOException("Unable to configuration from project pom.", e);
-            }
-        } else {
-            return getFileAsString(installConfigurationFile);
-        }
-    }
-
-    protected String getFileAsString(final File file) throws IOException {
-        StringBuffer buffer = new StringBuffer((int)file.length());
-        BufferedReader reader = new BufferedReader(new FileReader(file));
-        char[] buf = new char[1024];
-        int numRead = 0;
-        while((numRead = reader.read(buf))!= -1) {
-            buffer.append(buf, 0, numRead);
-        }
-        reader.close();
-        return buffer.toString();
-    }
-
     /**
-     * @param list
+     * Converts a list into a comma separated String list
+     *
+     * @param list The list to be converted
      * @return
      */
     protected String getCommaSeparatedList(List list) {
@@ -117,7 +130,73 @@ public abstract class AbstractInstallMojo extends AbstractMarkLogicMojo {
         return buffer.toString();
     }
 
-    protected File writeEnvironmentToConfigurationFile() throws IOException, PlexusConfigurationException {
+    /**
+     * Gets the current environment object
+     *
+     * @return MLInstallEnvironment instance
+     */
+    public MLInstallEnvironment getCurrentEnvironment() {
+        if(currentEnvironment == null) {
+            for (MLInstallEnvironment e : environments) {
+                if(environment.equalsIgnoreCase(e.getName())) {
+                    currentEnvironment = e;
+                    break;
+                }
+            }
+            if(currentEnvironment == null) {
+                currentEnvironment = new DefaultMLInstallEnvironment(environment);
+            }
+        }
+        return currentEnvironment;
+    }
+
+    /**
+     * Returns the string representation of the specified file
+     *
+     * @param file The file to be loaded
+     * @return
+     * @throws IOException
+     */
+    protected String getFileAsString(final File file) throws IOException {
+        StringBuffer buffer = new StringBuffer((int)file.length());
+        BufferedReader reader = new BufferedReader(new FileReader(file));
+        char[] buf = new char[1024];
+        int numRead = 0;
+        while((numRead = reader.read(buf))!= -1) {
+            buffer.append(buf, 0, numRead);
+        }
+        reader.close();
+        return buffer.toString();
+    }
+
+    private String getInstallConfiguration() throws IOException {
+        if(installConfigurationFile == null) {
+            try {
+                installConfigurationFile = writeEnvironmentToConfigurationFile();
+                return getFileAsString(installConfigurationFile);
+            } catch (PlexusConfigurationException e) {
+                throw new IOException("Unable to configuration from project pom.", e);
+            }
+        } else {
+            return getFileAsString(installConfigurationFile);
+        }
+    }
+
+    private StringBuffer plexusConfigurationToStringBuffer(PlexusConfiguration config) throws IOException {
+        StringWriter writer = new StringWriter();
+        MarklogicXmlPlexusConfigurationWriter xmlWriter = new MarklogicXmlPlexusConfigurationWriter();
+        xmlWriter.write( config, writer );
+        return writer.getBuffer();
+    }
+
+    /**
+     * Creates a configuration file based on the specification defined in the environment block
+     *
+     * @return
+     * @throws IOException
+     * @throws PlexusConfigurationException
+     */
+    private File writeEnvironmentToConfigurationFile() throws IOException, PlexusConfigurationException {
 
         StringBuilder builder = new StringBuilder();
         builder.append("<?xml version=\"1.0\" encoding=\"" + UTF_8 + "\" ?>\n");
@@ -145,26 +224,4 @@ public abstract class AbstractInstallMojo extends AbstractMarkLogicMojo {
         return buildFile;
     }
 
-    private StringBuffer plexusConfigurationToStringBuffer(PlexusConfiguration config) throws IOException {
-        StringWriter writer = new StringWriter();
-        MarklogicXmlPlexusConfigurationWriter xmlWriter = new MarklogicXmlPlexusConfigurationWriter();
-        xmlWriter.write( config, writer );
-        return writer.getBuffer();
-    }
-
-
-    public MLInstallEnvironment getCurrentEnvironment() {
-        if(currentEnvironment == null) {
-            for (MLInstallEnvironment e : environments) {
-                if(environment.equalsIgnoreCase(e.getName())) {
-                    currentEnvironment = e;
-                    break;
-                }
-            }
-            if(currentEnvironment == null) {
-                currentEnvironment = new DefaultMLInstallEnvironment(environment);
-            }
-        }
-        return currentEnvironment;
-    }
 }
