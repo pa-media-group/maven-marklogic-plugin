@@ -17,7 +17,7 @@
                     <xdbcName>8997-TestInstaller</xdbcName>
                     <xdbcModuleRoot>/</xdbcModuleRoot>
                     <database>Documents</database>
-                    <xdbcModulesDatabase>TestInstallModules</xdbcModulesDatabase>
+                    <!--<xdbcModulesDatabase>file-system</xdbcModulesDatabase>-->
                     <!--<installConfigurationFile>${basedir}/src/main/marklogic/configuration.xml</installConfigurationFile>-->
                     <environments>
                         <environment>
@@ -87,6 +87,38 @@
                                     <attribute-range-index  scalar-type="string" parent-namespace="urn:coralreef:target" parent-localname="target" namespace="" localname="id"/>
                                     <attribute-range-index  scalar-type="string" parent-namespace="urn:coralreef" parent-localname="domexHistory" namespace="" localname="uniqueId" />
                                     <attribute-range-index  scalar-type="string" parent-namespace=":::performance:::" parent-localname="profile" namespace="" localname="label" />
+
+                                    <content-processing user="admin" role="admin" modules="Modules" root="/" default-domain="Test">
+                                        <load-pipelines>
+                                            <from-filesystem file="Installer/cpf/status-pipeline.xml"/>
+                                            <from-filesystem file="Installer/conversion/alternatives/basic-pipeline.xml"/>
+                                            <!--<from-filesystem file="{$MARKLOGIC-HOME}/Installer/openxml/openxml-pipeline.xml"/>-->
+                                            <!--<from-filesystem file="{$APPLICATION-ROOT}/Modules/CPF/pipelines/msoffice-pipeline.xml"/>-->
+                                            <!--<from-filesystem file="{$APPLICATION-ROOT}/Modules/CPF/pipelines/cr-raw-to-formatted.xml"/>-->
+                                            <!--<from-filesystem file="{$APPLICATION-ROOT}/Modules/CPF/pipelines/invalid-file.xml"/>-->
+                                            <!--<from-filesystem file="{$APPLICATION-ROOT}/Modules/CPF/pipelines/create-alerts-for-domex.xml"/>-->
+                                        </load-pipelines>
+                                        <domain name="Test" description="Test" document-scope="directory" uri="/Content/Raw/" depth="infinity" modules="Modules" root="/">
+                                            <pipeline name="HTML Conversion"/>
+                                            <!--<pipeline name="MS Office Conversion"/>-->
+                                            <pipeline name="Conversion Processing (Basic)"/>
+                                            <!--<pipeline name="Coral Reef Raw-to-Formatted"/>-->
+                                            <!--<pipeline name="Invalid File"/>-->
+                                            <pipeline name="Status Change Handling"/>
+                                        </domain>
+                                        <!--<domain name="Coral Reef Raw" description="Process CR Raw Input" document-scope="directory" uri="/Content/Raw/" depth="infinity" modules="Modules" root="/">-->
+                                            <!--<pipeline name="MS Office Conversion"/>-->
+                                            <!--<pipeline name="Conversion Processing (Basic)"/>-->
+                                            <!--<pipeline name="Coral Reef Raw-to-Formatted"/>-->
+                                            <!--<pipeline name="Invalid File"/>-->
+                                            <!--<pipeline name="Status Change Handling"/>-->
+                                        <!--</domain>-->
+                                        <!--<domain name="Coral Reef Alerts" description="Create Alerts" document-scope="directory" uri="/Content/Formatted/" depth="infinity" modules="Modules" root="/">-->
+                                            <!--<pipeline name="Conversion Processing (Basic)"/>-->
+                                            <!--<pipeline name="Create Alerts for Domex"/>-->
+                                            <!--<pipeline name="Status Change Handling"/>-->
+                                        <!--</domain>-->
+                                    </content-processing>
                                 </database>
 
                                 <database name="Triggers">
@@ -104,9 +136,18 @@
                                 <server type="webdav" name="Modules"     port="9003" group="Default" database="Modules"   root="/" modules="0" authentication="application-level" default-user="admin"/>
                                 <server type="http"   name="Content"     port="9004" group="Default" database="Content"   root="/" modules="Content"/>
                             </servers>
+                            <pipeline-resources>
+                                <resource>
+                                    <database>Triggers</database>
+                                    <directory>src/main/marklogic</directory>
+                                    <includes>
+                                        <include>html-convert.xml</include>
+                                    </includes>
+                                </resource>
+                            </pipeline-resources>
                             <resources>
                                 <resource>
-                                    <database>Test-Dev-Modules</database>
+                                    <database>Modules</database>
                                     <directory>src/main/xquery</directory>
                                     <outputDirectory>/</outputDirectory>
                                     <includes>
