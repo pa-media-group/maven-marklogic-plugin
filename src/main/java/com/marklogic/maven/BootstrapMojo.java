@@ -73,10 +73,11 @@ public class BootstrapMojo extends AbstractBootstrapMojo {
     protected String getBootstrapExecuteQuery() {
         XQueryDocumentBuilder sb = new XQueryDocumentBuilder();
 
-        sb.assign("_", createDatabase());
-        sb.assign("_", createForest());
-        sb.assign("_", attachForestToDatabase());
-        sb.assign("_", createWebDAVServer());
+        if(!"file-system".equalsIgnoreCase(xdbcModulesDatabase)) {
+            sb.assign("_", createDatabase());
+            sb.assign("_", createForest());
+            sb.assign("_", attachForestToDatabase());
+        }
         sb.assign("_", createXDBCServer());
 
         sb.doReturn(XQueryModule.quote("Bootstrap Install - OK"));
@@ -91,31 +92,40 @@ public class BootstrapMojo extends AbstractBootstrapMojo {
 		getLog().info("bootstrap execute");
 		super.execute();
 
-        this.database = xdbcModulesDatabase;
+        if(!"file-system".equalsIgnoreCase(xdbcModulesDatabase)) {
+            this.database = xdbcModulesDatabase;
 
-        Session session = getXccSession();
+            Session session = getXccSession();
 
-        String[] paths = { "/install.xqy"
-                         , "/lib/lib-app-server.xqy"
-                         , "/lib/lib-cpf.xqy"
-                         , "/lib/lib-database-add.xqy"
-                         , "/lib/lib-database-set.xqy"
-                         , "/lib/lib-database.xqy"
-                         , "/lib/lib-field.xqy"
-                         , "/lib/lib-index.xqy"
-                         , "/lib/lib-install.xqy"
-                         , "/lib/lib-load.xqy" };
+            String[] paths = { "/install.xqy"
+                    , "/lib/lib-app-server.xqy"
+                    , "/lib/lib-cpf.xqy"
+                    , "/lib/lib-database-add.xqy"
+                    , "/lib/lib-database-set.xqy"
+                    , "/lib/lib-database.xqy"
+                    , "/lib/lib-field.xqy"
+                    , "/lib/lib-index.xqy"
+                    , "/lib/lib-install.xqy"
+                    , "/lib/lib-load.xqy" };
 
-        ClassLoader loader =  Thread.currentThread().getContextClassLoader();
-        for (String path : paths) {
+            ClassLoader loader =  Thread.currentThread().getContextClassLoader();
+            for (String path : paths) {
                 getLog().info("Uploading " + path);
-            try {
-                Content cs = ContentFactory.newContent(path, loader.getResource("xquery" + path), null);
-                session.insertContent(cs);
-            } catch (Exception e) {
-                getLog().error("Failed to insert required library.");
+                try {
+                    Content cs = ContentFactory.newContent(path, loader.getResource("xquery" + path), null);
+                    session.insertContent(cs);
+                } catch (Exception e) {
+                    getLog().error("Failed to insert required library.");
+                }
+                session.commit();
             }
-            session.commit();
+        } else {
+            getLog().warn("");
+            getLog().warn("***************************************************************");
+            getLog().warn("* Using filesystem modules location, ensure that install.xqy  *");
+            getLog().warn("* and associated libraries are placed into the specified root *");
+            getLog().warn("***************************************************************");
+            getLog().warn("");
         }
     }
 }
