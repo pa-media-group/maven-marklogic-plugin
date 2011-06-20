@@ -76,6 +76,16 @@ else if ("create-configurations" eq $action) then
     $action,
     inst-cpf:create-configurations($install-config)
 )
+else if ("install-cpf" eq $action) then
+(
+    $action,
+    inst-cpf:install-cpf($install-config)
+)
+else if ("restart" eq $action) then
+(
+    $action,
+    xdmp:restart((),"Installation")
+)
 else
     text{"Invalid Action: ", $action}
 

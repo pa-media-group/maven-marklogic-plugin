@@ -35,6 +35,11 @@ public class MLInstallEnvironment {
     protected String filesystemRoot;
 
     /**
+     * @parameter alias="pipeline-resources"
+     */
+    protected ResourceFileSet[] pipelineResources;
+
+    /**
      * @parameter
      */
     protected ResourceFileSet[] resources;
@@ -76,5 +81,9 @@ public class MLInstallEnvironment {
 
     public String getFilesystemRoot() {
         return filesystemRoot;
+    }
+
+    public ResourceFileSet[] getPipelineResources() {
+        return pipelineResources;
     }
 }
