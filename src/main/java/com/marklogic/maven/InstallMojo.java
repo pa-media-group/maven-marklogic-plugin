@@ -58,18 +58,22 @@ public class InstallMojo extends AbstractInstallMojo {
         executeAction(ACTION_INSTALL_DATABASES);
         executeAction(ACTION_INSTALL_SERVERS);
 
-        /*
-         * Install pipeline resources from maven project
-         */
-        installPipeline(getCurrentEnvironment().getPipelineResources());
+        if(getCurrentEnvironment().getPipelineResources() != null) {
+            /*
+             * Install pipeline resources from maven project
+             */
+            installPipeline(getCurrentEnvironment().getPipelineResources());
+        }
 
         executeAction(ACTION_INSTALL_CPF);
         executeAction(ACTION_INSTALL_CONTENT);
 
-        /*
-         * Install content resources from maven project
-         */
-        installResources(getCurrentEnvironment().getResources());
+        if(getCurrentEnvironment().getResources() != null) {
+            /*
+             * Install content resources from maven project
+             */
+            installResources(getCurrentEnvironment().getResources());
+        }
 
         executeAction(ACTION_RESTART);
     }
