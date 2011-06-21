@@ -3,15 +3,13 @@ package com.marklogic.maven;
 import org.apache.maven.shared.model.fileset.FileSet;
 
 /**
- * Created by IntelliJ IDEA.
- * User: bobb
- * Date: 16/06/2011
- * Time: 09:50
- * To change this template use File | Settings | File Templates.
+ * @author Bob Browning <bob.browning@pressassociation.com>
  */
 public class ResourceFileSet extends FileSet {
 
     /**
+     * The database to load the specified resources into
+     *
      * @parameter
      * @required
      */

@@ -1,12 +1,5 @@
 package com.marklogic.maven;
 
-/**
- * Created by IntelliJ IDEA.
- * User: bobb
- * Date: 17/06/2011
- * Time: 13:56
- * To change this template use File | Settings | File Templates.
- */
 import org.codehaus.plexus.configuration.PlexusConfiguration;
 import org.codehaus.plexus.util.xml.PrettyPrintXMLWriter;
 import org.codehaus.plexus.util.xml.XMLWriter;

@@ -36,7 +36,7 @@ public class InstallMojo extends AbstractInstallMojo {
 
     private Map<String, Session> sessions = new HashMap<String, Session>();
 
-    public Session getSession(final String database) {
+    private Session getSession(final String database) {
         Session s = sessions.get(database);
         if(s == null) {
             s = sessions.put(database, getXccSession(database));
