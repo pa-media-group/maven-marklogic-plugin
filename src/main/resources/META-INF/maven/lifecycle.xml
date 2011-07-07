@@ -1,0 +1,22 @@
+<lifecycles>
+    <lifecycle>
+        <id>mlcycle</id>
+        <phases>
+            <phase>
+                <id>install</id>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>bootstrap</goal>
+                            <goal>install-databases</goal>
+                            <goal>install-servers</goal>
+                            <goal>install-cpf</goal>
+                            <goal>install-content</goal>
+                            <goal>restart-server</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </phase>
+        </phases>
+    </lifecycle>
+</lifecycles>
