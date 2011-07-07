@@ -8,6 +8,7 @@ import module namespace inst-app = 'http://www.marklogic.com/ps/lib/lib-app-serv
 import module namespace inst-idx = 'http://www.marklogic.com/ps/lib/lib-index.xqy' at "/lib/lib-index.xqy";
 import module namespace inst-cpf = 'http://www.marklogic.com/ps/lib/lib-cpf.xqy' at "/lib/lib-cpf.xqy";
 import module namespace inst-load = 'http://www.marklogic.com/ps/lib/lib-load.xqy' at "/lib/lib-load.xqy";
+import module namespace inst-trgr = 'http://www.marklogic.com/ps/lib/lib-trigger.xqy' at "/lib/lib-trigger.xqy";
 import module namespace admin = "http://marklogic.com/xdmp/admin" at "/MarkLogic/admin.xqy";
 
 declare variable $action as xs:string external;
@@ -34,6 +35,7 @@ else if ("uninstall-all" eq $action) then
 (
     $action,
     inst-app:uninstall-servers($install-config),
+    inst-trgr:uninstall-triggers($install-config),
     inst-db:uninstall-databases($install-config, $delete-data)
 )
 else if ("install-databases" eq $action) then
@@ -44,6 +46,7 @@ else if ("install-databases" eq $action) then
 else if ("uninstall-databases" eq $action) then
 (
     $action,
+    inst-trgr:uninstall-triggers($install-config),
     inst-db:uninstall-databases($install-config, $delete-data)
 )
 else if ("install-servers" eq $action) then

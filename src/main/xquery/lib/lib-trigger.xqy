@@ -15,7 +15,9 @@ declare namespace conf = "http://www.marklogic.com/ps/install/config.xqy";
         <event type="data|online">
           <!-- data only -->
           <scope type="directory|collection|document" depth="1">URI</scope>
-          <content type="document|property|all-properties" kind="create|update|delete" prop-ns="" prop-name="" />
+          <content type="document|property|all-properties" 
+                   kind="create|update|delete"          <!-- document type only -->
+                   prop-ns="" prop-name="" />           <!-- property type only -->
           <when>pre-commit|post-commit</when>
         </event>
         <module database="modules" path="/">add-serch-metadata.xqy</module>
