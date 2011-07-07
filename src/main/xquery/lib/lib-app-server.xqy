@@ -48,7 +48,7 @@ declare function inst-app:create-server($install-config, $server as element())
     let $modules := $server/@modules
     let $modules := if($modules eq "0") then "file-system" else xdmp:database(inst-db:mk-database-name-from-string($install-config, $modules))
     let $root := $server/@root
-    let $collation := ($server/@collation, "http://marklogic.com/collation/codepoint")[1]
+    let $collation := ($server/@collation, fn:default-collation())[1]
  
     let $config := 
         try {

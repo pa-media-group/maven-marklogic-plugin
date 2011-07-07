@@ -43,7 +43,7 @@ declare function  inst-idx:install-indices($install-config)
 declare function inst-idx:add-index($install-config, $database, $install-indices as element()*)
 {
     let $DEFAULT-NAMESPACE              := ""
-    let $DEFAULT-COLLATION              := "http://marklogic.com/collation/codepoint"
+    let $DEFAULT-COLLATION              := fn:default-collation()
     let $DEFAULT-COORDINATE-SYSTEM      := "wgs84"
     let $DEFAULT-RANGE-VALUE-POSITIONS  := "false"
     
