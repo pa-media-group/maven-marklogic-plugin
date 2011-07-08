@@ -11,7 +11,7 @@ import org.apache.maven.plugin.MojoFailureException;
  * @author <a href="mailto:mark.helmstetter@marklogic.com">Mark Helmstetter</a>
  * @author Bob Browning <bob.browning@pressassociation.com>
  * @goal install
- * @execute lifecycle="mlcycle" phase="install"
+ * @execute lifecycle="mlcycle-install" phase="install"
  */
 public final class InstallMojo extends AbstractInstallMojo {
 

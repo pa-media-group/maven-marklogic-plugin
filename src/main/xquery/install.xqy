@@ -59,7 +59,12 @@ else if ("uninstall-servers" eq $action) then
    $action,
     inst-app:uninstall-servers($install-config)
 )
-else if ("reinstall-content" eq $action) then
+else if ("uninstall-content" eq $action) then
+(
+    $action,
+    inst-load:remove-content($install-config)
+)
+else if ("install-content" eq $action) then
 (
    $action,
     inst-load:load-content($install-config)

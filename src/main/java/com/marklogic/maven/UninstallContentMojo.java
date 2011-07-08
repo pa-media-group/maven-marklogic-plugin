@@ -1,5 +1,6 @@
 package com.marklogic.maven;
 
+import com.marklogic.xcc.AdhocQuery;
 import com.marklogic.xcc.Content;
 import com.marklogic.xcc.Session;
 import com.marklogic.xcc.exceptions.RequestException;
@@ -9,31 +10,28 @@ import org.apache.maven.shared.model.fileset.util.FileSetManager;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 import static com.marklogic.xcc.ContentFactory.newContent;
 
 /**
  * @author Bob Browning <bob.browning@pressassociation.com>
- * @goal install-content
+ * @goal uninstall-content
  */
-public class InstallContentMojo extends AbstractInstallMojo {
+public class UninstallContentMojo extends AbstractInstallMojo {
 
-    protected static final String ACTION_INSTALL_CONTENT = "install-content";
+    private static final String ACTION_UNINSTALL_CONTENT = "uninstall-content";
 
     public void execute() throws MojoExecutionException, MojoFailureException {
-        executeAction(ACTION_INSTALL_CONTENT);
-
+        executeAction(ACTION_UNINSTALL_CONTENT);
         if(getCurrentEnvironment().getResources() != null) {
-            /*
-             * Install content resources from maven project
-             */
-            installResources(getCurrentEnvironment().getResources());
+            uninstallResources(getCurrentEnvironment().getResources());
         }
     }
 
-    private void installResources(ResourceFileSet[] resources) {
+    private void uninstallResources(ResourceFileSet[] resources) {
+        List uris = new ArrayList();
+
         try {
             FileSetManager manager = new FileSetManager();
 
@@ -47,21 +45,29 @@ public class InstallContentMojo extends AbstractInstallMojo {
                 Session session = getSession(targetDatabase);
 
                 for (String f : manager.getIncludedFiles(resource)) {
-                    File sourceFile = new File(resource.getDirectory(), f);
                     File destinationFile = new File(resource.getOutputDirectory(), f);
-                    getLog().info(String.format("Deploying %s to %s", sourceFile.getPath(),
-                            destinationFile.getPath()));
-                    try {
-                        Content c = newContent(destinationFile.getPath(),
-                                getFileAsString(sourceFile), null);
-                        session.insertContent(c);
-                    } catch (IOException e) {
-                        getLog().error("Failed to read content file ".concat(f), e);
-                    } catch (RequestException e) {
-                        getLog().error("Failed to insert content file ".concat(f), e);
+                    getLog().info(String.format("Submitting %s for removal.", destinationFile.getPath()));
+                    uris.add(destinationFile.getPath());
+                }
+
+                StringBuilder b = new StringBuilder("for $uri in (");
+                Iterator iter = uris.iterator();
+                while(iter.hasNext()) {
+                    b.append("'").append((String) iter.next()).append("'");
+                    if(iter.hasNext()) {
+                        b.append(",");
                     }
                 }
+                b.append(") return try { xdmp:document-delete($uri) } catch ($e) { () }");
+
+                AdhocQuery q = session.newAdhocQuery(b.toString());
+                try {
+                    session.submitRequest(q);
+                } catch (RequestException e) {
+                    getLog().error("Failed to remove content file.", e);
+                }
             }
+
         } finally {
             for ( Map.Entry<String, Session> e : sessions.entrySet() ) {
                 e.getValue().close();

@@ -1,6 +1,6 @@
 <lifecycles>
     <lifecycle>
-        <id>mlcycle</id>
+        <id>mlcycle-install</id>
         <phases>
             <phase>
                 <id>install</id>
@@ -13,6 +13,22 @@
                             <goal>install-cpf</goal>
                             <goal>install-content</goal>
                             <goal>restart-server</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </phase>
+        </phases>
+    </lifecycle>
+    <lifecycle>
+        <id>mlcycle-uninstall</id>
+        <phases>
+            <phase>
+                <id>install</id>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>uninstall-servers</goal>
+                            <goal>uninstall-databases</goal>
                         </goals>
                     </execution>
                 </executions>

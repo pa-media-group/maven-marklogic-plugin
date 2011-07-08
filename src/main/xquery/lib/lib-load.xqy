@@ -20,6 +20,10 @@ declare namespace conf = "http://www.marklogic.com/ps/install/config.xqy";
      </load-content>
 :::)
 
+declare function inst-load:remove-content($install-config) {
+    "undefined"
+};
+
 declare function inst-load:load-content($install-config) {
     for $copyFiles in $install-config/conf:load-content/conf:copy-files
         let $from-filesystem := $copyFiles/conf:from-filesystem/@root
