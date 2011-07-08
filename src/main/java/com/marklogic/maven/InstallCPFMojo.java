@@ -16,7 +16,10 @@ import java.util.Map;
  * @author Bob Browning <bob.browning@pressassociation.com>
  * @goal install-cpf
  */
-public class InstallCPFMojo extends InstallMojo {
+public class InstallCPFMojo extends AbstractInstallMojo {
+
+    protected static final String ACTION_INSTALL_CPF = "install-cpf";
+
     public void execute() throws MojoExecutionException, MojoFailureException {
         if(getCurrentEnvironment().getPipelineResources() != null) {
             /*

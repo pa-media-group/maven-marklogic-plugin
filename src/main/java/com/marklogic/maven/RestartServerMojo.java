@@ -10,9 +10,10 @@ import org.apache.maven.plugin.MojoFailureException;
  * @author Bob Browning <bob.browning@pressassociation.com>
  * @goal restart-server
  */
-public class RestartServerMojo extends InstallMojo {
+public class RestartServerMojo extends AbstractInstallMojo {
 
-    @Override
+    protected static final String ACTION_RESTART = "restart";
+
     public void execute() throws MojoExecutionException, MojoFailureException {
         executeAction(ACTION_RESTART);
 

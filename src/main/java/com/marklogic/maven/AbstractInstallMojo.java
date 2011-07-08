@@ -5,14 +5,16 @@ import com.marklogic.xcc.ResultSequence;
 import com.marklogic.xcc.Session;
 import com.marklogic.xcc.exceptions.RequestException;
 import com.marklogic.xcc.types.ValueType;
-
+import org.apache.maven.plugin.MojoExecutionException;
 import org.codehaus.plexus.configuration.PlexusConfiguration;
 import org.codehaus.plexus.configuration.PlexusConfigurationException;
 import org.codehaus.plexus.util.FileUtils;
 
 import java.io.*;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 
 public abstract class AbstractInstallMojo extends AbstractMarkLogicMojo {
@@ -95,6 +97,27 @@ public abstract class AbstractInstallMojo extends AbstractMarkLogicMojo {
      * @parameter default-value="install.xqy" expression="${marklogic.install.module}"
      */
     protected String installModule;
+
+    protected Map<String, Session> sessions = new HashMap<String, Session>();
+
+    protected Session getSession(final String database) {
+        Session s = sessions.get(database);
+        if(s == null) {
+            s = getXccSession(database);
+            sessions.put(database, s);
+        }
+        return s;
+    }
+
+    protected void executeAction(final String action) throws MojoExecutionException {
+        getLog().info("Executing ".concat(action));
+        try {
+            ResultSequence rs = executeInstallAction(action, installModule);
+            getLog().debug(rs.asString());
+        } catch (RequestException e) {
+            throw new MojoExecutionException("xcc request error", e);
+        }
+    }
 
     protected ResultSequence executeInstallAction(String action, String module) throws RequestException {
     	Session session = this.getXccSession();

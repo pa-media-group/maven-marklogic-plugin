@@ -18,7 +18,10 @@ import static com.marklogic.xcc.ContentFactory.newContent;
  * @author Bob Browning <bob.browning@pressassociation.com>
  * @goal install-content
  */
-public class InstallContentMojo extends InstallMojo {
+public class InstallContentMojo extends AbstractInstallMojo {
+
+    protected static final String ACTION_INSTALL_CONTENT = "reinstall-content";
+
     public void execute() throws MojoExecutionException, MojoFailureException {
         executeAction(ACTION_INSTALL_CONTENT);
 
