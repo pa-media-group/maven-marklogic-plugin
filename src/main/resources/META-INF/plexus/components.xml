@@ -1,0 +1,14 @@
+<component-set>
+    <components>
+        <component>
+            <role>org.apache.maven.lifecycle.mapping.LifecycleMapping</role>
+            <role-hint>marklogic-app</role-hint>
+            <implementation>org.apache.maven.lifecycle.mapping.DefaultLifecycleMapping</implementation>
+            <configuration>
+                <phases>
+                    <install>com.marklogic.maven:maven-marklogic-plugin:install</install>
+                </phases>
+            </configuration>
+        </component>
+    </components>
+</component-set>
