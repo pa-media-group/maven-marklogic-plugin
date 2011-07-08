@@ -9,9 +9,7 @@ import org.apache.maven.plugin.MojoFailureException;
  */
 public class InstallServersMojo extends AbstractInstallMojo {
 
-    protected static final String ACTION_INSTALL_SERVERS = "install-servers";
-
     public void execute() throws MojoExecutionException, MojoFailureException {
-        executeAction(ACTION_INSTALL_SERVERS);
+        installServers();
     }
 }

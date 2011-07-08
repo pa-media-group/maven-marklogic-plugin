@@ -1,7 +1,6 @@
 package com.marklogic.maven;
 
 import com.marklogic.xcc.AdhocQuery;
-import com.marklogic.xcc.Content;
 import com.marklogic.xcc.Session;
 import com.marklogic.xcc.exceptions.RequestException;
 import org.apache.maven.plugin.MojoExecutionException;
@@ -9,7 +8,6 @@ import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.shared.model.fileset.util.FileSetManager;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.*;
 
 import static com.marklogic.xcc.ContentFactory.newContent;
@@ -18,7 +16,7 @@ import static com.marklogic.xcc.ContentFactory.newContent;
  * @author Bob Browning <bob.browning@pressassociation.com>
  * @goal uninstall-content
  */
-public class UninstallContentMojo extends AbstractInstallMojo {
+public class UninstallContentMojo extends AbstractDeploymentMojo {
 
     private static final String ACTION_UNINSTALL_CONTENT = "uninstall-content";
 

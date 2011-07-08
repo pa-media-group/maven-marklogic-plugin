@@ -9,14 +9,13 @@ import org.apache.maven.plugin.MojoFailureException;
  * 
  * @author <a href="mailto:mark.helmstetter@marklogic.com">Mark Helmstetter</a>
  * @goal uninstall
- * @execute lifecycle="mlcycle-uninstall" phase="install"
  */
-public class UninstallMojo extends AbstractInstallMojo {
+public class UninstallMojo extends AbstractDeploymentMojo {
 
     private static final String ACTION_UNINSTALL_ALL = "uninstall-all";
 
     public void execute() throws MojoExecutionException, MojoFailureException {
-//		executeAction(ACTION_UNINSTALL_ALL);
+		executeAction(ACTION_UNINSTALL_ALL);
 	}
 	
 }

@@ -9,9 +9,7 @@ import org.apache.maven.plugin.MojoFailureException;
  */
 public class InstallDatabasesMojo extends AbstractInstallMojo {
 
-    protected static final String ACTION_INSTALL_DATABASES = "install-databases";
-
     public void execute() throws MojoExecutionException, MojoFailureException {
-        executeAction(ACTION_INSTALL_DATABASES);
+        installDatabases();
     }
 }

@@ -1,5 +1,8 @@
 package com.marklogic.maven;
 
+import com.marklogic.xcc.AdhocQuery;
+import com.marklogic.xcc.Session;
+import com.marklogic.xcc.exceptions.RequestException;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 
@@ -11,12 +14,15 @@ import org.apache.maven.plugin.MojoFailureException;
  * @author <a href="mailto:mark.helmstetter@marklogic.com">Mark Helmstetter</a>
  * @author Bob Browning <bob.browning@pressassociation.com>
  * @goal install
- * @execute lifecycle="mlcycle-install" phase="install"
+ * @execute goal="bootstrap"
  */
 public final class InstallMojo extends AbstractInstallMojo {
 
     public void execute() throws MojoExecutionException, MojoFailureException {
-        // Does nothing, just forks the mlcyle lifecycle
+        installDatabases();
+        installServers();
+        installCPF();
+        installContent();
+        restartServers();
     }
-
 }

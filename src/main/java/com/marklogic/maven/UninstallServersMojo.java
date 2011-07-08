@@ -7,7 +7,7 @@ import org.apache.maven.plugin.MojoFailureException;
  * @author Bob Browning <bob.browning@pressassociation.com>
  * @goal uninstall-servers
  */
-public class UninstallServersMojo extends AbstractInstallMojo {
+public class UninstallServersMojo extends AbstractDeploymentMojo {
 
     private static final String ACTION_UNINSTALL_SERVERS = "uninstall-servers";
 

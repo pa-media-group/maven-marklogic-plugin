@@ -8,11 +8,12 @@ import org.apache.maven.plugin.MojoFailureException;
  * @goal uninstall-databases
  * @execute goal="uninstall-servers"
  */
-public class UninstallDatabases extends AbstractInstallMojo {
+public class UninstallDatabases extends AbstractDeploymentMojo {
 
     private static final String ACTION_UNINSTALL_DATABASES = "uninstall-databases";
 
     public void execute() throws MojoExecutionException, MojoFailureException {
         executeAction(ACTION_UNINSTALL_DATABASES);
+        restartServers();
     }
 }
