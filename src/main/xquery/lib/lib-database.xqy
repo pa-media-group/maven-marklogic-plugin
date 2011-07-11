@@ -5,7 +5,6 @@ module namespace inst-db = 'http://www.marklogic.com/ps/lib/lib-database.xqy';
 import module namespace admin = "http://marklogic.com/xdmp/admin" at "/MarkLogic/admin.xqy";
 import module namespace inst-idx = "http://www.marklogic.com/ps/lib/lib-index.xqy" at "/lib/lib-index.xqy";
 import module namespace inst-fld = "http://www.marklogic.com/ps/lib/lib-field.xqy" at "/lib/lib-field.xqy";
-import module namespace inst-trgr = "http://www.marklogic.com/ps/lib/lib-trigger.xqy" at "/lib/lib-trigger.xqy";
 import module namespace inst-db-set = "http://www.marklogic.com/ps/lib/lib-database-set.xqy" at "/lib/lib-database-set.xqy";
 import module namespace inst-db-add = "http://www.marklogic.com/ps/lib/lib-database-add.xqy" at "/lib/lib-database-add.xqy";
 
@@ -40,8 +39,7 @@ declare function  inst-db:install-databases($install-config)
     inst-db-set:do-sets($install-config),
     inst-db-add:do-adds($install-config),
     inst-idx:install-indices($install-config),
-    inst-fld:install-fields($install-config),
-    inst-trgr:install-triggers($install-config)
+    inst-fld:install-fields($install-config)
 )};
 
 declare function  inst-db:uninstall-databases($install-config, $delete-data)

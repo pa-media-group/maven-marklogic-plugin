@@ -26,6 +26,7 @@ if ("install-all" eq $action) then
 (
     $action,
     inst-db:install-databases($install-config),
+    inst-trgr:install-triggers($install-config),
     inst-app:install-servers($install-config),
     inst-cpf:install-cpf($install-config),
     inst-load:load-content($install-config),
@@ -46,8 +47,17 @@ else if ("install-databases" eq $action) then
 else if ("uninstall-databases" eq $action) then
 (
     $action,
-    inst-trgr:uninstall-triggers($install-config),
     inst-db:uninstall-databases($install-config, $delete-data)
+)
+else if ("install-triggers" eq $action) then
+(
+    $action,
+    inst-trgr:install-triggers($install-config)
+)
+else if ("uninstall-triggers" eq $action) then
+(
+    $action,
+    inst-trgr:uninstall-triggers($install-config)
 )
 else if ("install-servers" eq $action) then
 (   

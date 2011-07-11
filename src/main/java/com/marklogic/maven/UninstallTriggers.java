@@ -5,13 +5,13 @@ import org.apache.maven.plugin.MojoFailureException;
 
 /**
  * @author Bob Browning <bob.browning@pressassociation.com>
- * @goal uninstall-servers
+ * @goal uninstall-triggers
  */
-public class UninstallServersMojo extends AbstractDeploymentMojo {
+public class UninstallTriggers extends AbstractDeploymentMojo {
 
-    public static final String ACTION_UNINSTALL_SERVERS = "uninstall-servers";
+    public static final String ACTION_UNINSTALL_TRIGGERS = "uninstall-triggers";
 
     public void execute() throws MojoExecutionException, MojoFailureException {
-        executeAction(ACTION_UNINSTALL_SERVERS);
+        executeAction(ACTION_UNINSTALL_TRIGGERS);
     }
 }

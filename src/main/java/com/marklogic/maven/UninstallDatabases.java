@@ -10,9 +10,10 @@ import org.apache.maven.plugin.MojoFailureException;
  */
 public class UninstallDatabases extends AbstractDeploymentMojo {
 
-    private static final String ACTION_UNINSTALL_DATABASES = "uninstall-databases";
+    public static final String ACTION_UNINSTALL_DATABASES = "uninstall-databases";
 
     public void execute() throws MojoExecutionException, MojoFailureException {
+        executeAction(UninstallTriggers.ACTION_UNINSTALL_TRIGGERS);
         executeAction(ACTION_UNINSTALL_DATABASES);
         restartServers();
     }

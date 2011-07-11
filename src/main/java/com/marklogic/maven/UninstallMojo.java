@@ -9,6 +9,7 @@ import org.apache.maven.plugin.MojoFailureException;
  * 
  * @author <a href="mailto:mark.helmstetter@marklogic.com">Mark Helmstetter</a>
  * @goal uninstall
+ * @execute goal="bootstrap"
  */
 public class UninstallMojo extends AbstractDeploymentMojo {
 

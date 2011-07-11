@@ -36,10 +36,24 @@ declare function  inst-trgr:install-triggers($install-config)
 
 declare function  inst-trgr:uninstall-triggers($install-config)
 {
-  for $database in $install-config//conf:database 
-  let $triggers := $database/conf:trigger       
+  let $q := (::)'(::)
+      xquery version "1.0-ml";
+      import module namespace trgr="http://marklogic.com/xdmp/triggers" at "/MarkLogic/triggers.xqy";
+      declare variable $trigger-name external;
+      try { trgr:remove-trigger($trigger-name) } catch($e) { xdmp:log(text{$e//*:message, $trigger-name}) }
+  (::)'(::)
+
+  return for $database in $install-config//conf:database
+  let $triggers := $database/conf:trigger
+  let $content-database-name := inst-db:mk-database-name-from-string($install-config, $database/@name)
+  let $triggers-database := admin:database-get-triggers-database(admin:get-configuration(), xdmp:database($content-database-name))
   return if($triggers) then 
-    for $trigger in $triggers return try { trgr:remove-trigger($trigger/@name) } catch($e) { () }
+    for $trigger in $triggers
+    return xdmp:eval( $q
+                    , (xs:QName('trigger-name'), $trigger/@name/fn:string())
+                    , <options xmlns="xdmp:eval">
+                        <database>{$triggers-database}</database>
+                      </options> )
   else ()
 };
 

@@ -20,6 +20,7 @@ public final class InstallMojo extends AbstractInstallMojo {
 
     public void execute() throws MojoExecutionException, MojoFailureException {
         installDatabases();
+        installTriggers();
         installServers();
         installCPF();
         installContent();
