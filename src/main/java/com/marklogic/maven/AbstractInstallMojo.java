@@ -114,16 +114,20 @@ public abstract class AbstractInstallMojo extends AbstractDeploymentMojo {
                  */
                 Session session = getSession(targetDatabase);
 
-                for (String f : manager.getIncludedFiles(resource)) {
-                    File sourceFile = new File(resource.getDirectory(), f);
-                    File destinationFile = new File(resource.getOutputDirectory(), f);
-                    getLog().info(String.format("Deploying %s to %s", sourceFile.getPath(),
-                            destinationFile.getPath()));
-                    try {
-                        Content c = newContent(destinationFile.getPath(),
-                                getFileAsString(sourceFile), null);
-                        session.insertContent(c);
-                    } catch (IOException e) {
+                for (String f : manager.getIncludedFiles(resource)) 
+                {
+                	File sourceFile = new File(resource.getDirectory(), f);
+                	File destinationFile = new File(resource.getOutputDirectory(), f);
+
+                	String destinationPath = destinationFile.getPath().replace(File.separatorChar, '/');
+                	getLog().info(String.format("Deploying %s to %s", sourceFile.getPath(), destinationPath));
+
+                	try 
+                	{
+                		Content c = newContent(destinationPath, getFileAsString(sourceFile), null);
+                		session.insertContent(c);
+                    } 
+                	catch (IOException e) {
                         getLog().error("Failed to read content file ".concat(f), e);
                     } catch (RequestException e) {
                         getLog().error("Failed to insert content file ".concat(f), e);
@@ -137,5 +141,4 @@ public abstract class AbstractInstallMojo extends AbstractDeploymentMojo {
             sessions = new HashMap<String, Session>();
         }
     }
-
 }
