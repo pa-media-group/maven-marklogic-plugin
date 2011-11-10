@@ -2,6 +2,7 @@ package com.marklogic.maven;
 
 import com.marklogic.xcc.AdhocQuery;
 import com.marklogic.xcc.Content;
+import com.marklogic.xcc.ContentCreateOptions;
 import com.marklogic.xcc.Session;
 import com.marklogic.xcc.exceptions.RequestException;
 import org.apache.maven.plugin.MojoExecutionException;
@@ -124,7 +125,15 @@ public abstract class AbstractInstallMojo extends AbstractDeploymentMojo {
 
                 	try 
                 	{
-                		Content c = newContent(destinationPath, getFileAsString(sourceFile), null);
+                        ContentCreateOptions options = null;
+                        String[] collections = resource.getCollections();
+
+                        if (collections != null && collections.length > 0)
+                        {
+                            options = new ContentCreateOptions();
+                            options.setCollections(collections);
+                        }
+                        Content c = newContent(destinationPath, getFileAsString(sourceFile), options);
                 		session.insertContent(c);
                     } 
                 	catch (IOException e) {
