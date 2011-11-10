@@ -18,4 +18,18 @@ public class ResourceFileSet extends FileSet {
     public String getDatabase() {
         return database;
     }
+
+/**
+     * The collection to load the specified resources into
+     *
+     * @parameter
+     * @optional
+     */
+    private String[] collections;
+
+    public String[] getCollections() {
+        return collections;
+    }
+
+
 }
