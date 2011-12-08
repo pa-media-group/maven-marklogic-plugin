@@ -16,6 +16,17 @@
                     <executeProperties>
                       <some.property>${project.artifactId}</some.property>
                     </executeProperties>
+                    <xqueryExecutions>
+                      <execution>
+                        <xquery>src/main/xquery/sample.xqy</xquery>
+                        <properties>
+                          <property.name>value</property.name> <!-- external as property_name -->
+                        </properties>
+                      </execution>
+                      <execution>
+                        <xquery>src/main/xquery/sample.xqy</xquery>
+                      </execution>
+                    </xqueryExecutions>
                     <xdbcPort>8997</xdbcPort>
                     <xdbcName>8997-TestInstaller</xdbcName>
                     <xdbcModuleRoot>/</xdbcModuleRoot>

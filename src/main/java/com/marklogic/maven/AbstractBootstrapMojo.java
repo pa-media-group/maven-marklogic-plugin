@@ -51,7 +51,7 @@ public abstract class AbstractBootstrapMojo extends AbstractMarkLogicMojo {
 	protected HttpResponse executeBootstrapQuery(String query) throws MojoExecutionException {
 		HttpClient httpClient = this.getHttpClient();
 		List<NameValuePair> qparams = new ArrayList<NameValuePair>();
-		qparams.add(new BasicNameValuePair("queryInput", getBootstrapExecuteQuery()));
+		qparams.add(new BasicNameValuePair("queryInput", query));
 		URI uri;
 		try {
 			uri = URIUtils.createURI("http", this.host, bootstrapPort, "/use-cases/eval2.xqy", 
