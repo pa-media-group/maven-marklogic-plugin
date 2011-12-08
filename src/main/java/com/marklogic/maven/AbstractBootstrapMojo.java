@@ -42,27 +42,27 @@ public abstract class AbstractBootstrapMojo extends AbstractMarkLogicMojo {
      */    
     protected String xdbcModuleRoot = "/";
 
-    protected abstract String getBootstrapExecuteQuery();
+    protected abstract String getBootstrapExecuteQuery() throws MojoExecutionException;
 	
 	public void execute() throws MojoExecutionException, MojoFailureException {
-		HttpResponse response = executeBootstrapQuery(getBootstrapExecuteQuery());
+		executeBootstrapQuery(getBootstrapExecuteQuery());
 	}
 	
 	protected HttpResponse executeBootstrapQuery(String query) throws MojoExecutionException {
 		HttpClient httpClient = this.getHttpClient();
 		List<NameValuePair> qparams = new ArrayList<NameValuePair>();
 		qparams.add(new BasicNameValuePair("queryInput", getBootstrapExecuteQuery()));
-		URI uri = null;
+		URI uri;
 		try {
 			uri = URIUtils.createURI("http", this.host, bootstrapPort, "/use-cases/eval2.xqy", 
 			URLEncodedUtils.format(qparams, "UTF-8"), null);
 		} catch (URISyntaxException e1) {
-			throw new MojoExecutionException("Unvalid uri", e1);
+			throw new MojoExecutionException("Invalid uri", e1);
 		}
 		
 		HttpPost httpPost = new HttpPost(uri);
 		
-		HttpResponse response = null;
+		HttpResponse response;
         try {
         	response = httpClient.execute(httpPost);
 		} catch (Exception e) {

@@ -11,8 +11,11 @@
             <plugin>
                 <groupId>com.marklogic.maven</groupId>
                 <artifactId>maven-marklogic-plugin</artifactId>
-                <version>0.2-SNAPSHOT</version>
+                <version>0.4.1-SNAPSHOT</version>
                 <configuration>
+                    <executeProperties>
+                      <some.property>${project.artifactId}</some.property>
+                    </executeProperties>
                     <xdbcPort>8997</xdbcPort>
                     <xdbcName>8997-TestInstaller</xdbcName>
                     <xdbcModuleRoot>/</xdbcModuleRoot>

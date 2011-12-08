@@ -13,7 +13,15 @@ public class XQueryModule {
         sb.append(')');
         return sb.toString();
     }
-
+    
+    public static String createQName(final String value) {
+        return invokeFunction("xs", "QName", quote(value));
+    }
+    
+    public static String createQName(final String prefix, final String value) {
+            return invokeFunction("fn", "QName", quote(prefix), quote(value));
+    }
+    
     public static String quote(final String value) {
         return quote(value, true);
     }
