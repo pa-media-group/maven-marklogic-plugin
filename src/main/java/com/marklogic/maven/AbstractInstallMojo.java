@@ -9,6 +9,8 @@ import java.util.Map;
 
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.shared.model.fileset.util.FileSetManager;
+import org.codehaus.plexus.configuration.PlexusConfiguration;
+import org.codehaus.plexus.configuration.PlexusConfigurationException;
 
 import com.marklogic.xcc.AdhocQuery;
 import com.marklogic.xcc.Content;
@@ -208,5 +210,46 @@ public abstract class AbstractInstallMojo extends AbstractDeploymentMojo {
 			sessions = new HashMap<String, Session>();
 		}
 	}
+	
+	 protected void invokeModules() 
+	    {
+	    	PlexusConfiguration invokes = getCurrentEnvironment().getModuleInvokes();
+	    	
+	    	if (invokes == null || invokes.getChildCount() == 0)
+	    		return;
+	    	
+			String appName = getCurrentEnvironment().getApplicationName();
+
+			for (PlexusConfiguration config : invokes.getChildren() )
+	    	{
+				try
+				{
+					String modulePath = config.getChild("module").getValue();
+					String serverName = config.getChild("server").getValue();
+					
+					PlexusConfiguration server = getServer(serverName);
+			
+					String database = appName + "-" + server.getAttribute("database");
+					int port = Integer.parseInt( server.getAttribute("port") );
+
+					getLog().info("-------------------------------------------------------------------- ");
+					getLog().info("Invoking module on " + database);
+					getLog().info("-------------------------------------------------------------------- ");
+					getLog().info("Connecting to : " + host + " : " + port );
+					getLog().info("  Module Path : " + modulePath);
+					
+					Session session = getXccSession(database, port);
+					session.submitRequest( session.newModuleInvoke(modulePath) );
+				} 
+				catch (PlexusConfigurationException e)
+				{
+					e.printStackTrace();
+				} 
+				catch (RequestException e)
+				{
+					e.printStackTrace();
+				}
+	    	}
+	    }
 
 }

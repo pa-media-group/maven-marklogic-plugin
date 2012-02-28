@@ -90,6 +90,11 @@ public abstract class AbstractMarkLogicMojo extends AbstractMojo {
         return session;
     }
 
+	protected Session getXccSession(final String database, final int port) 
+	{
+		return ContentSourceFactory.newContentSource(host, port, username, password, database).newSession();
+	}
+	
     protected String getXdbcConnectionString() {
     	StringBuilder sb = new StringBuilder();
     	sb.append("xcc://");

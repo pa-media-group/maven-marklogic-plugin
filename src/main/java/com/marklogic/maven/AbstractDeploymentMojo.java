@@ -68,6 +68,14 @@ public abstract class AbstractDeploymentMojo extends AbstractMarkLogicMojo {
      *                 </includes>
      *             </resource>
      *         </resources>
+     *         
+     *         <module-invokes>
+     *         		<module-invoke>
+     *     				<server>XCC</server>			
+     *     				<module>static/load-lookups.xqy</module>
+     *     			</module-invoke>	
+     *         </module-invokes>
+     *         
      *     </environment>
      *     ...
      * </environments>
@@ -257,6 +265,28 @@ public abstract class AbstractDeploymentMojo extends AbstractMarkLogicMojo {
         }
     }
 
+    /**
+     * Get the server configuration with name attribute of value parameter 
+     * 
+     * @param value
+     * @return
+     * @throws PlexusConfigurationException
+     */
+    protected PlexusConfiguration getServer(String value) throws PlexusConfigurationException
+  	{
+  		PlexusConfiguration[] servers = getCurrentEnvironment().getServers().getChildren();
+
+  		for (PlexusConfiguration cfg : servers)
+  		{
+  			if (value != null && value.equals( cfg.getAttribute("name") ) )
+  			{
+  				return cfg;
+  			}
+  		}
+  		throw new PlexusConfigurationException("Unknown server configuration: " + value);
+  	}
+    
+    
     /**
      * Creates a configuration file based on the specification defined in the environment block
      *

@@ -67,6 +67,14 @@ public class MLInstallEnvironment {
     protected PlexusConfiguration servers;
 
     /**
+     * Module Invoker configuration.
+     *
+     * @parameter
+     */
+    protected PlexusConfiguration moduleInvokes;
+
+    
+    /**
      * Return the name of the environment
      *
      * @return
@@ -102,6 +110,15 @@ public class MLInstallEnvironment {
         return servers;
     }
 
+    /**
+     * Return the set of modules to be invoked and the servers to invoke them against.
+     *
+     * @return
+     */
+    public PlexusConfiguration getModuleInvokes() {
+        return moduleInvokes;
+    }
+    
     /**
      * Return the application name
      *
