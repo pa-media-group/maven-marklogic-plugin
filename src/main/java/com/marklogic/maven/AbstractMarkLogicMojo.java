@@ -74,6 +74,13 @@ public abstract class AbstractMarkLogicMojo extends AbstractMojo {
      * @parameter default-value="InstallModules" expression="${marklogic.xdbc.modules-db}"
      */
     protected String xdbcModulesDatabase;
+
+    /**
+     * The control to install the bootstrap server
+     *
+     * @parameter default-value="true" expression="${marklogic.bootstrap}"
+     */
+    protected boolean installBootstrap;
     
     protected Session getXccSession() {
     	return getXccSession(database);

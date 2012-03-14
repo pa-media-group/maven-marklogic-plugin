@@ -45,7 +45,10 @@ public abstract class AbstractBootstrapMojo extends AbstractMarkLogicMojo {
     protected abstract String getBootstrapExecuteQuery() throws MojoExecutionException;
 	
 	public void execute() throws MojoExecutionException, MojoFailureException {
-		executeBootstrapQuery(getBootstrapExecuteQuery());
+        getLog().info("Install Bootstrap = " + installBootstrap);
+        if (installBootstrap) {
+		    executeBootstrapQuery(getBootstrapExecuteQuery());
+        }
 	}
 	
 	protected HttpResponse executeBootstrapQuery(String query) throws MojoExecutionException {
