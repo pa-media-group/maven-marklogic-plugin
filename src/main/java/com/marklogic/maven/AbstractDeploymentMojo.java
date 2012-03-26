@@ -41,36 +41,44 @@ public abstract class AbstractDeploymentMojo extends AbstractMarkLogicMojo {
      * For example
      * <p/>
      * <environments>
-     * <environment>
-     * <name>development</name>
-     * <applicationName>Demo-Development</applicationName>
-     * <title>Demo (Development)</title>
-     * <databases>
-     * { database nodes for configuration xml }
-     * </databases>
-     * <servers>
-     * { server nodes for configuration xml }
-     * </servers>
-     * <pipeline-resources>
-     * <resource>
-     * <database>Triggers</database>
-     * <directory>${basedir}/src/main/marklogic/pipelines</directory>
-     * <includes>
-     * <include>demp-pipeline.xml</include>
-     * </includes>
-     * </resource>
-     * </pipeline-resources>
-     * <resources>
-     * <resource>
-     * <database>Content</database>
-     * <directory>${basedir}/src/main/xquery</directory>
-     * <includes>
-     * <include>*.xqy</include>
-     * </includes>
-     * </resource>
-     * </resources>
-     * </environment>
-     * ...
+     *     <environment>
+     *         <name>development</name>
+     *         <applicationName>Demo-Development</applicationName>
+     *         <title>Demo (Development)</title>
+     *         <databases>
+     *             { database nodes for configuration xml }
+     *         </databases>
+     *         <servers>
+     *             { server nodes for configuration xml }
+     *         </servers>
+     *         <pipeline-resources>
+     *             <resource>
+     *                 <database>Triggers</database>
+     *                 <directory>${basedir}/src/main/marklogic/pipelines</directory>
+     *                 <includes>
+     *                     <include>demp-pipeline.xml</include>
+     *                 </includes>
+     *             </resource>
+     *         </pipeline-resources>
+     *         <resources>
+     *             <resource>
+     *                 <database>Content</database>
+     *                 <directory>${basedir}/src/main/xquery</directory>
+     *                 <includes>
+     *                     <include>*.xqy</include>
+     *                 </includes>
+     *             </resource>
+     *         </resources>
+     *         
+     *         <module-invokes>
+     *         		<module-invoke>
+     *     				<server>XCC</server>			
+     *     				<module>static/load-lookups.xqy</module>
+     *     			</module-invoke>	
+     *         </module-invokes>
+     *         
+     *     </environment>
+     *     ...
      * </environments>
      */
     @MojoParameter
@@ -259,6 +267,28 @@ public abstract class AbstractDeploymentMojo extends AbstractMarkLogicMojo {
         }
     }
 
+    /**
+     * Get the server configuration with name attribute of value parameter 
+     * 
+     * @param value
+     * @return
+     * @throws PlexusConfigurationException
+     */
+    protected PlexusConfiguration getServer(String value) throws PlexusConfigurationException
+  	{
+  		PlexusConfiguration[] servers = getCurrentEnvironment().getServers().getChildren();
+
+  		for (PlexusConfiguration cfg : servers)
+  		{
+  			if (value != null && value.equals( cfg.getAttribute("name") ) )
+  			{
+  				return cfg;
+  			}
+  		}
+  		throw new PlexusConfigurationException("Unknown server configuration: " + value);
+  	}
+    
+    
     /**
      * Creates a configuration file based on the specification defined in the environment block
      *

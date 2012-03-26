@@ -58,6 +58,9 @@ public class BootstrapUninstallMojo extends AbstractBootstrapMojo {
 
     public void execute() throws MojoExecutionException, MojoFailureException {
         getLog().info("bootstrap-uninstall execute");
-        super.execute();
+        getLog().info("Install Bootstrap = " + installBootstrap);
+        if (installBootstrap) {
+            super.execute();
+        }
     }
 }

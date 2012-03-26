@@ -58,7 +58,14 @@ public class MLInstallEnvironment {
     protected PlexusConfiguration servers;
 
     /**
-     * @return the name of the environment
+     * Module Invoker configuration.
+     */
+    @MojoParameter
+    protected PlexusConfiguration moduleInvokes;
+
+    
+    /**
+     * @return the name of the environment.
      */
     public String getName() {
         return name;
@@ -85,6 +92,13 @@ public class MLInstallEnvironment {
         return servers;
     }
 
+    /**
+     * @return the set of modules to be invoked and the servers to invoke them against.
+     */
+    public PlexusConfiguration getModuleInvokes() {
+        return moduleInvokes;
+    }
+    
     /**
      * @return the application name
      */

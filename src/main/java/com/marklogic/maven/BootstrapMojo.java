@@ -89,6 +89,9 @@ public class BootstrapMojo extends AbstractBootstrapMojo {
 
     public void execute() throws MojoExecutionException, MojoFailureException {
         getLog().info("bootstrap execute");
+        if (!installBootstrap) {
+            return;
+        }
         super.execute();
 
         if (!"file-system".equalsIgnoreCase(xdbcModulesDatabase)) {

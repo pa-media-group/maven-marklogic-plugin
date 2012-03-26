@@ -25,7 +25,7 @@ public abstract class AbstractBootstrapMojo extends AbstractMarkLogicMojo {
     /**
      * The port used to bootstrap MarkLogic Server.
      */
-    @MojoParameter(defaultValue = "8080", expression = "${marklogic.bootstrap.port}")
+    @MojoParameter(defaultValue = "8000", expression = "${marklogic.bootstrap.port}")
     protected int bootstrapPort;
 
     /**
@@ -43,7 +43,10 @@ public abstract class AbstractBootstrapMojo extends AbstractMarkLogicMojo {
     protected abstract String getBootstrapExecuteQuery() throws MojoExecutionException;
 
     public void execute() throws MojoExecutionException, MojoFailureException {
-        executeBootstrapQuery(getBootstrapExecuteQuery());
+        getLog().info("Install Bootstrap = " + installBootstrap);
+        if (installBootstrap) {
+            executeBootstrapQuery(getBootstrapExecuteQuery());
+        }
     }
 
     protected HttpResponse executeBootstrapQuery(String query) throws MojoExecutionException {
@@ -61,6 +64,7 @@ public abstract class AbstractBootstrapMojo extends AbstractMarkLogicMojo {
         HttpPost httpPost = new HttpPost(uri);
 
         HttpResponse response;
+
         try {
             response = httpClient.execute(httpPost);
         } catch (Exception e) {

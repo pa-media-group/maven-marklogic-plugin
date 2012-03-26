@@ -1,12 +1,11 @@
 package com.marklogic.maven;
 
-import com.marklogic.xcc.AdhocQuery;
-import com.marklogic.xcc.Content;
-import com.marklogic.xcc.ContentCreateOptions;
-import com.marklogic.xcc.Session;
+import com.marklogic.xcc.*;
 import com.marklogic.xcc.exceptions.RequestException;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.shared.model.fileset.util.FileSetManager;
+import org.codehaus.plexus.configuration.PlexusConfiguration;
+import org.codehaus.plexus.configuration.PlexusConfigurationException;
 
 import java.io.File;
 import java.io.IOException;
@@ -31,8 +30,8 @@ public abstract class AbstractInstallMojo extends AbstractDeploymentMojo {
 
         if (getCurrentEnvironment().getResources() != null) {
             /*
-             * Install content resources from maven project
-             */
+                * Install content resources from maven project
+                */
             installResources(getCurrentEnvironment().getResources());
         }
     }
@@ -40,8 +39,8 @@ public abstract class AbstractInstallMojo extends AbstractDeploymentMojo {
     protected void installCPF() throws MojoExecutionException {
         if (getCurrentEnvironment().getPipelineResources() != null) {
             /*
-             * Install pipeline resources from maven project
-             */
+                * Install pipeline resources from maven project
+                */
             installPipeline(getCurrentEnvironment().getPipelineResources());
         }
 
@@ -60,37 +59,43 @@ public abstract class AbstractInstallMojo extends AbstractDeploymentMojo {
         executeAction(ACTION_INSTALL_SERVERS);
     }
 
-
     private void installPipeline(ResourceFileSet[] resources) {
         try {
             FileSetManager manager = new FileSetManager();
 
             for (ResourceFileSet resource : resources) {
-                final String targetDatabase = getCurrentEnvironment().getApplicationName() + "-" + resource.getDatabase();
+                final String targetDatabase = getCurrentEnvironment()
+                        .getApplicationName() + "-" + resource.getDatabase();
                 getLog().info(" -- ".concat(targetDatabase).concat(" -- "));
 
                 /*
-                 * Get connection to database for uploading content
-                 */
+                     * Get connection to database for uploading content
+                     */
                 Session session = getSession(targetDatabase);
 
-                AdhocQuery query = session.newAdhocQuery("(::)\n" +
-                        "xquery version \"1.0-ml\";\n" +
-                        "import module namespace p = \"http://marklogic.com/cpf/pipelines\" at \"/MarkLogic/cpf/pipelines.xqy\";\n" +
-                        "declare variable $file as xs:string external; \n" +
-                        "p:insert( xdmp:unquote($file)/* )\n" +
-                        "(::)");
+                AdhocQuery query = session
+                        .newAdhocQuery("(::)\n"
+                                + "xquery version \"1.0-ml\";\n"
+                                + "import module namespace p = \"http://marklogic.com/cpf/pipelines\" at \"/MarkLogic/cpf/pipelines.xqy\";\n"
+                                + "declare variable $file as xs:string external; \n"
+                                + "p:insert( xdmp:unquote($file)/* )\n"
+                                + "(::)");
 
                 for (String f : manager.getIncludedFiles(resource)) {
                     File sourceFile = new File(resource.getDirectory(), f);
-                    getLog().info(String.format("Loading pipeline configuration %s", sourceFile.getPath()));
+                    getLog().info(
+                            String.format("Loading pipeline configuration %s",
+                                    sourceFile.getPath()));
                     try {
-                        query.setNewStringVariable("file", getFileAsString(sourceFile));
+                        query.setNewStringVariable("file",
+                                getFileAsString(sourceFile));
                         session.submitRequest(query);
                     } catch (IOException e) {
-                        getLog().error("Failed to read pipeline file ".concat(f), e);
+                        getLog().error(
+                                "Failed to read pipeline file ".concat(f), e);
                     } catch (RequestException e) {
-                        getLog().error("Failed to insert pipeline file ".concat(f), e);
+                        getLog().error(
+                                "Failed to insert pipeline file ".concat(f), e);
                     }
                 }
             }
@@ -107,34 +112,87 @@ public abstract class AbstractInstallMojo extends AbstractDeploymentMojo {
             FileSetManager manager = new FileSetManager();
 
             for (ResourceFileSet resource : resources) {
-                final String targetDatabase = getCurrentEnvironment().getApplicationName() + "-" + resource.getDatabase();
+                final String targetDatabase = getCurrentEnvironment()
+                        .getApplicationName() + "-" + resource.getDatabase();
                 getLog().info(" -- ".concat(targetDatabase).concat(" -- "));
 
                 /*
-                 * Get connection to database for uploading content
-                 */
+                     * Get connection to database for uploading content
+                     */
                 Session session = getSession(targetDatabase);
+
+                ContentCreateOptions options = null;
+                options = new ContentCreateOptions();
+
+                String[] collections = resource.getCollections();
+                if (collections != null && collections.length > 0) {
+                    options.setCollections(collections);
+                }
+
+                Permission[] permissions = resource.getPermissions();
+                if (permissions != null && permissions.length > 0) {
+                    ContentPermission[] contentPermissions = new ContentPermission[permissions.length];
+                    int i = 0;
+                    for (Permission permission : permissions) {
+                        String capability = permission.getCapability();
+                        ContentCapability contentCapability = null;
+
+                        if (capability.equals("execute"))
+                            contentCapability = ContentCapability.EXECUTE;
+                        else if (capability.equals("read"))
+                            contentCapability = ContentCapability.READ;
+                        else if (capability.equals("insert"))
+                            contentCapability = ContentCapability.INSERT;
+                        else if (capability.equals("update"))
+                            contentCapability = ContentCapability.UPDATE;
+                        else
+                            throw new RuntimeException(
+                                    "Unknown permission capability for role '"
+                                            + permission.getRole() + "' : "
+                                            + capability);
+
+                        ContentPermission contentPermission = new ContentPermission(
+                                contentCapability, permission.getRole());
+                        contentPermissions[i++] = contentPermission;
+                    }
+                    options.setPermissions(contentPermissions);
+                }
+
+                String format = resource.getFormat();
+                if (format != null && format.length() > 0) {
+                    if (format.equals("xml"))
+                        options.setFormat(DocumentFormat.XML);
+                    else if (format.equals("text"))
+                        options.setFormat(DocumentFormat.TEXT);
+                    else if (format.equals("binary"))
+                        options.setFormat(DocumentFormat.BINARY);
+                    else if (format.equals("none"))
+                        options.setFormat(DocumentFormat.NONE);
+                    else
+                        throw new RuntimeException("Unknown format: " + format);
+                }
 
                 for (String f : manager.getIncludedFiles(resource)) {
                     File sourceFile = new File(resource.getDirectory(), f);
-                    File destinationFile = new File(resource.getOutputDirectory(), f);
+                    File destinationFile = new File(
+                            resource.getOutputDirectory(), f);
 
-                    String destinationPath = destinationFile.getPath().replace(File.separatorChar, '/');
-                    getLog().info(String.format("Deploying %s to %s", sourceFile.getPath(), destinationPath));
+                    String destinationPath = destinationFile.getPath().replace(
+                            File.separatorChar, '/');
+                    getLog().info(
+                            String.format("Deploying %s to %s",
+                                    sourceFile.getPath(), destinationPath));
                     try {
-                        ContentCreateOptions options = null;
-                        String[] collections = resource.getCollections();
 
-                        if (collections != null && collections.length > 0) {
-                            options = new ContentCreateOptions();
-                            options.setCollections(collections);
-                        }
-                        Content c = newContent(destinationPath, getFileAsString(sourceFile), options);
+                        Content c = newContent(destinationPath,
+                                getFileAsString(sourceFile), options);
                         session.insertContent(c);
                     } catch (IOException e) {
-                        getLog().error("Failed to read content file ".concat(f), e);
+                        getLog().error(
+                                "Failed to read content file ".concat(f), e);
                     } catch (RequestException e) {
-                        getLog().error("Failed to insert content file ".concat(f), e);
+                        getLog().error(
+                                "Failed to insert content file ".concat(f), e);
                     }
                 }
             }
@@ -143,6 +201,40 @@ public abstract class AbstractInstallMojo extends AbstractDeploymentMojo {
                 e.getValue().close();
             }
             sessions = new HashMap<String, Session>();
+        }
+    }
+
+    protected void invokeModules() {
+        PlexusConfiguration invokes = getCurrentEnvironment().getModuleInvokes();
+
+        if (invokes == null || invokes.getChildCount() == 0)
+            return;
+
+        String appName = getCurrentEnvironment().getApplicationName();
+
+        for (PlexusConfiguration config : invokes.getChildren()) {
+            try {
+                String modulePath = config.getChild("module").getValue();
+                String serverName = config.getChild("server").getValue();
+
+                PlexusConfiguration server = getServer(serverName);
+
+                String database = appName + "-" + server.getAttribute("database");
+                int port = Integer.parseInt(server.getAttribute("port"));
+
+                getLog().info("-------------------------------------------------------------------- ");
+                getLog().info("Invoking module on " + database);
+                getLog().info("-------------------------------------------------------------------- ");
+                getLog().info("Connecting to : " + host + " : " + port);
+                getLog().info("  Module Path : " + modulePath);
+
+                Session session = getXccSession(database, port);
+                session.submitRequest(session.newModuleInvoke(modulePath));
+            } catch (PlexusConfigurationException e) {
+                e.printStackTrace();
+            } catch (RequestException e) {
+                e.printStackTrace();
+            }
         }
     }
 

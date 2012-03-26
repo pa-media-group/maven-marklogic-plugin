@@ -65,6 +65,12 @@ public abstract class AbstractMarkLogicMojo extends AbstractMojo {
     @MojoParameter(defaultValue = "InstallModules", expression = "${marklogic.xdbc.modules-db}")
     protected String xdbcModulesDatabase;
 
+    /**
+     * The control to install the bootstrap server.
+     */
+    @MojoParameter(defaultValue = "true", expression = "${marklogic.bootstrap}")
+    protected boolean installBootstrap;
+    
     protected Session getXccSession() {
         return getXccSession(database);
     }
@@ -79,6 +85,11 @@ public abstract class AbstractMarkLogicMojo extends AbstractMojo {
         return cs.newSession();
     }
 
+	protected Session getXccSession(final String database, final int port) 
+	{
+		return ContentSourceFactory.newContentSource(host, port, username, password, database).newSession();
+	}
+	
     protected String getXdbcConnectionString() {
         StringBuilder sb = new StringBuilder();
         sb.append("xcc://");

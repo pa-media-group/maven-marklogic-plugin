@@ -45,8 +45,10 @@ public class UninstallContentMojo extends AbstractDeploymentMojo {
 
                 for (String f : manager.getIncludedFiles(resource)) {
                     File destinationFile = new File(resource.getOutputDirectory(), f);
-                    getLog().info(String.format("Submitting %s for removal.", destinationFile.getPath()));
-                    uris.add(destinationFile.getPath());
+                    String destinationPath = destinationFile.getPath().replace(
+                            File.separatorChar, '/');
+                    getLog().info(String.format("Submitting %s for removal.", destinationPath));
+                    uris.add(destinationPath);
                 }
 
                 StringBuilder b = new StringBuilder("for $uri in (");

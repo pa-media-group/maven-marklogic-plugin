@@ -22,6 +22,7 @@ public final class InstallMojo extends AbstractInstallMojo {
         installServers();
         installCPF();
         installContent();
+        invokeModules();
         restartServers();
     }
 }
