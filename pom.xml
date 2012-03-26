@@ -43,6 +43,14 @@
                 <role>Developer</role>
             </roles>
         </developer>
+        <developer>
+            <id>darpholgshon</id>
+            <name>Ralph Hodgson</name>
+            <email>ralph.hodgson@pressassociation.com</email>
+            <roles>
+                <role>Developer</role>
+            </roles>
+        </developer>
     </developers>
 
     <repositories>
