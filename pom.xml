@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.marklogic.maven</groupId>
-    <artifactId>maven-marklogic-plugin</artifactId>
+    <artifactId>marklogic-plugin</artifactId>
     <version>0.4.1-SNAPSHOT</version>
     <packaging>maven-plugin</packaging>
 
@@ -21,33 +21,29 @@
     </licenses>
 
     <scm>
-        <connection>scm:svn:http://svn.helmstetter.com/trunk/maven-marklogic-plugin/</connection>
-        <url>http://svn.helmstetter.com/trunk/maven-marklogic-plugin/</url>
+        <connection>scm:git:git@github.com:ukcrpb6/maven-marklogic-plugin.git</connection>
+        <developerConnection>scm:git:git@github.com:ukcrpb6/maven-marklogic-plugin.git</developerConnection>
+        <url>http://github.com/ukcrpb6/maven-marklogic-plugin/</url>
     </scm>
 
     <developers>
         <developer>
-            <id>mhelmstetter</id>
-            <name>Mark Helmstetter</name>
-            <email>mark@helmstetter.com</email>
-            <timezone>-5</timezone>
+            <id>bobb</id>
+            <name>Bob Browning</name>
+            <email>bob.browing@pressassociation.com</email>
             <roles>
                 <role>Maintainer</role>
             </roles>
         </developer>
+        <developer>
+            <id>gphaydon</id>
+            <name>Gavin Haydon</name>
+            <email>gavin.haydon@pressassociation.com</email>
+            <roles>
+                <role>Developer</role>
+            </roles>
+        </developer>
     </developers>
-
-    <distributionManagement>
-        <repository>
-            <id>helmstetter-maven</id>
-            <name>helmstetter-maven</name>
-            <url>scp://helmstetter.com/var/www/helmstetter.com/maven</url>
-        </repository>
-        <site>
-            <id>helmstetter-maven</id>
-            <url>scp://helmstetter.com/var/www/helmstetter.com/maven-marklogic-plugin</url>
-        </site>
-    </distributionManagement>
 
     <repositories>
         <repository>
@@ -60,7 +56,23 @@
             <name>developer.marklogic.com maven repository</name>
             <url>http://developer.marklogic.com/maven2/</url>
         </repository>
+        <repository>
+            <id>jfrog</id>
+            <name>jfrog</name>
+            <url>http://repo.jfrog.org/artifactory/plugins-releases-local</url>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
     </repositories>
+
+    <pluginRepositories>
+        <pluginRepository>
+            <id>jfrog</id>
+            <name>jfrog</name>
+            <url>http://repo.jfrog.org/artifactory/plugins-releases-local</url>
+        </pluginRepository>
+    </pluginRepositories>
 
     <properties>
         <mavenVersion>2.2.1</mavenVersion>
@@ -175,15 +187,33 @@
             <plugins>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-plugin-plugin</artifactId>
+                    <version>2.9</version>
+                    <configuration>
+                        <goalPrefix>marklogic</goalPrefix>
+                    </configuration>
+                    <dependencies>
+                        <dependency>
+                            <groupId>org.jfrog.maven.annomojo</groupId>
+                            <artifactId>maven-plugin-tools-anno</artifactId>
+                            <version>1.4.1</version>
+                            <scope>runtime</scope>
+                        </dependency>
+                    </dependencies>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-compiler-plugin</artifactId>
                     <configuration>
-                        <source>1.5</source>
-                        <target>1.5</target>
+                        <source>1.6</source>
+                        <target>1.6</target>
+                        <encoding>UTF-8</encoding>
                     </configuration>
                 </plugin>
             </plugins>
         </pluginManagement>
     </build>
+
     <reporting>
         <plugins>
             <plugin>
