@@ -3,12 +3,12 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.marklogic.maven</groupId>
-    <artifactId>marklogic-plugin</artifactId>
-    <version>0.4.1-SNAPSHOT</version>
+    <artifactId>marklogic-maven-plugin</artifactId>
+    <version>0.4.2-SNAPSHOT</version>
     <packaging>maven-plugin</packaging>
 
-    <name>Maven MarkLogic Plugin</name>
-    <description>Maven MarkLogic Plugin</description>
+    <name>MarkLogic Maven Plugin</name>
+    <description>Allows controlled deployment of marklogic server environments</description>
     <inceptionYear>2010</inceptionYear>
     <url>http://maven.apache.org</url>
 
