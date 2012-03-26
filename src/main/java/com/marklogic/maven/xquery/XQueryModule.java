@@ -4,7 +4,7 @@ public class XQueryModule {
     public static String invokeFunction(final String functionPrefix, final String functionName, String... args) {
         StringBuilder sb = new StringBuilder();
         sb.append(functionPrefix).append(':').append(functionName).append('(');
-        if(args.length > 0) {
+        if (args.length > 0) {
             sb.append(args[0]);
             for (int i = 1; i < args.length; i++) {
                 sb.append(',').append(args[i]);
@@ -13,15 +13,15 @@ public class XQueryModule {
         sb.append(')');
         return sb.toString();
     }
-    
+
     public static String createQName(final String value) {
         return invokeFunction("xs", "QName", quote(value));
     }
-    
+
     public static String createQName(final String prefix, final String value) {
-            return invokeFunction("fn", "QName", quote(prefix), quote(value));
+        return invokeFunction("fn", "QName", quote(prefix), quote(value));
     }
-    
+
     public static String quote(final String value) {
         return quote(value, true);
     }

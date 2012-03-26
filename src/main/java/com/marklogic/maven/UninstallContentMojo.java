@@ -6,23 +6,24 @@ import com.marklogic.xcc.exceptions.RequestException;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.shared.model.fileset.util.FileSetManager;
+import org.jfrog.maven.annomojo.annotations.MojoGoal;
 
 import java.io.File;
 import java.util.*;
 
-import static com.marklogic.xcc.ContentFactory.newContent;
-
 /**
+ * Uninstall content from database.
+ *
  * @author Bob Browning <bob.browning@pressassociation.com>
- * @goal uninstall-content
  */
+@MojoGoal("uninstall-content")
 public class UninstallContentMojo extends AbstractDeploymentMojo {
 
     private static final String ACTION_UNINSTALL_CONTENT = "uninstall-content";
 
     public void execute() throws MojoExecutionException, MojoFailureException {
         executeAction(ACTION_UNINSTALL_CONTENT);
-        if(getCurrentEnvironment().getResources() != null) {
+        if (getCurrentEnvironment().getResources() != null) {
             uninstallResources(getCurrentEnvironment().getResources());
         }
     }
@@ -50,9 +51,9 @@ public class UninstallContentMojo extends AbstractDeploymentMojo {
 
                 StringBuilder b = new StringBuilder("for $uri in (");
                 Iterator iter = uris.iterator();
-                while(iter.hasNext()) {
+                while (iter.hasNext()) {
                     b.append("'").append((String) iter.next()).append("'");
-                    if(iter.hasNext()) {
+                    if (iter.hasNext()) {
                         b.append(",");
                     }
                 }
@@ -67,7 +68,7 @@ public class UninstallContentMojo extends AbstractDeploymentMojo {
             }
 
         } finally {
-            for ( Map.Entry<String, Session> e : sessions.entrySet() ) {
+            for (Map.Entry<String, Session> e : sessions.entrySet()) {
                 e.getValue().close();
             }
             sessions = new HashMap<String, Session>();

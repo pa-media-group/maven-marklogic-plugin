@@ -7,6 +7,9 @@ import org.apache.http.HttpResponse;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.codehaus.plexus.util.StringUtils;
+import org.jetbrains.annotations.Nullable;
+import org.jfrog.maven.annomojo.annotations.MojoGoal;
+import org.jfrog.maven.annomojo.annotations.MojoParameter;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -18,28 +21,32 @@ import java.util.*;
  * Remove the bootstrap configuration created by the marklogic:bootstrap goal.
  *
  * @author <a href="mailto:bob.browning@pressassociation.com">Bob Browning</a>
- * @goal execute
  */
+@MojoGoal("execute")
 public class BootstrapExecuteMojo extends AbstractBootstrapMojo {
 
     /**
-     * @parameter expression="${marklogic.xquery}"
+     * XQuery script to be executed
      */
+    @MojoParameter(expression = "${marklogic.xquery}")
     protected File executeXQuery;
 
     /**
-     * @parameter expression="${marklogic.executeDatabase}"
+     * Database to execute XQuery against
      */
+    @MojoParameter(expression = "${marklogic.executeDatabase}")
     protected String executeDatabase;
 
     /**
-     * @parameter expression="${marklogic.executeProperties}"
+     * XQuery execution properties
      */
+    @MojoParameter(expression = "${marklogic.executeProperties}")
     protected Map executeProperties;
 
     /**
-     * @parameter
+     * Sequence of XQuery scripts to be executed
      */
+    @MojoParameter
     protected Execution xqueryExecutions[];
 
     /**
@@ -65,7 +72,7 @@ public class BootstrapExecuteMojo extends AbstractBootstrapMojo {
         throw new UnsupportedOperationException("Not Implemented.");
     }
 
-    private String getExecutionXQuery(File xquery, String database, Map properties) throws MojoExecutionException {
+    private String getExecutionXQuery(File xquery, String database, @Nullable Map properties) throws MojoExecutionException {
         try {
             if (StringUtils.isBlank(database) && (properties == null || properties.isEmpty())) {
                 return getFileAsString(xquery);
@@ -119,7 +126,7 @@ public class BootstrapExecuteMojo extends AbstractBootstrapMojo {
         Map collected = new HashMap(executeProperties);
         Set<String> names = System.getProperties().stringPropertyNames();
         for (String name : names) {
-            if(name.startsWith("marklogic.executionProperties.")) {
+            if (name.startsWith("marklogic.executionProperties.")) {
                 collected.put(name.substring(30), System.getProperty(name));
             }
         }

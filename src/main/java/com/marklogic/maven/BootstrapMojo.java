@@ -9,17 +9,16 @@ import com.marklogic.xcc.ContentFactory;
 import com.marklogic.xcc.Session;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
-
+import org.jfrog.maven.annomojo.annotations.MojoGoal;
 
 /**
- * Create the necessary bootstrap configuration that the MarkLogic Plugin 
+ * Create the necessary bootstrap configuration that the MarkLogic Plugin
  * requires for executing its goals.
- * 
+ *
  * @author <a href="mailto:mark.helmstetter@marklogic.com">Mark Helmstetter</a>
  * @author <a href="mailto:bob.browning@pressassociation.com">Bob Browning</a>
- * @goal bootstrap
- * 
  */
+@MojoGoal("bootstrap")
 public class BootstrapMojo extends AbstractBootstrapMojo {
 
     private String createDatabase() {
@@ -73,7 +72,7 @@ public class BootstrapMojo extends AbstractBootstrapMojo {
     protected String getBootstrapExecuteQuery() {
         XQueryDocumentBuilder sb = new XQueryDocumentBuilder();
 
-        if(!"file-system".equalsIgnoreCase(xdbcModulesDatabase)) {
+        if (!"file-system".equalsIgnoreCase(xdbcModulesDatabase)) {
             sb.assign("_", createDatabase());
             sb.assign("_", createForest());
             sb.assign("_", attachForestToDatabase());
@@ -88,16 +87,16 @@ public class BootstrapMojo extends AbstractBootstrapMojo {
         return sb.toString();
     }
 
-	public void execute() throws MojoExecutionException, MojoFailureException {
-		getLog().info("bootstrap execute");
-		super.execute();
+    public void execute() throws MojoExecutionException, MojoFailureException {
+        getLog().info("bootstrap execute");
+        super.execute();
 
-        if(!"file-system".equalsIgnoreCase(xdbcModulesDatabase)) {
+        if (!"file-system".equalsIgnoreCase(xdbcModulesDatabase)) {
             this.database = xdbcModulesDatabase;
 
             Session session = getXccSession();
 
-            String[] paths = { "/install.xqy"
+            String[] paths = {"/install.xqy"
                     , "/lib/lib-app-server.xqy"
                     , "/lib/lib-cpf.xqy"
                     , "/lib/lib-database-add.xqy"
@@ -107,9 +106,9 @@ public class BootstrapMojo extends AbstractBootstrapMojo {
                     , "/lib/lib-trigger.xqy"
                     , "/lib/lib-index.xqy"
                     , "/lib/lib-install.xqy"
-                    , "/lib/lib-load.xqy" };
+                    , "/lib/lib-load.xqy"};
 
-            ClassLoader loader =  Thread.currentThread().getContextClassLoader();
+            ClassLoader loader = Thread.currentThread().getContextClassLoader();
             for (String path : paths) {
                 getLog().info("Uploading " + path);
                 try {

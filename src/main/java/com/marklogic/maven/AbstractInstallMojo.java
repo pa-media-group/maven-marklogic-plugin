@@ -29,7 +29,7 @@ public abstract class AbstractInstallMojo extends AbstractDeploymentMojo {
     protected void installContent() throws MojoExecutionException {
         executeAction(ACTION_INSTALL_CONTENT);
 
-        if(getCurrentEnvironment().getResources() != null) {
+        if (getCurrentEnvironment().getResources() != null) {
             /*
              * Install content resources from maven project
              */
@@ -38,7 +38,7 @@ public abstract class AbstractInstallMojo extends AbstractDeploymentMojo {
     }
 
     protected void installCPF() throws MojoExecutionException {
-        if(getCurrentEnvironment().getPipelineResources() != null) {
+        if (getCurrentEnvironment().getPipelineResources() != null) {
             /*
              * Install pipeline resources from maven project
              */
@@ -62,7 +62,7 @@ public abstract class AbstractInstallMojo extends AbstractDeploymentMojo {
 
 
     private void installPipeline(ResourceFileSet[] resources) {
-         try {
+        try {
             FileSetManager manager = new FileSetManager();
 
             for (ResourceFileSet resource : resources) {
@@ -95,7 +95,7 @@ public abstract class AbstractInstallMojo extends AbstractDeploymentMojo {
                 }
             }
         } finally {
-            for ( Map.Entry<String, Session> e : sessions.entrySet() ) {
+            for (Map.Entry<String, Session> e : sessions.entrySet()) {
                 e.getValue().close();
             }
             sessions = new HashMap<String, Session>();
@@ -118,15 +118,14 @@ public abstract class AbstractInstallMojo extends AbstractDeploymentMojo {
                 for (String f : manager.getIncludedFiles(resource)) {
                     File sourceFile = new File(resource.getDirectory(), f);
                     File destinationFile = new File(resource.getOutputDirectory(), f);
-                    
+
                     String destinationPath = destinationFile.getPath().replace(File.separatorChar, '/');
                     getLog().info(String.format("Deploying %s to %s", sourceFile.getPath(), destinationPath));
                     try {
                         ContentCreateOptions options = null;
                         String[] collections = resource.getCollections();
 
-                        if (collections != null && collections.length > 0)
-                        {
+                        if (collections != null && collections.length > 0) {
                             options = new ContentCreateOptions();
                             options.setCollections(collections);
                         }
@@ -140,7 +139,7 @@ public abstract class AbstractInstallMojo extends AbstractDeploymentMojo {
                 }
             }
         } finally {
-            for ( Map.Entry<String, Session> e : sessions.entrySet() ) {
+            for (Map.Entry<String, Session> e : sessions.entrySet()) {
                 e.getValue().close();
             }
             sessions = new HashMap<String, Session>();
