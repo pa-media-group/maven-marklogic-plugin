@@ -13,6 +13,7 @@ public class UninstallDatabases extends AbstractDeploymentMojo {
     public static final String ACTION_UNINSTALL_DATABASES = "uninstall-databases";
 
     public void execute() throws MojoExecutionException, MojoFailureException {
+    	executeAction(UninstallTasks.ACTION_UNINSTALL_TASKS);
         executeAction(UninstallTriggers.ACTION_UNINSTALL_TRIGGERS);
         executeAction(ACTION_UNINSTALL_DATABASES);
         restartServers();

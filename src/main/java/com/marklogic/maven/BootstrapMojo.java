@@ -108,6 +108,7 @@ public class BootstrapMojo extends AbstractBootstrapMojo {
                     , "/lib/lib-database.xqy"
                     , "/lib/lib-field.xqy"
                     , "/lib/lib-trigger.xqy"
+                    , "/lib/lib-task.xqy"
                     , "/lib/lib-index.xqy"
                     , "/lib/lib-install.xqy"
                     , "/lib/lib-load.xqy" };
