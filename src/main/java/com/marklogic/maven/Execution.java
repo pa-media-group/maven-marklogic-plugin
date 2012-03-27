@@ -1,25 +1,31 @@
 package com.marklogic.maven;
 
+import org.jfrog.maven.annomojo.annotations.MojoParameter;
+
 import java.io.File;
 import java.util.Map;
 
 /**
+ * Defines the context of an XQuery Execution
+ *
  * @author Bob Browning <bob.browning@pressassociation.com>
  */
 public class Execution {
     /**
-     * @parameter
-     * @required
+     * XQuery to be invoked
      */
+    @MojoParameter(required = true)
     protected File xquery;
 
     /**
-     * @parameter
+     * Database to invoke XQuery against
      */
+    @MojoParameter
     protected String database;
 
     /**
-     * @parameter
+     * Properties to be used for invocation.
      */
+    @MojoParameter
     protected Map properties;
 }

@@ -121,7 +121,7 @@ public abstract class AbstractInstallMojo extends AbstractDeploymentMojo {
                      */
                 Session session = getSession(targetDatabase);
 
-                ContentCreateOptions options = null;
+                ContentCreateOptions options;
                 options = new ContentCreateOptions();
 
                 String[] collections = resource.getCollections();
@@ -135,7 +135,7 @@ public abstract class AbstractInstallMojo extends AbstractDeploymentMojo {
                     int i = 0;
                     for (Permission permission : permissions) {
                         String capability = permission.getCapability();
-                        ContentCapability contentCapability = null;
+                        ContentCapability contentCapability;
 
                         if (capability.equals("execute"))
                             contentCapability = ContentCapability.EXECUTE;
@@ -204,11 +204,17 @@ public abstract class AbstractInstallMojo extends AbstractDeploymentMojo {
         }
     }
 
+    /**
+     * Invoke server modules.
+     *
+     * TODO: Create configuration object instead of using PlexusConfiguration - ModuleExecution perhaps.
+     */
     protected void invokeModules() {
         PlexusConfiguration invokes = getCurrentEnvironment().getModuleInvokes();
 
-        if (invokes == null || invokes.getChildCount() == 0)
+        if (invokes == null || invokes.getChildCount() == 0) {
             return;
+        }
 
         String appName = getCurrentEnvironment().getApplicationName();
 
@@ -231,9 +237,9 @@ public abstract class AbstractInstallMojo extends AbstractDeploymentMojo {
                 Session session = getXccSession(database, port);
                 session.submitRequest(session.newModuleInvoke(modulePath));
             } catch (PlexusConfigurationException e) {
-                e.printStackTrace();
+                getLog().error(e);
             } catch (RequestException e) {
-                e.printStackTrace();
+                getLog().error(e);
             }
         }
     }

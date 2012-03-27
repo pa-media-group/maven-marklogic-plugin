@@ -14,42 +14,49 @@ public class ResourceFileSet extends FileSet {
     @MojoParameter(required = true)
     private String database;
 
-    public String getDatabase() {
-        return database;
-    }
-
     /**
      * The collection to load the specified resources into.
      */
     @MojoParameter
     private String[] collections;
 
+    /**
+     * The permissions the specified resources should have.
+     */
+    @MojoParameter
+    private Permission[] permissions;
+
+    /**
+     * The format of the specified resources.
+     */
+    @MojoParameter
+    private String format;
+
+    /**
+     * @return Collections to load resources into.
+     */
     public String[] getCollections() {
         return collections;
     }
-    
-    /**
-     * The permissions the specified resources should have
-     *
-     * @parameter
-     * @optional
-     */
-    private Permission[] permissions;
 
-    public Permission[] getPermissions() {
-        return permissions;
+    /**
+     * @return Database to load resources into.
+     */
+    public String getDatabase() {
+        return database;
     }
 
     /**
-     * The format of the specified resources
-     *
-     * @parameter
-     * @optional
+     * @return Format of the specified resources (binary, text, xml).
      */
-    private String format;
-    
-	public String getFormat() {
-		return format;
-	}
+    public String getFormat() {
+        return format;
+    }
 
+    /**
+     * @return Permissions that should be applied to the resources.
+     */
+    public Permission[] getPermissions() {
+        return permissions;
+    }
 }
