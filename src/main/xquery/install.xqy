@@ -9,6 +9,8 @@ import module namespace inst-idx = 'http://www.marklogic.com/ps/lib/lib-index.xq
 import module namespace inst-cpf = 'http://www.marklogic.com/ps/lib/lib-cpf.xqy' at "/lib/lib-cpf.xqy";
 import module namespace inst-load = 'http://www.marklogic.com/ps/lib/lib-load.xqy' at "/lib/lib-load.xqy";
 import module namespace inst-trgr = 'http://www.marklogic.com/ps/lib/lib-trigger.xqy' at "/lib/lib-trigger.xqy";
+import module namespace inst-task = 'http://www.marklogic.com/ps/lib/lib-task.xqy' at "/lib/lib-task.xqy";
+
 import module namespace admin = "http://marklogic.com/xdmp/admin" at "/MarkLogic/admin.xqy";
 
 declare variable $action as xs:string external;
@@ -27,6 +29,7 @@ if ("install-all" eq $action) then
     $action,
     inst-db:install-databases($install-config),
     inst-trgr:install-triggers($install-config),
+    inst-task:install-tasks($install-config),
     inst-app:install-servers($install-config),
     inst-cpf:install-cpf($install-config),
     inst-load:load-content($install-config),
@@ -36,6 +39,7 @@ else if ("uninstall-all" eq $action) then
 (
     $action,
     inst-app:uninstall-servers($install-config),
+    inst-task:uninstall-tasks($install-config),
     inst-trgr:uninstall-triggers($install-config),
     inst-db:uninstall-databases($install-config, $delete-data)
 )
@@ -58,6 +62,16 @@ else if ("uninstall-triggers" eq $action) then
 (
     $action,
     inst-trgr:uninstall-triggers($install-config)
+)
+else if ("install-tasks" eq $action) then
+(
+    $action,
+    inst-task:install-tasks($install-config)
+)
+else if ("uninstall-tasks" eq $action) then
+(
+    $action,
+    inst-task:uninstall-tasks($install-config)
 )
 else if ("install-servers" eq $action) then
 (   
