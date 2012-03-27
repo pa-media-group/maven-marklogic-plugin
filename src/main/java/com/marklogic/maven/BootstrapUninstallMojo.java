@@ -2,18 +2,19 @@ package com.marklogic.maven;
 
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
+import org.jfrog.maven.annomojo.annotations.MojoGoal;
 
 
 /**
  * Remove the bootstrap configuration created by the marklogic:bootstrap goal.
- * 
+ *
  * @author <a href="mailto:mark.helmstetter@marklogic.com">Mark Helmstetter</a>
  * @author <a href="mailto:bob.browning@pressassociation.com">Bob Browning</a>
- * @goal bootstrap-uninstall
  */
-public class BootstrapUninstallMojo extends AbstractBootstrapMojo {	
+@MojoGoal("bootstrap-uninstall")
+public class BootstrapUninstallMojo extends AbstractBootstrapMojo {
 
-	protected String getBootstrapExecuteQuery() {
+    protected String getBootstrapExecuteQuery() {
         StringBuilder sb = new StringBuilder();
 
         sb.append(XQUERY_PROLOG);
@@ -54,12 +55,12 @@ public class BootstrapUninstallMojo extends AbstractBootstrapMojo {
 
         return sb.toString();
     }
-	
-	public void execute() throws MojoExecutionException, MojoFailureException {
-		getLog().info("bootstrap-uninstall execute");
+
+    public void execute() throws MojoExecutionException, MojoFailureException {
+        getLog().info("bootstrap-uninstall execute");
         getLog().info("Install Bootstrap = " + installBootstrap);
-        if(installBootstrap) {
-		    super.execute();
+        if (installBootstrap) {
+            super.execute();
         }
-	}	
+    }
 }

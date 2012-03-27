@@ -10,6 +10,7 @@ import org.apache.maven.plugin.MojoExecutionException;
 import org.codehaus.plexus.configuration.PlexusConfiguration;
 import org.codehaus.plexus.configuration.PlexusConfigurationException;
 import org.codehaus.plexus.util.FileUtils;
+import org.jfrog.maven.annomojo.annotations.MojoParameter;
 
 import java.io.*;
 import java.util.HashMap;
@@ -36,9 +37,9 @@ public abstract class AbstractDeploymentMojo extends AbstractMarkLogicMojo {
 
     /**
      * Sequence of environments, containing configuration instructions
-     *
+     * <p/>
      * For example
-     *
+     * <p/>
      * <environments>
      *     <environment>
      *         <name>development</name>
@@ -79,41 +80,38 @@ public abstract class AbstractDeploymentMojo extends AbstractMarkLogicMojo {
      *     </environment>
      *     ...
      * </environments>
-     *
-     * @parameter
      */
+    @MojoParameter
     protected MLInstallEnvironment[] environments;
 
     /**
      * The path to the file controlling installation.
-     *
+     * <p/>
      * The configuration defined in the specified file is used instead of that defined in the environments block
      * with the exception of the pipeline-resources and resources elements.
-     *
-     * @parameter
      */
+    @MojoParameter
     protected File installConfigurationFile;
 
     /**
      * The installation module path.  This path is relative to the
      * xdbcModuleRoot.
-     *
+     * <p/>
      * For example if the xdbcModuleRoot is set to /modules/,
      * and the installation module is deployed at /modules/install/install.xqy,
      * set the installModule to install/install.xqy.
-     *
+     * <p/>
      * The default value is just "install.xqy" since we assume that the xdbc server
      * will point directly to the installation xquery.
-     *
-     * @parameter default-value="install.xqy" expression="${marklogic.install.module}"
      */
+    @MojoParameter(defaultValue = "install.xqy", expression = "${marklogic.install.module}")
     protected String installModule;
 
     protected Map<String, Session> sessions = new HashMap<String, Session>();
 
     protected Session getSession(final String database) {
         Session s = sessions.get(database);
-        if(s == null) {
+        if (s == null) {
             s = getXccSession(database);
             sessions.put(database, s);
         }
@@ -131,30 +129,29 @@ public abstract class AbstractDeploymentMojo extends AbstractMarkLogicMojo {
     }
 
     protected ResultSequence executeInstallAction(String action, String module) throws RequestException {
-    	Session session = this.getXccSession();
-		Request request = session.newModuleInvoke(module);
-		request.setNewStringVariable("action", action);
-		request.setNewStringVariable("environ", environment);
-		request.setNewVariable("delete-data", ValueType.XS_BOOLEAN, false);
+        Session session = this.getXccSession();
+        Request request = session.newModuleInvoke(module);
+        request.setNewStringVariable("action", action);
+        request.setNewStringVariable("environ", environment);
+        request.setNewVariable("delete-data", ValueType.XS_BOOLEAN, false);
         try {
             request.setNewStringVariable("configuration-string", getInstallConfiguration());
             getLog().debug("Using configuration : ".concat(installConfigurationFile.getPath()));
         } catch (IOException e) {
             throw new RequestException("Cannot load configuration file", request, e);
         }
-        ResultSequence rs = session.submitRequest(request);
-		return rs;
+        return session.submitRequest(request);
     }
 
     /**
      * Converts a list into a comma separated String list
      *
      * @param list The list to be converted
-     * @return
+     * @return Comma separated representation of list
      */
     protected String getCommaSeparatedList(List list) {
-        StringBuffer buffer = new StringBuffer();
-        for (Iterator iterator = list.iterator(); iterator.hasNext();) {
+        StringBuilder buffer = new StringBuilder();
+        for (Iterator iterator = list.iterator(); iterator.hasNext(); ) {
             Object element = iterator.next();
             buffer.append(element.toString());
             if (iterator.hasNext()) {
@@ -170,14 +167,14 @@ public abstract class AbstractDeploymentMojo extends AbstractMarkLogicMojo {
      * @return MLInstallEnvironment instance
      */
     public MLInstallEnvironment getCurrentEnvironment() {
-        if(currentEnvironment == null) {
+        if (currentEnvironment == null) {
             for (MLInstallEnvironment e : environments) {
-                if(environment.equalsIgnoreCase(e.getName())) {
+                if (environment.equalsIgnoreCase(e.getName())) {
                     currentEnvironment = e;
                     break;
                 }
             }
-            if(currentEnvironment == null) {
+            if (currentEnvironment == null) {
                 currentEnvironment = new DefaultMLInstallEnvironment(environment);
             }
         }
@@ -192,11 +189,11 @@ public abstract class AbstractDeploymentMojo extends AbstractMarkLogicMojo {
      * @throws IOException
      */
     protected String getFileAsString(final File file) throws IOException {
-        StringBuffer buffer = new StringBuffer((int)file.length());
+        StringBuilder buffer = new StringBuilder((int) file.length());
         BufferedReader reader = new BufferedReader(new FileReader(file));
         char[] buf = new char[1024];
-        int numRead = 0;
-        while((numRead = reader.read(buf))!= -1) {
+        int numRead;
+        while ((numRead = reader.read(buf)) != -1) {
             buffer.append(buf, 0, numRead);
         }
         reader.close();
@@ -204,7 +201,7 @@ public abstract class AbstractDeploymentMojo extends AbstractMarkLogicMojo {
     }
 
     private String getInstallConfiguration() throws IOException {
-        if(installConfigurationFile == null) {
+        if (installConfigurationFile == null) {
             try {
                 installConfigurationFile = writeEnvironmentToConfigurationFile();
                 return getFileAsString(installConfigurationFile);
@@ -219,10 +216,15 @@ public abstract class AbstractDeploymentMojo extends AbstractMarkLogicMojo {
     private StringBuffer plexusConfigurationToStringBuffer(PlexusConfiguration config) throws IOException {
         StringWriter writer = new StringWriter();
         MarklogicXmlPlexusConfigurationWriter xmlWriter = new MarklogicXmlPlexusConfigurationWriter();
-        xmlWriter.write( config, writer );
+        xmlWriter.write(config, writer);
         return writer.getBuffer();
     }
 
+    /**
+     * Restart marklogic HTTP, XDBC servers.
+     *
+     * @throws MojoExecutionException
+     */
     protected void restartServers() throws MojoExecutionException {
         executeAction(ACTION_RESTART);
 
@@ -232,10 +234,10 @@ public abstract class AbstractDeploymentMojo extends AbstractMarkLogicMojo {
         int count = 10;
         boolean success = false;
         RequestException lastException = null;
-        while(count-- > 0) {
+        while (count-- > 0) {
             /* Try and get session */
             Session session = getXccSession();
-            if(session != null) {
+            if (session != null) {
                 /* Attempt simple xquery */
                 AdhocQuery q = session.newAdhocQuery("xquery version \"1.0-ml\";\n1");
                 try {
@@ -248,7 +250,7 @@ public abstract class AbstractDeploymentMojo extends AbstractMarkLogicMojo {
                 }
             }
 
-            if(success) {
+            if (success) {
                 break;
             } else {
                 try {
@@ -260,7 +262,7 @@ public abstract class AbstractDeploymentMojo extends AbstractMarkLogicMojo {
             }
         }
 
-        if(!success) {
+        if (!success) {
             throw new MojoExecutionException("Job timed out waiting for servers on host to restart.", lastException);
         }
     }
@@ -314,7 +316,7 @@ public abstract class AbstractDeploymentMojo extends AbstractMarkLogicMojo {
 
         // The fileName should probably use the plugin executionId instead of the targetName
         String fileName = "install-" + environment + ".xml";
-        File buildFile = new File( project.getBuild().getDirectory(), "/marklogic/" + fileName );
+        File buildFile = new File(project.getBuild().getDirectory(), "/marklogic/" + fileName);
 
         buildFile.getParentFile().mkdirs();
         FileUtils.fileWrite(buildFile.getAbsolutePath(), UTF_8, builder.toString());

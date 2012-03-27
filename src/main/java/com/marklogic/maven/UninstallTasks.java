@@ -2,11 +2,13 @@ package com.marklogic.maven;
 
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
+import org.jfrog.maven.annomojo.annotations.MojoGoal;
 
 /**
  * @author Gavin Haydon <gavin.haydon@pressassociation.com>
- * @goal uninstall-tasks
  */
+
+@MojoGoal("uninstall-tasks")
 public class UninstallTasks extends AbstractDeploymentMojo {
 
     public static final String ACTION_UNINSTALL_TASKS = "uninstall-tasks";

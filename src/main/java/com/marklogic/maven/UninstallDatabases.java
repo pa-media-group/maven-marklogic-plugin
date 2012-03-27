@@ -2,12 +2,16 @@ package com.marklogic.maven;
 
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
+import org.jfrog.maven.annomojo.annotations.MojoExecute;
+import org.jfrog.maven.annomojo.annotations.MojoGoal;
 
 /**
+ * Uninstall databases.
+ *
  * @author Bob Browning <bob.browning@pressassociation.com>
- * @goal uninstall-databases
- * @execute goal="uninstall-servers"
  */
+@MojoGoal("uninstall-databases")
+@MojoExecute(goal = "uninstall-servers")
 public class UninstallDatabases extends AbstractDeploymentMojo {
 
     public static final String ACTION_UNINSTALL_DATABASES = "uninstall-databases";

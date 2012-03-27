@@ -1,6 +1,7 @@
 package com.marklogic.maven;
 
 import org.apache.maven.shared.model.fileset.FileSet;
+import org.jfrog.maven.annomojo.annotations.MojoParameter;
 
 /**
  * @author Bob Browning <bob.browning@pressassociation.com>
@@ -8,23 +9,19 @@ import org.apache.maven.shared.model.fileset.FileSet;
 public class ResourceFileSet extends FileSet {
 
     /**
-     * The database to load the specified resources into
-     *
-     * @parameter
-     * @required
+     * The database to load the specified resources into.
      */
+    @MojoParameter(required = true)
     private String database;
 
     public String getDatabase() {
         return database;
     }
 
-/**
-     * The collection to load the specified resources into
-     *
-     * @parameter
-     * @optional
+    /**
+     * The collection to load the specified resources into.
      */
+    @MojoParameter
     private String[] collections;
 
     public String[] getCollections() {
@@ -54,6 +51,5 @@ public class ResourceFileSet extends FileSet {
 	public String getFormat() {
 		return format;
 	}
-
 
 }
