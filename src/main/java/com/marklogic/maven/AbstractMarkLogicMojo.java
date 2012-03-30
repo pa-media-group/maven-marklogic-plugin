@@ -85,8 +85,7 @@ public abstract class AbstractMarkLogicMojo extends AbstractMojo {
         return cs.newSession();
     }
 
-	protected Session getXccSession(final String database, final int port) 
-	{
+	protected Session getXccSession(final String database, final int port) {
 		return ContentSourceFactory.newContentSource(host, port, username, password, database).newSession();
 	}
 	

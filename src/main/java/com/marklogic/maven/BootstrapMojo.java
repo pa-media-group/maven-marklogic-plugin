@@ -98,30 +98,33 @@ public class BootstrapMojo extends AbstractBootstrapMojo {
             this.database = xdbcModulesDatabase;
 
             Session session = getXccSession();
+            try {
+                String[] paths = {"/install.xqy"
+                        , "/lib/lib-app-server.xqy"
+                        , "/lib/lib-cpf.xqy"
+                        , "/lib/lib-database-add.xqy"
+                        , "/lib/lib-database-set.xqy"
+                        , "/lib/lib-database.xqy"
+                        , "/lib/lib-field.xqy"
+                        , "/lib/lib-trigger.xqy"
+                        , "/lib/lib-task.xqy"
+                        , "/lib/lib-index.xqy"
+                        , "/lib/lib-install.xqy"
+                        , "/lib/lib-load.xqy"};
 
-            String[] paths = {"/install.xqy"
-                    , "/lib/lib-app-server.xqy"
-                    , "/lib/lib-cpf.xqy"
-                    , "/lib/lib-database-add.xqy"
-                    , "/lib/lib-database-set.xqy"
-                    , "/lib/lib-database.xqy"
-                    , "/lib/lib-field.xqy"
-                    , "/lib/lib-trigger.xqy"
-                    , "/lib/lib-task.xqy"
-                    , "/lib/lib-index.xqy"
-                    , "/lib/lib-install.xqy"
-                    , "/lib/lib-load.xqy"};
-
-            ClassLoader loader = Thread.currentThread().getContextClassLoader();
-            for (String path : paths) {
-                getLog().info("Uploading " + path);
-                try {
-                    Content cs = ContentFactory.newContent(path, loader.getResource("xquery" + path), null);
-                    session.insertContent(cs);
-                } catch (Exception e) {
-                    getLog().error("Failed to insert required library.");
+                ClassLoader loader = Thread.currentThread().getContextClassLoader();
+                for (String path : paths) {
+                    getLog().info("Uploading " + path);
+                    try {
+                        Content cs = ContentFactory.newContent(path, loader.getResource("xquery" + path), null);
+                        session.insertContent(cs);
+                    } catch (Exception e) {
+                        getLog().error("Failed to insert required library.");
+                    }
+                    session.commit();
                 }
-                session.commit();
+            } finally {
+                session.close();
             }
         } else {
             getLog().warn("");

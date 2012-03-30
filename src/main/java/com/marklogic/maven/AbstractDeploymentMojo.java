@@ -129,18 +129,22 @@ public abstract class AbstractDeploymentMojo extends AbstractMarkLogicMojo {
     }
 
     protected ResultSequence executeInstallAction(String action, String module) throws RequestException {
-        Session session = this.getXccSession();
-        Request request = session.newModuleInvoke(module);
-        request.setNewStringVariable("action", action);
-        request.setNewStringVariable("environ", environment);
-        request.setNewVariable("delete-data", ValueType.XS_BOOLEAN, false);
-        try {
-            request.setNewStringVariable("configuration-string", getInstallConfiguration());
-            getLog().debug("Using configuration : ".concat(installConfigurationFile.getPath()));
-        } catch (IOException e) {
-            throw new RequestException("Cannot load configuration file", request, e);
+        Session session = getXccSession();
+            try {
+            Request request = session.newModuleInvoke(module);
+            request.setNewStringVariable("action", action);
+            request.setNewStringVariable("environ", environment);
+            request.setNewVariable("delete-data", ValueType.XS_BOOLEAN, false);
+            try {
+                request.setNewStringVariable("configuration-string", getInstallConfiguration());
+                getLog().debug("Using configuration : ".concat(installConfigurationFile.getPath()));
+            } catch (IOException e) {
+                throw new RequestException("Cannot load configuration file", request, e);
+            }
+            return session.submitRequest(request);
+        } finally {
+            session.close();
         }
-        return session.submitRequest(request);
     }
 
     /**
