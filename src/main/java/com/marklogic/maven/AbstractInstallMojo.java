@@ -10,6 +10,7 @@ import org.codehaus.plexus.configuration.PlexusConfigurationException;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 import static com.marklogic.xcc.ContentFactory.newContent;
@@ -215,7 +216,7 @@ public abstract class AbstractInstallMojo extends AbstractDeploymentMojo {
      *
      * TODO: Create configuration object instead of using PlexusConfiguration - ModuleExecution perhaps.
      */
-    protected void invokeModules() {
+    protected void invokeModules() throws MojoExecutionException {
         PlexusConfiguration invokes = getCurrentEnvironment().getModuleInvokes();
 
         if (invokes == null || invokes.getChildCount() == 0) {
@@ -239,13 +240,21 @@ public abstract class AbstractInstallMojo extends AbstractDeploymentMojo {
                 getLog().info("-------------------------------------------------------------------- ");
                 getLog().info("Connecting to : " + host + " : " + port);
                 getLog().info("  Module Path : " + modulePath);
+                getLog().info("Output = ");
 
                 Session session = getXccSession(database, port);
-                session.submitRequest(session.newModuleInvoke(modulePath));
+                ResultSequence results = session.submitRequest(session.newModuleInvoke(modulePath));
+                Iterator<ResultItem> it = results.iterator();
+                while (it.hasNext()) {
+                	ResultItem item = it.next();
+                	getLog().info(item.asString());
+                }
             } catch (PlexusConfigurationException e) {
                 getLog().error(e);
+                throw new MojoExecutionException(e.getLocalizedMessage(), e);
             } catch (RequestException e) {
                 getLog().error(e);
+                throw new MojoExecutionException(e.getLocalizedMessage(), e);
             }
         }
     }

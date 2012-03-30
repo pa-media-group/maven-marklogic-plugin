@@ -4,7 +4,7 @@
 
     <groupId>com.marklogic.maven</groupId>
     <artifactId>marklogic-maven-plugin</artifactId>
-    <version>0.4.5-SNAPSHOT</version>
+    <version>0.4.6-SNAPSHOT</version>
     <packaging>maven-plugin</packaging>
 
     <name>MarkLogic Maven Plugin</name>
