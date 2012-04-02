@@ -1,5 +1,7 @@
 package com.marklogic.maven;
 
+import com.google.common.collect.Iterators;
+import com.google.common.collect.UnmodifiableIterator;
 import com.marklogic.xcc.AdhocQuery;
 import com.marklogic.xcc.Request;
 import com.marklogic.xcc.ResultSequence;
@@ -10,13 +12,17 @@ import org.apache.maven.plugin.MojoExecutionException;
 import org.codehaus.plexus.configuration.PlexusConfiguration;
 import org.codehaus.plexus.configuration.PlexusConfigurationException;
 import org.codehaus.plexus.util.FileUtils;
+import org.codehaus.plexus.util.StringUtils;
 import org.jfrog.maven.annomojo.annotations.MojoParameter;
 
 import java.io.*;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
+import java.util.NoSuchElementException;
+
+import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkNotNull;
+import static com.marklogic.maven.PlexusConfigurationUtils.PlexusConfigurationAttributeMatchingPredicate.attributeMatching;
 
 
 public abstract class AbstractDeploymentMojo extends AbstractMarkLogicMojo {
@@ -69,14 +75,14 @@ public abstract class AbstractDeploymentMojo extends AbstractMarkLogicMojo {
      *                 </includes>
      *             </resource>
      *         </resources>
-     *         
+     *
      *         <module-invokes>
      *         		<module-invoke>
-     *     				<server>XCC</server>			
+     *     				<server>XCC</server>
      *     				<module>static/load-lookups.xqy</module>
-     *     			</module-invoke>	
+     *     			</module-invoke>
      *         </module-invokes>
-     *         
+     *
      *     </environment>
      *     ...
      * </environments>
@@ -130,7 +136,7 @@ public abstract class AbstractDeploymentMojo extends AbstractMarkLogicMojo {
 
     protected ResultSequence executeInstallAction(String action, String module) throws RequestException {
         Session session = getXccSession();
-            try {
+        try {
             Request request = session.newModuleInvoke(module);
             request.setNewStringVariable("action", action);
             request.setNewStringVariable("environ", environment);
@@ -145,24 +151,6 @@ public abstract class AbstractDeploymentMojo extends AbstractMarkLogicMojo {
         } finally {
             session.close();
         }
-    }
-
-    /**
-     * Converts a list into a comma separated String list
-     *
-     * @param list The list to be converted
-     * @return Comma separated representation of list
-     */
-    protected String getCommaSeparatedList(List list) {
-        StringBuilder buffer = new StringBuilder();
-        for (Iterator iterator = list.iterator(); iterator.hasNext(); ) {
-            Object element = iterator.next();
-            buffer.append(element.toString());
-            if (iterator.hasNext()) {
-                buffer.append(",");
-            }
-        }
-        return buffer.toString();
     }
 
     /**
@@ -272,27 +260,26 @@ public abstract class AbstractDeploymentMojo extends AbstractMarkLogicMojo {
     }
 
     /**
-     * Get the server configuration with name attribute of value parameter 
-     * 
+     * Get the server configuration with name attribute of value parameter
+     *
      * @param value
      * @return
      * @throws PlexusConfigurationException
      */
-    protected PlexusConfiguration getServer(String value) throws PlexusConfigurationException
-  	{
-  		PlexusConfiguration[] servers = getCurrentEnvironment().getServers().getChildren();
+    protected PlexusConfiguration getServer(String value) throws PlexusConfigurationException {
+        checkNotNull(value, "No server name provided.");
+        checkArgument(StringUtils.isNotBlank(value), "Empty string is not a valid server name.");
 
-  		for (PlexusConfiguration cfg : servers)
-  		{
-  			if (value != null && value.equals( cfg.getAttribute("name") ) )
-  			{
-  				return cfg;
-  			}
-  		}
-  		throw new PlexusConfigurationException("Unknown server configuration: " + value);
-  	}
-    
-    
+        UnmodifiableIterator<PlexusConfiguration> serverIterator =
+                Iterators.forArray(getCurrentEnvironment().getServers().getChildren());
+        try {
+            /* Find server element with attribute matching specified name */
+            return Iterators.find(serverIterator, attributeMatching("name", value));
+        } catch (NoSuchElementException e) {
+            throw new PlexusConfigurationException("Unknown server configuration: " + value);
+        }
+    }
+
     /**
      * Creates a configuration file based on the specification defined in the environment block
      *
