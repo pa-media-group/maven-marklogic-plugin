@@ -1,8 +1,15 @@
 package com.marklogic.maven;
 
-import com.marklogic.maven.xquery.XQueryDocumentBuilder;
-import com.marklogic.maven.xquery.XQueryModule;
-import com.marklogic.maven.xquery.XQueryModuleXDMP;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 import org.apache.http.HttpResponse;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
@@ -11,11 +18,9 @@ import org.jetbrains.annotations.Nullable;
 import org.jfrog.maven.annomojo.annotations.MojoGoal;
 import org.jfrog.maven.annomojo.annotations.MojoParameter;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
-import java.util.*;
+import com.marklogic.maven.xquery.XQueryDocumentBuilder;
+import com.marklogic.maven.xquery.XQueryModule;
+import com.marklogic.maven.xquery.XQueryModuleXDMP;
 
 /**
  * Remove the bootstrap configuration created by the marklogic:bootstrap goal.

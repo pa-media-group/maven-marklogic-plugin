@@ -1,5 +1,9 @@
 package com.marklogic.maven;
 
+import org.apache.maven.plugin.MojoExecutionException;
+import org.apache.maven.plugin.MojoFailureException;
+import org.jfrog.maven.annomojo.annotations.MojoGoal;
+
 import com.marklogic.maven.xquery.XQueryDocumentBuilder;
 import com.marklogic.maven.xquery.XQueryModule;
 import com.marklogic.maven.xquery.XQueryModuleAdmin;
@@ -7,9 +11,6 @@ import com.marklogic.maven.xquery.XQueryModuleXDMP;
 import com.marklogic.xcc.Content;
 import com.marklogic.xcc.ContentFactory;
 import com.marklogic.xcc.Session;
-import org.apache.maven.plugin.MojoExecutionException;
-import org.apache.maven.plugin.MojoFailureException;
-import org.jfrog.maven.annomojo.annotations.MojoGoal;
 
 /**
  * Create the necessary bootstrap configuration that the MarkLogic Plugin
