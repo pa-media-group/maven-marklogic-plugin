@@ -1,11 +1,13 @@
 package com.marklogic.maven;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
@@ -18,7 +20,10 @@ import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.codehaus.plexus.util.IOUtil;
 import org.jfrog.maven.annomojo.annotations.MojoParameter;
+import org.json.JSONException;
+import org.json.JSONML;
 import org.json.JSONObject;
+import org.json.XML;
 
 public abstract class AbstractBootstrapMojo extends AbstractMarkLogicMojo {
 
@@ -75,29 +80,34 @@ public abstract class AbstractBootstrapMojo extends AbstractMarkLogicMojo {
         if (installBootstrap) {
             getLog().info("Bootstrapping MarkLogic " + marklogicVersion);
         	String bootstrapQuery = getBootstrapExecuteQuery();
-        	if (marklogicVersion == 4) {
-        		executeML4BootstrapQuery(bootstrapQuery);
-        	} else if (marklogicVersion == 5) {
-        		executeML5BootstrapQuery(bootstrapQuery);
-        	} else {
-        		throw new MojoExecutionException("Unsupported MarkLogic version: marklogic.version=" + marklogicVersion);
-        	}
+        	executeBootstrapQuery(bootstrapQuery);
         }
     }
     
 	protected HttpResponse executeBootstrapQuery(String query)
 			throws MojoExecutionException {
 		getLog().info("Bootstrapping MarkLogic " + marklogicVersion);
-		String bootstrapQuery = getBootstrapExecuteQuery();
+		HttpResponse response;
 		if (marklogicVersion == 4) {
-			return executeML4BootstrapQuery(bootstrapQuery);
+			response =  executeML4BootstrapQuery(query);
 		} else if (marklogicVersion == 5) {
-			return executeML5BootstrapQuery(bootstrapQuery);
+			response = executeML5BootstrapQuery(query);
 		} else {
 			throw new MojoExecutionException(
 					"Unsupported MarkLogic version: marklogic.version="
 							+ marklogicVersion);
 		}
+		
+		if (response.getEntity() != null) {
+			try {
+				InputStream is = response.getEntity().getContent();
+				getLog().info(IOUtil.toString(is));
+			} catch (IOException e) {
+				throw new MojoExecutionException("IO Error reading response", e);
+			}
+		}
+		
+		return response;
 	}
     
     protected HttpResponse executeML4BootstrapQuery(String query) throws MojoExecutionException {
@@ -195,6 +205,30 @@ public abstract class AbstractBootstrapMojo extends AbstractMarkLogicMojo {
         if (response.getStatusLine().getStatusCode() != 200) {
             throw new MojoExecutionException("POST response failed: " + response.getStatusLine());
         }
+
+		Header[] headers = response.getHeaders("qconsole");
+		if (headers != null && headers.length > 0) {
+			try {
+				JSONObject json = new JSONObject(headers[0].getValue());
+				if (json.getString("type").equals("error")) {
+					StringBuilder b = new StringBuilder(
+							"Failed to execute query ...\n");
+					if (response.getEntity() != null) {
+						InputStream is = response.getEntity().getContent();
+						JSONObject jsonError = new JSONObject(
+								IOUtil.toString(is));
+						b.append(XML.toString(jsonError));
+					}
+					throw new MojoExecutionException(b.toString());
+				}
+			} catch (JSONException e) {
+				throw new MojoExecutionException(
+						"Unable to parse json error header", e);
+			} catch (IOException ioe) {
+				throw new MojoExecutionException(
+						"IOException parsing json error", ioe);
+			}
+		}
 
         return response;
     }
