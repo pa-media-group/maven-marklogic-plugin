@@ -51,8 +51,10 @@ declare function  inst-db:uninstall-databases($install-config, $delete-data)
 
 declare function  inst-db:mk-database-name-from-string($install-config, $short-name)
 {
-    if($short-name eq "0") then "file-system" else
-    fn:concat($install-config/inst-conf:application/@name, "-", $short-name)
+    if($short-name eq "0") then "file-system"
+    else if ($install-config/inst-conf:application/@name ne "null") then
+        fn:concat($install-config/inst-conf:application/@name, "-", $short-name)
+    else $short-name
 };
 
 declare function  inst-db:mk-database-name($install-config, $database)
@@ -62,7 +64,9 @@ declare function  inst-db:mk-database-name($install-config, $database)
 
 declare function  inst-db:mk-forest-name($install-config, $forest)
 {
-    fn:concat($install-config/inst-conf:application/@name, "-", $forest/@name)
+    if ($install-config/inst-conf:application/@name ne "null") then
+        fn:concat($install-config/inst-conf:application/@name, "-", $forest/@name)
+    else $forest/@name
 };
 
 declare function  inst-db:create-database($database-name)

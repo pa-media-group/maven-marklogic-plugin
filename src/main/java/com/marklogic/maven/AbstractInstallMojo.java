@@ -71,8 +71,9 @@ public abstract class AbstractInstallMojo extends AbstractDeploymentMojo {
             FileSetManager manager = new FileSetManager();
 
             for (ResourceFileSet resource : resources) {
-                final String targetDatabase = getCurrentEnvironment()
-                        .getApplicationName() + "-" + resource.getDatabase();
+            	String appName = getCurrentEnvironment().getApplicationName();
+				final String targetDatabase = appName == null ? resource
+						.getDatabase() : appName + "-" + resource.getDatabase();
                 getLog().info(" -- ".concat(targetDatabase).concat(" -- "));
 
                 /*
@@ -119,8 +120,10 @@ public abstract class AbstractInstallMojo extends AbstractDeploymentMojo {
             FileSetManager manager = new FileSetManager();
 
             for (ResourceFileSet resource : resources) {
-                final String targetDatabase = getCurrentEnvironment()
-                        .getApplicationName() + "-" + resource.getDatabase();
+            	String appName = getCurrentEnvironment().getApplicationName();
+				final String targetDatabase = appName == null ? resource
+						.getDatabase() : appName + "-" + resource.getDatabase();
+
                 getLog().info(" -- ".concat(targetDatabase).concat(" -- "));
 
                 /*

@@ -33,7 +33,10 @@ declare function  inst-app:uninstall-servers($install-config)
 
 declare function  inst-app:mk-server-name($config, $server)
 {
-    fn:concat($server/@port, "-", $config/conf:application/@name, "-", $server/@name)
+    if ($config/conf:application/@name ne "null") then
+        fn:concat($server/@port, "-", $config/conf:application/@name, "-", $server/@name)
+    else
+        fn:concat($server/@port, "-", $server/@name)
 };
 
 declare function inst-app:create-server($install-config, $server as element())
