@@ -78,7 +78,6 @@ public abstract class AbstractBootstrapMojo extends AbstractMarkLogicMojo {
     public void execute() throws MojoExecutionException, MojoFailureException {
         getLog().info("Install Bootstrap = " + installBootstrap);
         if (installBootstrap) {
-            getLog().info("Bootstrapping MarkLogic " + marklogicVersion);
         	String bootstrapQuery = getBootstrapExecuteQuery();
         	executeBootstrapQuery(bootstrapQuery);
         }
@@ -86,16 +85,14 @@ public abstract class AbstractBootstrapMojo extends AbstractMarkLogicMojo {
     
 	protected HttpResponse executeBootstrapQuery(String query)
 			throws MojoExecutionException {
-		getLog().info("Bootstrapping MarkLogic " + marklogicVersion);
 		HttpResponse response;
-		if (marklogicVersion == 4) {
-			response =  executeML4BootstrapQuery(query);
-		} else if (marklogicVersion == 5) {
+		
+		if (isMarkLogic5()) {
+			getLog().info("Bootstrapping MarkLogic 5");
 			response = executeML5BootstrapQuery(query);
 		} else {
-			throw new MojoExecutionException(
-					"Unsupported MarkLogic version: marklogic.version="
-							+ marklogicVersion);
+			getLog().info("Bootstrapping MarkLogic 4");
+			response =  executeML4BootstrapQuery(query);
 		}
 		
 		if (response.getEntity() != null) {
@@ -232,5 +229,34 @@ public abstract class AbstractBootstrapMojo extends AbstractMarkLogicMojo {
 
         return response;
     }
+
+	protected boolean isMarkLogic5() throws MojoExecutionException {
+	    HttpClient httpClient = this.getHttpClient();
+	    List<NameValuePair> qparams = new ArrayList<NameValuePair>();
+	    URI uri;
+	
+		try {
+	        uri = URIUtils.createURI("http", this.host, bootstrapPort, "/qconsole",
+	                URLEncodedUtils.format(qparams, "UTF-8"), null);
+	    } catch (URISyntaxException e1) {
+	        throw new MojoExecutionException("Invalid uri for qconsole probe", e1);
+	    }
+	
+	    HttpGet httpGet = new HttpGet(uri);
+	
+	    HttpResponse response;
+		try {
+	        response = httpClient.execute(httpGet);
+	        if (response.getEntity() != null) {
+	        	response.getEntity().consumeContent();
+	        }
+	    } catch (Exception e) {
+	        throw new MojoExecutionException("Error executing GET to proble qconsole", e);
+	    }
+	    
+	    getLog().debug("Probe got " + response.getStatusLine());
+	    
+	    return (response.getStatusLine().getStatusCode() == 200);
+	}
 
 }

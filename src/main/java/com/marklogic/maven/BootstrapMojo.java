@@ -8,9 +8,11 @@ import com.marklogic.maven.xquery.XQueryDocumentBuilder;
 import com.marklogic.maven.xquery.XQueryModule;
 import com.marklogic.maven.xquery.XQueryModuleAdmin;
 import com.marklogic.maven.xquery.XQueryModuleXDMP;
+import com.marklogic.xcc.AdhocQuery;
 import com.marklogic.xcc.Content;
 import com.marklogic.xcc.ContentFactory;
 import com.marklogic.xcc.Session;
+import com.marklogic.xcc.exceptions.RequestException;
 
 /**
  * Create the necessary bootstrap configuration that the MarkLogic Plugin
@@ -89,16 +91,34 @@ public class BootstrapMojo extends AbstractBootstrapMojo {
     }
 
     public void execute() throws MojoExecutionException, MojoFailureException {
-        getLog().info("bootstrap execute");
-        if (!installBootstrap) {
-            return;
+    	if (!installBootstrap) {
+    		return;    
+    	} 
+    	
+        Session session = getXccSession();        
+        getLog().debug("Bootstrap session is to " + session.getConnectionUri().toASCIIString());
+        
+		AdhocQuery q = session.newAdhocQuery("xquery version \"1.0-ml\";\n1");
+		boolean success = false;
+		try {
+			session.submitRequest(q);
+			success = true;
+		} catch (RequestException e) {
+		} finally {
+			session.close();
+		}
+        
+        if (success) {
+        	getLog().info("Bootstrap already exists, skipping this goal");
+        	return;
         }
+               
         super.execute();
 
         if (!"file-system".equalsIgnoreCase(xdbcModulesDatabase)) {
             this.database = xdbcModulesDatabase;
+            session = getXccSession();        
 
-            Session session = getXccSession();
             try {
                 String[] paths = {"/install.xqy"
                         , "/lib/lib-app-server.xqy"
