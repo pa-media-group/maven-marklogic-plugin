@@ -248,7 +248,7 @@ public abstract class AbstractBootstrapMojo extends AbstractMarkLogicMojo {
 		try {
 	        response = httpClient.execute(httpGet);
 	        if (response.getEntity() != null) {
-	        	response.getEntity().consumeContent();
+	        	response.getEntity().getContent();
 	        }
 	    } catch (Exception e) {
 	        throw new MojoExecutionException("Error executing GET to proble qconsole", e);
