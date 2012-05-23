@@ -237,13 +237,3 @@ declare function inst-idx:add-range-element-attribute-index($database, $scalar-t
     let $config := admin:save-configuration($config)
     return $index
 };
-
-
-
-
-
-
-
-
-
-

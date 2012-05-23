@@ -44,8 +44,8 @@ public abstract class AbstractMarkLogicMojo extends AbstractMojo {
     /**
      * The XDBC port used for install purposes.
      */
-    @MojoParameter(defaultValue = "8998", expression = "${marklogic.xdbc.port}")
-    protected int xdbcPort = 8998;
+    @MojoParameter(defaultValue = "8997", expression = "${marklogic.xdbc.port}")
+    protected int xdbcPort = 8997;
 
     /**
      * The database to be used for XDBC connections.
