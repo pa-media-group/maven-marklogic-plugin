@@ -112,7 +112,22 @@ declare function inst-trgr:add-trigger($install-config as node(), $database as e
         declare variable $permissions as element() external; 
         declare variable $recursive as xs:boolean external;
         
-        trgr:create-trigger( $name, $desc, $event, $module, $enabled
+        let $trigger :=
+            try {trgr:get-trigger($name)}
+            catch($e){()}
+        
+        return
+        if (fn:exists($trigger)) then
+        (
+            trgr:trigger-set-description($name, $desc),
+            trgr:trigger-set-event($name, $event),
+            trgr:trigger-set-module($name, $module),
+            if ($enabled) then trgr:trigger-enable($name) else trgr:trigger-disable($name),
+            trgr:trigger-set-permissions($name, xdmp:default-permissions()),
+            trgr:trigger-set-recursive($name, $recursive)
+        )
+        else
+            trgr:create-trigger( $name, $desc, $event, $module, $enabled
                            , xdmp:default-permissions(), $recursive)
         (::)'(::)
         

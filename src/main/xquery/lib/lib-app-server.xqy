@@ -52,8 +52,19 @@ declare function inst-app:create-server($install-config, $server as element())
     let $modules := if($modules eq "0") then "file-system" else xdmp:database(inst-db:mk-database-name-from-string($install-config, $modules))
     let $root := $server/@root
     let $collation := ($server/@collation, fn:default-collation())[1]
- 
     let $config := 
+        if (admin:appserver-exists($config, $group-id, $server-name)) then
+            let $server-id := admin:appserver-get-id($config, $group-id, $server-name)
+            let $config := admin:appserver-set-root($config, $server-id, $root)
+            let $config := admin:appserver-set-port($config, $server-id, $server-port)
+            let $config := admin:appserver-set-database($config, $server-id, $database)
+            let $config :=
+                if ($server/@type = "webdav") then
+                    $config
+                else
+                    admin:appserver-set-modules-database($config, $server-id, $modules)
+            return $config            
+        else
         try {
             if ($server/@type = "webdav") then (
                 xdmp:log(fn:concat("Creating webdav: ", $root)), 

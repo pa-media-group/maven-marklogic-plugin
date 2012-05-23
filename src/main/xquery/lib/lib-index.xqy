@@ -137,11 +137,13 @@ declare function inst-idx:add-index($install-config, $database, $install-indices
 declare function inst-idx:add-geospatial-element-pair-index(
 $database, $parent-namespace, $parent-localname, $lat-namespace, $lat-localname, $lon-namespace, $lon-localname, $coordinate-system, $range-value-positions)
 {
-    let $LOG := xdmp:log(text{"Inside: add-geospatial-element-attribute-pair-index()"})
+    let $LOG := xdmp:log(text{"Inside: add-geospatial-element-pair-index()"})
     let $config := admin:get-configuration()
     let $geospec := admin:database-geospatial-element-pair-index(
     $parent-namespace, $parent-localname, $lat-namespace, $lat-localname, $lon-namespace, $lon-localname, $coordinate-system, $range-value-positions)
-    let $config := admin:database-add-geospatial-element-pair-index($config, $database, $geospec)
+    let $config := 
+        try { admin:database-add-geospatial-element-pair-index($config, $database, $geospec) }
+        catch ($e) {(xdmp:log("skipping add-geospatial-element-pair-index(), already present"), $config)}
     let $config := admin:save-configuration($config)
     return $geospec
 };
@@ -153,7 +155,9 @@ $database, $parent-namespace, $parent-localname, $lat-namespace, $lat-localname,
     let $config := admin:get-configuration()
     let $geospec := admin:database-geospatial-element-attribute-pair-index(
     $parent-namespace, $parent-localname, $lat-namespace, $lat-localname, $lon-namespace, $lon-localname, $coordinate-system, $range-value-positions)
-    let $config := admin:database-add-geospatial-element-attribute-pair-index($config, $database, $geospec)
+    let $config := 
+        try { admin:database-add-geospatial-element-attribute-pair-index($config, $database, $geospec)}
+        catch ($e) {(xdmp:log("skipping add-geospatial-element-attribute-pair-index(), already present"), $config)}
     let $config := admin:save-configuration($config)
     return $geospec
 };
@@ -161,11 +165,13 @@ $database, $parent-namespace, $parent-localname, $lat-namespace, $lat-localname,
 declare function inst-idx:add-geospatial-element-child-index(
 $database, $parent-namespace, $parent-localname, $namespace, $localname, $coordinate-system, $range-value-positions)
 {
-    let $LOG := xdmp:log(text{"Inside: add-geospatial-element-attribute-pair-index()"})
+    let $LOG := xdmp:log(text{"Inside: add-geospatial-element-child-index()"})
     let $config := admin:get-configuration()
     let $geospec := admin:database-geospatial-element-child-index(
     $parent-namespace, $parent-localname, $namespace, $localname, $coordinate-system, $range-value-positions)
-    let $config := admin:database-add-geospatial-element-child-index($config, $database, $geospec)
+    let $config := 
+        try { admin:database-add-geospatial-element-child-index($config, $database, $geospec) }
+        catch ($e) {(xdmp:log("skipping add-geospatial-element-child-index(), already present"), $config)}
     let $config := admin:save-configuration($config)
     return $geospec
 };
@@ -173,11 +179,13 @@ $database, $parent-namespace, $parent-localname, $namespace, $localname, $coordi
 declare function inst-idx:add-geospatial-element-index(
 $database, $namespace, $localname, $coordinate-system, $range-value-positions)
 {
-    let $LOG := xdmp:log(text{"Inside: add-geospatial-element-attribute-pair-index()"})
+    let $LOG := xdmp:log(text{"Inside: add-geospatial-element-index()"})
     let $config := admin:get-configuration()
     let $geospec := admin:database-geospatial-element-index(
     $namespace, $localname, $coordinate-system, $range-value-positions)
-    let $config := admin:database-add-geospatial-element-index($config, $database, $geospec)
+    let $config := 
+        try { admin:database-add-geospatial-element-index($config, $database, $geospec) }
+        catch ($e) {(xdmp:log("skipping add-geospatial-element-index(), already present"), $config)}
     let $config := admin:save-configuration($config)
     return $geospec
 };
@@ -187,7 +195,9 @@ declare function inst-idx:add-element-word-lexicon($database, $namespace, $local
     let $LOG := xdmp:log(text{"Inside: add-element-word-lexicon()", $namespace, $localname, $collation})
     let $config := admin:get-configuration()
     let $lexicon  := admin:database-element-word-lexicon(xs:string($namespace), $localname, $collation)
-    let $config := admin:database-add-element-word-lexicon($config, $database, $lexicon)
+    let $config := 
+        try { admin:database-add-element-word-lexicon($config, $database, $lexicon) }
+        catch ($e) {(xdmp:log("skipping add-element-word-lexicon(), already present"), $config)}
     let $config := admin:save-configuration($config)
     return $lexicon
 };
@@ -197,7 +207,9 @@ declare function inst-idx:add-range-element-index($database, $scalar-type, $name
     let $LOG := xdmp:log(text{"Inside: add-range-element-index()"})
     let $config := admin:get-configuration()
     let $index := admin:database-range-element-index($scalar-type, $namespace, $localname, $collation, $range-value-positions)
-    let $config := admin:database-add-range-element-index($config, $database, $index)
+    let $config :=
+        try { admin:database-add-range-element-index($config, $database, $index) }
+        catch ($e) {(xdmp:log("skipping add-range-element-index(), already present"), $config)}
     let $config := admin:save-configuration($config)
     return $index
 };
@@ -207,7 +219,9 @@ declare function inst-idx:add-element-attribute-word-lexicon($database, $parent-
     let $LOG := xdmp:log(text{"Inside: add-element-attribute-word-lexicon()"})
     let $config := admin:get-configuration()
     let $lexicon := admin:database-element-attribute-word-lexicon($parent-namespace, $parent-localname, $namespace, $localname, $collation)
-    let $config := admin:database-add-element-attribute-word-lexicon($config, $database, $lexicon)
+    let $config := 
+        try { admin:database-add-element-attribute-word-lexicon($config, $database, $lexicon) }
+        catch ($e) {(xdmp:log("skipping add-element-attribute-word-lexicon(), already present"), $config)}
     let $config := admin:save-configuration($config)
     return $lexicon
 };
@@ -217,7 +231,9 @@ declare function inst-idx:add-range-element-attribute-index($database, $scalar-t
     let $LOG := xdmp:log(text{"Inside: add-range-element-attribute-index()"})
     let $config := admin:get-configuration()
     let $index := admin:database-range-element-attribute-index($scalar-type, $parent-namespace, $parent-localname, $namespace, $localname, $collation, $range-value-positions)
-    let $config := admin:database-add-range-element-attribute-index($config, $database, $index)
+    let $config :=
+        try { admin:database-add-range-element-attribute-index($config, $database, $index) }
+        catch ($e) {(xdmp:log("skipping add-range-element-attribute-index(), already present"), $config)}
     let $config := admin:save-configuration($config)
     return $index
 };
