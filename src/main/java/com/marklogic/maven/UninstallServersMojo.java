@@ -6,15 +6,13 @@ import org.jfrog.maven.annomojo.annotations.MojoGoal;
 
 /**
  * Uninstall servers HTTP, XDBC from Marklogic
- *
+ * 
  * @author Bob Browning <bob.browning@pressassociation.com>
  */
 @MojoGoal("uninstall-servers")
-public class UninstallServersMojo extends AbstractDeploymentMojo {
+public class UninstallServersMojo extends AbstractUninstallMojo {
 
-    public static final String ACTION_UNINSTALL_SERVERS = "uninstall-servers";
-
-    public void execute() throws MojoExecutionException, MojoFailureException {
-        executeAction(ACTION_UNINSTALL_SERVERS);
-    }
+	public void execute() throws MojoExecutionException, MojoFailureException {
+		uninstallServers();
+	}
 }

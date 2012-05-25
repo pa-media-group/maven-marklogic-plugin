@@ -37,9 +37,7 @@ declare function  inst-db:install-databases($install-config)
     inst-db:add-schema-to-databases($install-config),
     inst-db:add-security-to-databases($install-config),
     inst-db-set:do-sets($install-config),
-    inst-db-add:do-adds($install-config),
-    inst-idx:install-indices($install-config),
-    inst-fld:install-fields($install-config)
+    inst-db-add:do-adds($install-config)
 )};
 
 declare function  inst-db:uninstall-databases($install-config, $delete-data)

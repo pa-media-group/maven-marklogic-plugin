@@ -23,6 +23,8 @@ public abstract class AbstractInstallMojo extends AbstractDeploymentMojo {
     protected static final String ACTION_INSTALL_CONTENT = "install-content";
     protected static final String ACTION_INSTALL_CPF = "install-cpf";
     protected static final String ACTION_INSTALL_DATABASES = "install-databases";
+    protected static final String ACTION_INSTALL_INDICES = "install-indices";
+    protected static final String ACTION_INSTALL_FIELDS = "install-fields";
     protected static final String ACTION_INSTALL_TRIGGERS = "install-triggers";
     protected static final String ACTION_INSTALL_SERVERS = "install-servers";
     protected static final String ACTION_INSTALL_TASKS = "install-tasks";
@@ -52,6 +54,14 @@ public abstract class AbstractInstallMojo extends AbstractDeploymentMojo {
 
     protected void installDatabases() throws MojoExecutionException {
         executeAction(ACTION_INSTALL_DATABASES);
+    }
+    
+    protected void installIndices() throws MojoExecutionException {
+        executeAction(ACTION_INSTALL_INDICES);
+    }
+
+    protected void installFields() throws MojoExecutionException {
+        executeAction(ACTION_INSTALL_FIELDS);
     }
 
     protected void installTriggers() throws MojoExecutionException {

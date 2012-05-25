@@ -6,6 +6,7 @@ declare namespace inst-conf = "http://www.marklogic.com/ps/install/config.xqy";
 import module namespace inst-db = "http://www.marklogic.com/ps/lib/lib-database.xqy" at "/lib/lib-database.xqy";
 import module namespace inst-app = 'http://www.marklogic.com/ps/lib/lib-app-server.xqy' at "/lib/lib-app-server.xqy";
 import module namespace inst-idx = 'http://www.marklogic.com/ps/lib/lib-index.xqy' at "/lib/lib-index.xqy";
+import module namespace inst-fld = "http://www.marklogic.com/ps/lib/lib-field.xqy" at "/lib/lib-field.xqy";
 import module namespace inst-cpf = 'http://www.marklogic.com/ps/lib/lib-cpf.xqy' at "/lib/lib-cpf.xqy";
 import module namespace inst-load = 'http://www.marklogic.com/ps/lib/lib-load.xqy' at "/lib/lib-load.xqy";
 import module namespace inst-trgr = 'http://www.marklogic.com/ps/lib/lib-trigger.xqy' at "/lib/lib-trigger.xqy";
@@ -28,6 +29,8 @@ if ("install-all" eq $action) then
 (
     $action,
     inst-db:install-databases($install-config),
+    inst-idx:install-indices($install-config),
+    inst-fld:install-fields($install-config),
     inst-trgr:install-triggers($install-config),
     inst-task:install-tasks($install-config),
     inst-app:install-servers($install-config),
@@ -52,6 +55,26 @@ else if ("uninstall-databases" eq $action) then
 (
     $action,
     inst-db:uninstall-databases($install-config, $delete-data)
+)
+else if ("install-indices" eq $action) then
+(
+   $action,
+    inst-idx:install-indices($install-config)
+)
+else if ("uninstall-indices" eq $action) then
+(
+    $action,
+    inst-idx:uninstall-indices($install-config)
+)
+else if ("install-fields" eq $action) then
+(
+   $action,
+    inst-fld:install-fields($install-config)
+)
+else if ("uninstall-fields" eq $action) then
+(
+    $action,
+    inst-fld:uninstall-fields($install-config)
 )
 else if ("install-triggers" eq $action) then
 (

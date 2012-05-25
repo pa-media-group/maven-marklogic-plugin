@@ -7,17 +7,14 @@ import org.jfrog.maven.annomojo.annotations.MojoGoal;
 
 /**
  * Remove all database(s), application server(s), etc.
- *
+ * 
  * @author <a href="mailto:mark.helmstetter@marklogic.com">Mark Helmstetter</a>
  */
 @MojoGoal("uninstall")
 @MojoExecute(goal = "bootstrap")
-public class UninstallMojo extends AbstractDeploymentMojo {
+public class UninstallMojo extends AbstractUninstallMojo {
 
-    private static final String ACTION_UNINSTALL_ALL = "uninstall-all";
-
-    public void execute() throws MojoExecutionException, MojoFailureException {
-        executeAction(ACTION_UNINSTALL_ALL);
-    }
-
+	public void execute() throws MojoExecutionException, MojoFailureException {
+		uninstallAll();
+	}
 }

@@ -5,14 +5,14 @@ import org.apache.maven.plugin.MojoFailureException;
 import org.jfrog.maven.annomojo.annotations.MojoGoal;
 
 /**
- * Uninstall scheduled tasks from server.
- * 
+ * Install Fields defined in POM
+ *
  * @author Gavin Haydon <gavin.haydon@pressassociation.com>
  */
-@MojoGoal("uninstall-tasks")
-public class UninstallTasks extends AbstractUninstallMojo {
+@MojoGoal("install-fields")
+public class InstallFieldsMojo extends AbstractInstallMojo {
 
-	public void execute() throws MojoExecutionException, MojoFailureException {
-		uninstallTasks();
-	}
+    public void execute() throws MojoExecutionException, MojoFailureException {
+        installFields();
+    }
 }

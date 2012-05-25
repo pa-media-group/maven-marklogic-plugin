@@ -26,6 +26,13 @@ declare function  inst-fld:install-fields($install-config)
        return if($fields) then inst-fld:add-field($install-config, $database, $fields) else ()
 };
 
+declare function  inst-fld:uninstall-fields($install-config)
+{
+    for $database in $install-config//conf:database 
+       let $fields := $database/conf:field       
+       return if($fields) then inst-fld:remove-field($install-config, $database, $fields) else ()
+};
+
 declare function inst-fld:add-field($install-config as node(), $database as element(conf:database), $fields as element(conf:field)*) {
     let $LOG := xdmp:log("Inside: add-field()")
     let $database-name := inst-db:mk-database-name-from-string($install-config, $database/@name)
@@ -64,4 +71,20 @@ declare function inst-fld:add-field($install-config as node(), $database as elem
                 $config 
         let $config := admin:save-configuration($config)
         return ()        
+};
+
+declare function inst-fld:remove-field($install-config as node(), $database as element(conf:database), $fields as element(conf:field)*)
+{
+    let $LOG := xdmp:log("Inside: remove-field()")
+    let $database-name := inst-db:mk-database-name-from-string($install-config, $database/@name)
+    let $database := xdmp:database($database-name)
+    
+    for $field in $fields
+    let $config := admin:get-configuration()
+    let $config :=
+        try {admin:database-delete-field($config, $database, $field/@name)}
+        catch($e) {$config}
+        
+    let $config := admin:save-configuration($config)
+    return ()   
 };

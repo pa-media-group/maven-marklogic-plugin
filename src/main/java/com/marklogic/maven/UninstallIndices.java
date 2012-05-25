@@ -5,14 +5,14 @@ import org.apache.maven.plugin.MojoFailureException;
 import org.jfrog.maven.annomojo.annotations.MojoGoal;
 
 /**
- * Uninstall triggers from Marklogic
+ * Uninstall indices from Marklogic
  * 
- * @author Bob Browning <bob.browning@pressassociation.com>
+ * @author Gavin Haydon <gavin.haydon@pressassociation.com>
  */
-@MojoGoal("uninstall-triggers")
-public class UninstallTriggers extends AbstractUninstallMojo {
+@MojoGoal("uninstall-indices")
+public class UninstallIndices extends AbstractUninstallMojo {
 
 	public void execute() throws MojoExecutionException, MojoFailureException {
-		uninstallTriggers();
+		uninstallIndices();
 	}
 }

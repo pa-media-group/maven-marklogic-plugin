@@ -18,6 +18,8 @@ public final class InstallMojo extends AbstractInstallMojo {
 
     public void execute() throws MojoExecutionException, MojoFailureException {
         installDatabases();
+        installIndices();
+        installFields();
         installTriggers();
         installTasks();
         installServers();
