@@ -1,4 +1,4 @@
-package com.marklogic.maven.xquery;
+package com.marklogic.install.xquery;
 
 public class XQueryModuleAdmin extends XQueryModule {
 

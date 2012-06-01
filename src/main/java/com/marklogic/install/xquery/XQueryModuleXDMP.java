@@ -1,4 +1,4 @@
-package com.marklogic.maven.xquery;
+package com.marklogic.install.xquery;
 
 public class XQueryModuleXDMP extends XQueryModule {
     public static final String XDMP_MODULE_PREFIX = "xdmp";

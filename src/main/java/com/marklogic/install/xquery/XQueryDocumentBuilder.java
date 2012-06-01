@@ -1,4 +1,4 @@
-package com.marklogic.maven.xquery;
+package com.marklogic.install.xquery;
 
 /**
  * Created by IntelliJ IDEA.
