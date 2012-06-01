@@ -20,9 +20,9 @@ import org.jfrog.maven.annomojo.annotations.MojoGoal;
 import org.jfrog.maven.annomojo.annotations.MojoParameter;
 
 import com.google.common.collect.ImmutableList;
-import com.marklogic.maven.xquery.XQueryDocumentBuilder;
-import com.marklogic.maven.xquery.XQueryModule;
-import com.marklogic.maven.xquery.XQueryModuleXDMP;
+import com.marklogic.install.xquery.XQueryDocumentBuilder;
+import com.marklogic.install.xquery.XQueryModule;
+import com.marklogic.install.xquery.XQueryModuleXDMP;
 import com.marklogic.xcc.AdhocQuery;
 import com.marklogic.xcc.ResultItem;
 import com.marklogic.xcc.ResultSequence;

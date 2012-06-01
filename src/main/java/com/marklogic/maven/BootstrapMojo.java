@@ -4,10 +4,10 @@ import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.jfrog.maven.annomojo.annotations.MojoGoal;
 
-import com.marklogic.maven.xquery.XQueryDocumentBuilder;
-import com.marklogic.maven.xquery.XQueryModule;
-import com.marklogic.maven.xquery.XQueryModuleAdmin;
-import com.marklogic.maven.xquery.XQueryModuleXDMP;
+import com.marklogic.install.xquery.XQueryDocumentBuilder;
+import com.marklogic.install.xquery.XQueryModule;
+import com.marklogic.install.xquery.XQueryModuleAdmin;
+import com.marklogic.install.xquery.XQueryModuleXDMP;
 import com.marklogic.xcc.AdhocQuery;
 import com.marklogic.xcc.Content;
 import com.marklogic.xcc.ContentFactory;
