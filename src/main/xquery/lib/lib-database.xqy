@@ -155,7 +155,7 @@ declare function inst-db:add-triggers-to-databases($install-config)
 
 declare function  inst-db:add-schema-to-database($database-name, $schema-name)
 {
-    let $LOG := xdmp:log(text{"Adding Triggers:", $schema-name, "to Database:", $database-name})
+    let $LOG := xdmp:log(text{"Adding Schema:", $schema-name, "to Database:", $database-name})
     let $config := admin:get-configuration()
     let $config := 
         try {admin:database-set-schema-database($config, xdmp:database($database-name), xdmp:database($schema-name))
@@ -173,7 +173,7 @@ declare function inst-db:add-schema-to-databases($install-config)
         return
             if($schema-base-name) then
                 let $schema-name := inst-db:mk-database-name-from-string($install-config, $schema-base-name)
-                return inst-db:add-triggers-to-database($database-name, $schema-name)
+                return inst-db:add-schema-to-database($database-name, $schema-name)
             else ()        
 };
 
