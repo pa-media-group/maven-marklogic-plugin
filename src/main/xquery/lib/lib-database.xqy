@@ -26,13 +26,22 @@ declare namespace inst-conf = "http://www.marklogic.com/ps/install/config.xqy";
         <set name="{PropertyName}" value="{PropertyValue}"/> 
         ...
     </database>
-:::)
+:)
 
 declare function  inst-db:install-databases($install-config)
 {(
     inst-db:create-databases($install-config),
     inst-db:create-forests($install-config),
     inst-db:attach-forests($install-config),
+    inst-db:add-triggers-to-databases($install-config),
+    inst-db:add-schema-to-databases($install-config),
+    inst-db:add-security-to-databases($install-config),
+    inst-db-set:do-sets($install-config),
+    inst-db-add:do-adds($install-config)
+)};
+
+declare function  inst-db:update-databases($install-config)
+{(
     inst-db:add-triggers-to-databases($install-config),
     inst-db:add-schema-to-databases($install-config),
     inst-db:add-security-to-databases($install-config),

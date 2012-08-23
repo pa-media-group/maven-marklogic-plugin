@@ -83,7 +83,7 @@ declare namespace inst-conf = "http://www.marklogic.com/ps/install/config.xqy";
 	...
 
 </element>
-:::)
+:)
 
 declare function inst-db-set:do-sets($install-config)
 {

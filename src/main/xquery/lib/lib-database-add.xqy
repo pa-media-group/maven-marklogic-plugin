@@ -21,7 +21,7 @@ declare namespace inst-conf = "http://www.marklogic.com/ps/install/config.xqy";
 	...
 
 </element>
-:::)
+:)
 
 declare function inst-db-add:do-adds($install-config)
 {

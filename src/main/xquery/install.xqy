@@ -51,6 +51,11 @@ else if ("install-databases" eq $action) then
    $action,
     inst-db:install-databases($install-config)
 )
+else if ("update-databases" eq $action) then
+(
+   $action,
+    inst-db:update-databases($install-config)
+)
 else if ("uninstall-databases" eq $action) then
 (
     $action,
