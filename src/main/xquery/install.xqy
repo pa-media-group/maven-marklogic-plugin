@@ -106,6 +106,11 @@ else if ("install-servers" eq $action) then
     $action,
     inst-app:install-servers($install-config)
 )
+else if ("update-servers" eq $action) then
+(
+    $action,
+    inst-app:update-servers($install-config)
+)
 else if ("uninstall-servers" eq $action) then
 (
    $action,

@@ -17,12 +17,18 @@ declare namespace conf = "http://www.marklogic.com/ps/install/config.xqy";
         <server type="webdav" name="Content" port="9002" group="Default" database="Content"   root="/" modules="0"/>
         <server type="webdav" name="Modules" port="9003" group="Default" database="Modules"   root="/" modules="0"/>
     </servers>
-:::)
+:)
 
 declare function  inst-app:install-servers($install-config)
 {
     for $server in $install-config/conf:servers/conf:server
-       return inst-app:create-server($install-config, $server)
+       return inst-app:create-server($install-config, $server, fn:true())
+};
+
+declare function  inst-app:update-servers($install-config)
+{
+    for $server in $install-config/conf:servers/conf:server
+       return inst-app:create-server($install-config, $server, fn:false())
 };
 
 declare function  inst-app:uninstall-servers($install-config)
@@ -39,7 +45,7 @@ declare function  inst-app:mk-server-name($config, $server)
         fn:concat($server/@port, "-", $server/@name)
 };
 
-declare function inst-app:create-server($install-config, $server as element())
+declare function inst-app:create-server($install-config, $server as element(), $create as xs:boolean)
 {
     let $server-name := mk-server-name($install-config, $server)
     let $LOG := xdmp:log(text{"Creating Server:", $server-name})
@@ -53,7 +59,7 @@ declare function inst-app:create-server($install-config, $server as element())
     let $root := $server/@root
     let $collation := ($server/@collation, fn:default-collation())[1]
     let $config := 
-        if (admin:appserver-exists($config, $group-id, $server-name)) then
+        if ($create = fn:false() or admin:appserver-exists($config, $group-id, $server-name)) then
             let $server-id := admin:appserver-get-id($config, $group-id, $server-name)
             let $config := admin:appserver-set-root($config, $server-id, $root)
             let $config := admin:appserver-set-port($config, $server-id, $server-port)
@@ -87,7 +93,7 @@ declare function inst-app:create-server($install-config, $server as element())
     let $config := admin:appserver-set-collation($config, $server-id, $collation)
     let $config := admin:save-configuration-without-restart($config)
     
-    (::: Set Auth type :::)
+    (::: Set Auth type :)
     let $config := admin:get-configuration()
     let $authentication := $server/@authentication 
     let $config := if($authentication) then
@@ -98,7 +104,7 @@ declare function inst-app:create-server($install-config, $server as element())
     
     let $config := admin:save-configuration-without-restart($config)
     
-    (::: Set Default Auth User :::)
+    (::: Set Default Auth User :)
     let $config := admin:get-configuration()
     let $default-user := $server/@default-user
     let $config :=
@@ -117,7 +123,7 @@ declare function inst-app:create-server($install-config, $server as element())
         else
             $config
 
-    (::: Set URL Rewriter :::)
+    (::: Set URL Rewriter :)
     let $config := admin:get-configuration()
     let $rewriter := $server/conf:url-rewriter
     let $config := if($rewriter) then
