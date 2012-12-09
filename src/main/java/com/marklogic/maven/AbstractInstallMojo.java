@@ -202,17 +202,16 @@ public abstract class AbstractInstallMojo extends AbstractDeploymentMojo {
                     getLog().info(
                             String.format("Deploying %s to %s",
                                     sourceFile.getPath(), destinationPath));
+                    Content c = null;
                     try {
-
-                        Content c = newContent(destinationPath,
-                                getFileAsString(sourceFile), options);
+                        c = newContent(destinationPath, sourceFile, options);
                         session.insertContent(c);
-                    } catch (IOException e) {
-                        getLog().error(
-                                "Failed to read content file ".concat(f), e);
                     } catch (RequestException e) {
                         getLog().error(
                                 "Failed to insert content file ".concat(f), e);
+                    } finally {
+                        if (c != null)
+                            c.close();
                     }
                 }
             }
