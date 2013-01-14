@@ -31,7 +31,7 @@ public abstract class AbstractInstallMojo extends AbstractDeploymentMojo {
 
 
     protected void installContent() throws MojoExecutionException {
-        executeAction(ACTION_INSTALL_CONTENT);
+//        executeAction(ACTION_INSTALL_CONTENT);
 
         if (getCurrentEnvironment().getResources() != null) {
             /*
