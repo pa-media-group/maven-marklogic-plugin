@@ -123,6 +123,8 @@ declare function inst-app:create-server($install-config, $server as element(), $
         else
             $config
 
+    let $config := admin:save-configuration-without-restart($config)
+
     (::: Set URL Rewriter :)
     let $config := admin:get-configuration()
     let $rewriter := $server/conf:url-rewriter
