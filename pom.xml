@@ -3,7 +3,7 @@
 
     <groupId>com.marklogic.maven</groupId>
     <artifactId>marklogic-maven-plugin</artifactId>
-    <version>1.0.8-SNAPSHOT</version>
+    <version>1.0.9-SNAPSHOT</version>
     <packaging>maven-plugin</packaging>
 
     <name>MarkLogic Maven Plugin</name>
@@ -47,12 +47,20 @@
                 <role>Developer</role>
             </roles>
         </developer>
+        <developer>
+            <id>jonathonro</id>
+            <name>Jon Robins</name>
+            <email>jonathon.robins@pressassociation.com</email>
+            <roles>
+                <role>Developer</role>
+            </roles>
+        </developer>
     </developers>
 
     <scm>
-        <connection>scm:git:git@github.com:ukcrpb6/maven-marklogic-plugin.git</connection>
-        <developerConnection>scm:git:git@github.com:ukcrpb6/maven-marklogic-plugin.git</developerConnection>
-        <url>http://github.com/ukcrpb6/maven-marklogic-plugin/</url>
+        <connection>scm:git:git@github.com:PressAssociation/maven-marklogic-plugin.git</connection>
+        <developerConnection>scm:git:git@github.com:PressAssociation/maven-marklogic-plugin.git</developerConnection>
+        <url>http://github.com/PressAssociation/maven-marklogic-plugin/</url>
     </scm>
 
     <distributionManagement>
@@ -164,7 +172,7 @@
         <dependency>
         	<groupId>com.marklogic</groupId>
         	<artifactId>marklogic-install-server</artifactId>
-        	<version>1.0.4</version>
+        	<version>1.0.5</version>
         </dependency>
     </dependencies>
 
