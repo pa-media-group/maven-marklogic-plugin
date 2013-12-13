@@ -179,8 +179,7 @@ A set of database nodes to be constructed
             <set name="element-value-positions" value="true"/>
             <set name="element-word-positions"  value="true"/>
             <set name="attribute-value-positions"  value="true"/>
-            <set name="field-value-searches" value="true"/>
-            <!-- any other key/value setting from db admin page -->
+            <!-- and other supported key/value setting from db admin page -->
 
             <add name="fragment-root" namespace="a-namespace" localname="an-element-name"/>
 
