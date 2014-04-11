@@ -1,24 +1,5 @@
 package com.marklogic.maven;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import org.apache.maven.plugin.MojoExecutionException;
-import org.apache.maven.plugin.MojoFailureException;
-import org.codehaus.plexus.util.StringUtils;
-import org.jetbrains.annotations.Nullable;
-import org.jfrog.maven.annomojo.annotations.MojoGoal;
-import org.jfrog.maven.annomojo.annotations.MojoParameter;
-
 import com.google.common.collect.ImmutableList;
 import com.marklogic.install.xquery.XQueryDocumentBuilder;
 import com.marklogic.install.xquery.XQueryModule;
@@ -28,6 +9,20 @@ import com.marklogic.xcc.ResultItem;
 import com.marklogic.xcc.ResultSequence;
 import com.marklogic.xcc.Session;
 import com.marklogic.xcc.exceptions.RequestException;
+import org.apache.maven.plugin.MojoExecutionException;
+import org.apache.maven.plugin.MojoFailureException;
+import org.codehaus.plexus.util.StringUtils;
+import org.jetbrains.annotations.Nullable;
+import org.jfrog.maven.annomojo.annotations.MojoGoal;
+import org.jfrog.maven.annomojo.annotations.MojoParameter;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.*;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Remove the bootstrap configuration created by the marklogic:bootstrap goal.
@@ -150,14 +145,11 @@ public class ExecuteMojo extends AbstractInstallMojo {
 		}
 
 		AdhocQuery adhocQuery = session.newAdhocQuery(query);
-		try {
-			ResultSequence results = session.submitRequest(adhocQuery);
-			for (ResultItem i : ImmutableList.copyOf(results.iterator())) {
-				getLog().info(i.asString());
-			}
-		} finally {
-			session.close();
-		}
+
+        ResultSequence results = session.submitRequest(adhocQuery);
+        for (ResultItem i : ImmutableList.copyOf(results.iterator())) {
+            getLog().info(i.asString());
+        }
 	}
 
 	public void execute() throws MojoExecutionException, MojoFailureException {
