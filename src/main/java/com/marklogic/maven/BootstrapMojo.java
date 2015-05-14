@@ -96,7 +96,7 @@ public class BootstrapMojo extends AbstractBootstrapMojo {
     	} 
     	
         Session session = getXccSession();        
-        getLog().debug("Bootstrap session is to " + session.getConnectionUri().toASCIIString());
+        getLog().info("Bootstrap session is to " + session.getConnectionUri().toASCIIString());
         
 		AdhocQuery q = session.newAdhocQuery("xquery version \"1.0-ml\";\n1");
 		boolean success = false;
@@ -118,7 +118,7 @@ public class BootstrapMojo extends AbstractBootstrapMojo {
         if (!"file-system".equalsIgnoreCase(xdbcModulesDatabase)) {
             this.database = xdbcModulesDatabase;
             session = getXccSession();        
-
+            session.setTransactionMode(Session.TransactionMode.UPDATE);
             try {
                 String[] paths = {"/install.xqy"
                         , "/lib/lib-app-server.xqy"
@@ -141,10 +141,15 @@ public class BootstrapMojo extends AbstractBootstrapMojo {
                         session.insertContent(cs);
                     } catch (Exception e) {
                         getLog().error("Failed to insert required library.");
+                    } finally {
+                    	getLog().info("committing to db");
+                    	session.commit();
                     }
-                    session.commit();
                 }
-            } finally {
+            } catch (RequestException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} finally {
                 session.close();
             }
         } else {
