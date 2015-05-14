@@ -3,7 +3,7 @@
 
     <groupId>com.marklogic.maven</groupId>
     <artifactId>marklogic-maven-plugin</artifactId>
-    <version>1.0.12</version>
+    <version>1.0.13-SNAPSHOT</version>
     <packaging>maven-plugin</packaging>
 
     <name>MarkLogic Maven Plugin</name>
@@ -61,7 +61,7 @@
         <connection>scm:git:git@github.com:PressAssociation/maven-marklogic-plugin.git</connection>
         <developerConnection>scm:git:git@github.com:PressAssociation/maven-marklogic-plugin.git</developerConnection>
         <url>http://github.com/PressAssociation/maven-marklogic-plugin/</url>
-      <tag>v1.0.12</tag>
+      <tag>HEAD</tag>
   </scm>
 
     <distributionManagement>
