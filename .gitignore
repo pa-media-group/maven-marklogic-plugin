@@ -1,10 +1,14 @@
-*~
-*.class
-*.lck
-*.log
-target
+# Maven
+target/
+
+# IntelliJ
 .idea
 *.iml
+
+# Eclipse
 .settings
 .classpath
 .project
+
+# NPM
+node_modules

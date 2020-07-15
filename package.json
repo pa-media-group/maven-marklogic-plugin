@@ -1,0 +1,24 @@
+{
+  "name": "@press-association/maven-marklogic-plugin",
+  "version": "0.0.0-development",
+  "description": "Automated release management for maven projects",
+  "main": "index.js",
+  "private": true,
+  "scripts": {
+    "semantic-release:ci": "semantic-release --prepare @conveyal/maven-semantic-release --publish @semantic-release/github --verify-conditions @semantic-release/github,@conveyal/maven-semantic-release --verify-release @conveyal/maven-semantic-release --use-conveyal-workflow --skip-maven-deploy"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/PressAssociation/maven-marklogic-plugin.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/PressAssociation/maven-marklogic-plugin/issues"
+  },
+  "homepage": "https://github.com/PressAssociation/maven-marklogic-plugint#readme",
+  "dependencies": {
+    "@conveyal/maven-semantic-release": "^4.4.0",
+    "semantic-release": "^15.13.24"
+  }
+}

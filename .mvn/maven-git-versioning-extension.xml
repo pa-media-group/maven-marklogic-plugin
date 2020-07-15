@@ -1,0 +1,26 @@
+<gitVersioning>
+    <updatePom>false</updatePom>
+    <branch>
+        <pattern>master</pattern>
+        <versionFormat>${version}</versionFormat>
+    </branch>
+    <branch>
+        <pattern><![CDATA[feature/(?<feature>.+)]]></pattern>
+        <versionFormat>feature-${feature}</versionFormat>
+    </branch>
+    <branch>
+        <pattern><![CDATA[bugfix/(?<feature>.+)]]></pattern>
+        <versionFormat>bugfix-${feature}</versionFormat>
+    </branch>
+    <branch>
+        <pattern><![CDATA[hotfix/(?<feature>.+)]]></pattern>
+        <versionFormat>hotfix-${feature}</versionFormat>
+    </branch>
+    <tag>
+        <pattern><![CDATA[v(?<tagVersion>[0-9].*)]]></pattern>
+        <versionFormat>${tagVersion}</versionFormat>
+    </tag>
+    <commit>
+        <versionFormat>${commit.short}</versionFormat>
+    </commit>
+</gitVersioning>
