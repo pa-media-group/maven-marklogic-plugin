@@ -28,80 +28,80 @@ pipeline {
   }
 
   options {
-     ansiColor('xterm')
-     buildDiscarder(logRotator(numToKeepStr: '5'))
-     timeout(time: 15, unit: 'MINUTES')
-   }
+    ansiColor('xterm')
+    buildDiscarder(logRotator(numToKeepStr: '5'))
+    timeout(time: 15, unit: 'MINUTES')
+  }
 
-   parameters {
-     string(name: 'outputContainerName', defaultValue: 'maven-marklogic-plugin', description: '')
-     string(name: 'ciChannel', defaultValue: 'banacek-jenkins', description: 'Slack Notification Channel')
-   }
+  parameters {
+    string(name: 'outputContainerName', defaultValue: 'maven-marklogic-plugin', description: '')
+    string(name: 'ciChannel', defaultValue: 'banacek-jenkins', description: 'Slack Notification Channel')
+  }
 
-   tools {
-     maven 'M3'
-     jdk 'JDK6'
-     nodejs 'Node12.16.3'
-   }
+  tools {
+    maven 'M3'
+    jdk 'JDK6'
+    nodejs 'Node12.16.3'
+  }
 
-   stages {
-     stage('Notify Started') {
-       steps {
-         notifyStarted(params.ciChannel)
-       }
-     }
+  stages {
+    stage('Notify Started') {
+      steps {
+        notifyStarted(params.ciChannel)
+      }
+    }
 
-     stage('Build and Test') {
-       steps {
-         script {
-           mvn "clean test"
-         }
-       }
-     }
+    stage('Build and Test') {
+      steps {
+        script {
+          mvn "clean package"
+        }
+      }
+    }
 
-     stage('Semantic Release') {
-       when {
-         anyOf {
-           branch 'master'
-         }
-       }
-       steps {
-         withNPM(npmrcConfig: 'basenpmrc') {
-           sh 'npm ci'
-           sh 'npm run semantic-release:ci'
-         }
-       }
-     }
+    stage('Semantic Release') {
+      when {
+        anyOf {
+          branch 'master'
+        }
+      }
+      steps {
+        withNPM(npmrcConfig: 'basenpmrc') {
+          sh 'npm ci'
+          sh 'npm run semantic-release:ci'
+        }
+      }
+    }
 
-     stage ('Deploy Maven Artifacts') {
-       when {
-         anyOf {
-           branch 'bugfix/**'
-           branch 'feature/**'
-           branch 'hotfix/**'
-           branch 'master'
-         }
-       }
-       steps {
-         mvn "deploy -DskipTests"
-       }
-     }
-   }
+    stage ('Deploy Maven Artifacts') {
+      when {
+        anyOf {
+          branch 'bugfix/**'
+          branch 'feature/**'
+          branch 'hotfix/**'
+          branch 'master'
+        }
+      }
+      steps {
+        mvn "deploy -DskipTests"
+      }
+    }
+  }
 
-   post {
-     success {
-       script {
-         currentBuild.result = "SUCCESS"
-       }
-     }
-     failure {
-       script {
-         currentBuild.result = "FAILURE"
-       }
-     }
-     cleanup {
-       notifyResults(params.ciChannel)
-       cleanWs()
-     }
-   }
+  post {
+    success {
+      script {
+        currentBuild.result = "SUCCESS"
+      }
+    }
+    failure {
+      script {
+        currentBuild.result = "FAILURE"
+      }
+    }
+    cleanup {
+      notifyResults(params.ciChannel)
+      cleanWs()
+    }
+  }
 }
